@@ -1,0 +1,929 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@using Picanol.Helpers
+@{
+    ViewBag.Title = "GenerateInvoice";
+    //Layout = null;
+    Layout = "../Shared/_InvoiceLayout.cshtml";
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        .invoice-title h2, .invoice-title h3 {
+            display: inline-block;
+        }
+
+        .table > tbody > tr > .no-line {
+            border-top: none;
+        }
+
+        .table > thead > tr > .no-line {
+            border-bottom: none;
+        }
+
+        td, th {
+            text-align: center;
+        }
+
+        .table > tbody > tr > .thick-line {
+            border-top: 2px solid black;
+        }
+
+        .vl {
+            border-left: 1px solid black;
+            /*height: 403px;*/
+            height: 345px;
+            position: absolute;
+            left: 50%;
+            margin-left: -3px;
+            margin-top: 0px;
+            top: 0;
+        }
+
+        .v2 {
+            border-left: 1px solid black;
+            height: 382px;
+            position: absolute;
+            left: 50%;
+            margin-left: -3px;
+            margin-top: 2px;
+            top: 0;
+        }
+
+        .v3 {
+            border-left: 1px solid black;
+            height: 53px;
+        }
+
+        .v6 {
+            /*border-left: 1px solid black;*/
+            height: 53px;
+            /*margin-top: -53px;*/
+        }
+
+        .v4 {
+            /*border-left: 1px solid black;
+            height: 120px;*/
+            border-left: 1px solid black;
+            height: 120px;
+            border-right: 1px solid;
+        }
+
+        .v5 {
+            border-right: 1px solid black;
+            /*height: 120px;*/
+            margin-top: -120px;
+            /*border-right: 1px solid black;
+        height: 130px;
+        margin-top: -80px;*/
+        }
+
+        .v7 {
+            border-left: 1px solid black;
+            /*height: 80px;*/
+            height: 40px;
+            /*margin-top: -23px;*/
+        }
+
+        .v8 {
+            border-right: 1px solid black;
+            height: 80px;
+            margin-top: -80px;
+        }
+
+        .pagebreak {
+            page-break-before: always;
+        }
+
+        /* -->New style Modal<--*/
+        #dropdownlist-content {
+            width: 550px;
+            margin-top: 40vh;
+            margin-left: 55px;
+        }
+
+        h4.text-left.d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        span {
+            display: flex;
+            margin-top: -22px;
+        }
+
+        .close {
+            font-size: 28px;
+            color: #ffffff
+        }
+
+            .close:hover {
+                color: #ffffff
+            }
+
+        .listdatadropdown {
+            background-color: #1183ca;
+        }
+
+        #alertMessage {
+            Font-weight: bold;
+        }
+
+        div.modal-body.dropdownlist-body {
+            position: relative;
+            padding: 22px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .text-left d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        h4#alertMessage.modal-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        h4.text-left.d-inline-block.blockkk {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        p#trackingNumber.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#customerName.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button btn.btn-primary.btnn {
+            padding: 6px 26px;
+        }
+
+        button btn.btn-secondary.btnn {
+            padding-right: 25px;
+        }
+
+        .modal-footer {
+            text-align: center !important;
+            background-color: #dadde061 !important;
+        }
+
+        .btn.btn-secondary.btnn {
+            margin-bottom: 0;
+            margin-left: 5px;
+            background-color: #a5adc2b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center">
+        <h3><b>View Invoice</b></h3>
+        @if (@Model.previewOrigionalInv != "PreViewInvoice")
+        {
+            if (userInfo.RoleId == 5 || userInfo.RoleId == 6)
+            {
+                <h6 style="color:red">Click on Create E-Invoice/Create Proforma Invoice to create E-Invoice/Proforma Invoice</h6>
+            }
+            else
+            {
+                if (@Model.previewOrigionalInv != "PerformaInvoice")
+                {
+
+                    <h5 style="color:red">Note: You are not allow to create E-Invoice</h5> }
+                else
+                {
+                    <h5 style="color:red">Click on Create Proforma Invoice to create Proforma Invoice</h5>
+                }
+
+            }
+        }
+    </div>
+
+    <div style="display: inline-block;
+    margin-left: 157px;
+    margin-top: 0px;">
+        <a href="@Url.Action("OrdersList", "Order")" class="btn btn-primary btn-large"> <i class="fam-control-rewind-blue"></i> Back</a>
+        @*<button type="button" class="btn btn-success" onclick="printEInvoice()">Download</button>*@
+
+        @if (@Model.previewOrigionalInv == "PerformaInvoice")
+        {
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#alertModal">
+                Create Proforma Invoice
+            </button>
+        }
+
+
+        @if (@Model.previewOrigionalInv != "PreViewInvoice" && @Model.previewOrigionalInv != "PerformaInvoice")
+        {
+            if (@Model.InvoiceDetails.EInVoiceQrCode == null)
+            {
+                if (userInfo.RoleId == 5 || userInfo.RoleId == 6)
+                {
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#alertModal">
+                        Create E-Invoice
+                    </button>
+                }
+            }
+
+
+        }
+
+
+
+        @*<button type="button" class="btn btn-success" data-toggle="modal" data-target="#alertModal">
+                Download
+            </button>*@
+    </div>
+
+    <div class="container shadow p-3 mb-5 bg-white rounded" style="width:860px !important;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-4">
+                        @*<img src="~/Content/Images/L.png">*@
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="text-right">
+                            <font size="4"><b>GSTIN :@Model.BusinessDetails.GSTIN</b></font><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="border: 1px solid black ; border-bottom-style:none">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        @if (@Model.previewOrigionalInv != "PerformaInvoice")
+                        {
+
+                            <div class="col-xs-8">
+                                <div class="invoice-title" style="margin-left: 350px;">
+                                    <center> <h3>TAX INVOICE</h3></center>@*<h4 class="pull-right"><div style="margin-left: -25px">✔ Original for Recipient</div>Duplicate for Supplier/Transporter<br />Triplicate for Supplier</h4>*@
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-8">
+                                <div class="invoice-title" style="margin-left: 350px;">
+                                    <center> <h3>PROFORMA INVOICE</h3></center>@*<h4 class="pull-right"><div style="margin-left: -25px">✔ Original for Recipient</div>Duplicate for Supplier/Transporter<br />Triplicate for Supplier</h4>*@
+                                </div>
+                            </div>
+                        }
+
+                        @if (@Model.previewOrigionalInv == "PrintDuplicateInvoice")
+                        {
+                            <div class="col-xs-4">
+                                &nbsp; &nbsp;&nbsp;     Original for Recipient<br />
+                                ✔&nbsp;      Duplicate for Supplier/Transporter <br />
+                                &nbsp; &nbsp;&nbsp;     Triplicate for Supplier<br />
+                            </div>
+                        }
+                        else if (@Model.previewOrigionalInv == "PrintTriplicateInvoice")
+                        {
+
+                            <div class="col-xs-4">
+                                &nbsp; &nbsp;&nbsp;     Original for Recipient<br />
+                                &nbsp; &nbsp;&nbsp;      Duplicate for Supplier/Transporter <br />
+                                ✔&nbsp;  Triplicate for Supplier<br />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-4">
+                                ✔&nbsp;  Original for Recipient<br />
+                                &nbsp; &nbsp;&nbsp;      Duplicate for Supplier/Transporter <br />
+                                &nbsp; &nbsp;&nbsp;      Triplicate for Supplier<br />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (@Model.InvoiceDetails.IRN != null)
+        {
+            <div style="border: 1px solid black ; border-bottom-style:none">
+                <div class="row">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>IRN : @Model.InvoiceDetails.IRN</b>
+                </div>
+            </div>
+        }
+
+        <div style="border: 1px solid black ; border-bottom-style:none">
+
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <div class="row">
+                        @if (@Model.previewOrigionalInv != "PerformaInvoice")
+                        {
+                            <div class="col-xs-6">
+                                Reverse Charge :  <br />
+                                <b style="font-size:large">Invoice No.</b>  : <b style="font-size:x-large">@Model.InvoiceDetails.InvoiceNo</b><br />
+                                Invoice Date   :
+                                @if (@Model.InvoiceDetails.InvoiceDate != null)
+                                {
+                                    <b>@Model.InvoiceDetails.InvoiceDate.Value.ToShortDateString()</b><br />
+                                }
+                                else
+                                {
+                                    <b>@Model.InvoiceDetails.InvoiceDate</b><br />
+
+                                }
+
+                                State          : <b>@Model.BusinessDetails.State</b><br />
+                                State Code     : <b>07</b><br />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-6">
+                                Reverse Charge :  <br />
+                                <b style="font-size:large">PI No.</b>  : <b style="font-size:x-large">@Model.OrderDetails.PerformaInvoiceNumber</b><br />
+                                Invoice Date   :
+                                @if (@Model.InvoiceDetails.InvoiceDate != null)
+                                {
+                                    <b>@Model.InvoiceDetails.InvoiceDate.Value.ToShortDateString()</b><br />
+                                }
+                                else
+                                {
+                                    <b>@Model.InvoiceDetails.InvoiceDate</b><br />
+
+                                }
+
+                                State          : <b>@Model.BusinessDetails.State</b><br />
+                                State Code     : <b>07</b><br />
+                            </div>
+                        }
+
+
+
+                        @if (Model.CustomerDetails.ShippingState != null && Model.CustomerDetails.StateCode != null)
+                        {
+                            <div class="col-xs-6 text-left">
+                                Transportation Mode :Courier<br />
+                                Vehicle Number :<br />
+                                Date of Supply :<br />
+                                Place of Supply :@Model.CustomerDetails.ShippingState @Model.CustomerDetails.StateCode  <br />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-6 text-left">
+                                Transportation Mode :<br />
+                                Vehicle Number :<br />
+                                Date of Supply :<br />
+                                Place of Supply :<br />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="border: 1px solid black ; border-bottom-style:none">
+
+            <div class="row">
+                <div class="col-xs-12">
+
+                    @if (Model.BillingAddresss != "" && Model.BillingAddresss!=null)
+                    {
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <address>
+                                    <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                                    Name :<b>@Model.CustomerDetails.CustomerName</b><br />
+                                    Address :<b>@Model.BillingAddresss</b><br>
+                                    Contact :<b>@Model.CustomerDetails.Mobile</b><br>
+                                    GSTIN :<b>@Model.CustomerDetails.GSTIN</b> <br />
+                                    State : <b>@Model.CustomerDetails.State</b> <br />
+                                    State Code : <b>@Model.BillingStateCode</b> <br />
+                                </address>
+                            </div>
+                            <div class="col-xs-6 text-left">
+                                <address>
+                                    <strong><u>Details of Consignee / Shipped To:</u></strong><br>
+                                    Name : <b>@Model.CustomerDetails.CustomerName</b><br>
+                                    Address :<b>@Model.ShippingAddress</b><br>
+                                    GSTIN :<b>@Model.CustomerDetails.GSTIN</b> <br>
+                                    State :<b>@Model.CustomerDetails.State</b><br />
+                                    State Code :<b>@Model.ShippingStateCode</b><br />
+                                </address>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <address>
+                                    <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                                    Name :<b>@Model.CustomerDetails.CustomerName</b><br />
+                                    Address :<b>@Model.CustomerDetails.AddressLine1 @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City- @Model.CustomerDetails.PIN </b><br>
+                                    Contact :<b>@Model.CustomerDetails.Mobile</b><br>
+                                    GSTIN :<b>@Model.CustomerDetails.GSTIN</b> <br />
+                                    State : <b>@Model.CustomerDetails.State</b> <br />
+                                    State Code : <b>@Model.CustomerDetails.StateCode</b> <br />
+                                </address>
+                            </div>
+                            <div class="col-xs-6 text-left">
+                                <address>
+                                    <strong><u>Details of Consignee / Shipped To:</u></strong><br>
+                                    Name : <b>@Model.CustomerDetails.CustomerName</b><br>
+                                    Address :<b>@Model.CustomerDetails.ShippingAddressLine1  @Model.CustomerDetails.ShippingAddressLine2</b><br>
+                                    GSTIN :<b>@Model.CustomerDetails.GSTIN</b> <br>
+                                    State :<b>@Model.CustomerDetails.State</b><br />
+                                    State Code :<b>@Model.CustomerDetails.ShippingStateCode</b><br />
+                                </address>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <div style="border: 1px solid black">
+            <div class="row">
+                <div class="col-xs-5">
+                    <b style="font-size:medium">Proforma Invoice No:@Model.OrderDetails.PerformaInvoiceNumber </b>
+                </div>
+            </div>
+        </div>
+
+        <div style="border: 1px solid black">
+            <div class="row">
+                <div class="col-xs-7" style="width: 55.333333%">
+                    <b style="font-size:medium"> Your Ref. No. :@Model.OrderDetails.CustomerRef  </b>
+                </div>
+
+                @if (@Model.OrderDetails.ChallanDate != null)
+                {
+                    <div class="col-xs-2" style="width: 19.666667%">
+                        <b style="font-size:medium;margin-left:-39Px">  Date : @Model.OrderDetails.ChallanDate.Value.ToShortDateString() </b>
+                    </div>
+                }
+                <div class="col-xs-3">
+                    <b style="font-size:medium">Our Ref.No. : @Model.OrderDetails.TrackingNumber</b>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="v4"></div>
+        <div class="v5"></div>
+
+        @Html.HiddenFor(model => model.OrderDetails.OrderGUID, new { id = "GUID" })
+        <div class="row">
+            <div class="col-md-12">
+                <div class="v3">
+                    <div class="v6">
+                        <font size="4"><strong>Order Summary</strong></font>
+                    </div>
+                </div>
+                @*<div class="panel-heading">
+                        <h3 class="panel-title"><strong>Order summary</strong></h3>
+                    </div>*@
+
+                <div class="table-responsive">
+                    <table rules="all" border="1" style="font-size:medium ; width:100%" id="review-products">
+                        <thead>
+                            <tr>
+                                <th>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Model.OrderDetails.PartName @Model.OrderDetails.PartNo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Model.OrderDetails.SerialNo</th>
+                                @*<th width="15%" colspan="2" style="font-size:small">Name</th>
+                                    <th width="15%" colspan="2" style="font-size:small">@Model.OrderDetails.PartName @Model.OrderDetails.PartNo</th>
+                                    <th width="15%" colspan="2" style="font-size:small">Serial No.</th>
+                                    <th width="15%" colspan="2" style="font-size:small">@Model.OrderDetails.SerialNo</th>
+                                    <th width="15%" colspan="2"></th>
+                                    <th width="15%" colspan="2"></th>*@
+                                @*<th colspan="2" style="font-size:medium">Qty</th>
+                                    <th colspan="2" style="font-size:medium">@Model.OrderDetails.Qty</th>*@
+                                @*<th></th>*@
+
+                            </tr>
+                        </thead>
+                    </table>
+                    <table rules="all" border="1" style="font-size:small; width:100%;text-align:center" id="review-products">
+                        <thead style="text-align:center">
+                            <tr>
+                                @*<th>Serial No.</th>*@
+                                <th style="width:14%">Name of Product</th>
+                                <th style="width:14%">HSN /SAC Code</th>
+                                @*<th>Unit of Measurement</th>*@
+                                <th width="5%">Qty</th>
+                                <th width="10%">Rate</th>
+                                <th>Amount</th>
+                                <th>Taxable Value</th>
+                                @*@if (!Model.IsIGSTInvoice)
+                                    {
+                                        <th colspan="2">CGST</th>
+                                        <th colspan="2">SGST</th>
+                                    }
+                                    else
+                                    {
+                                        <th colspan="2">IGST</th>
+                                    }*@
+                                <th colspan="2">CGST</th>
+                                <th colspan="2">SGST</th>
+                                <th colspan="2">IGST</th>
+                                <th>Total</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                @*<th></th>
+                                    <th></th>*@
+                                @*<th>Rate</th>
+                                    <th>Amount</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>*@
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                            @foreach (var item in Model.InvoiceDetails.InvoiceItems)
+                            {
+                                <tr class="txtMult" style="font-weight:bold">
+                                    @*<td>1</td>*@
+                                    <td>@item.Name</td>
+                                    <td>@item.HSNCode</td>
+                                    <td>@item.Qty</td>
+                                    @*<td>@item.TotalComponentQty</td>*@
+                                    <td>@item.Rate</td>
+                                    @*<td>@item.UnitOfMeasurement</td>*@
+                                    @*@if (Model.Status == "InProgress")
+                                        {
+                                            <td> <input type="hidden" id="ID" name="cid" value=@item.InvoiceItemID /> </td>
+                                                        <td contenteditable='true' ID="txtQuantity" class="val1">@item.Qty</td>
+                                            //<td>@Html.TextBoxFor(model => item.Qty, new { id = "Qty"+item.InvoiceItemID, @class = "form-control" })</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.Qty</td>
+                                        }
+                                        @if (Model.Status == "InProgress")
+                                        {
+                                            <td contenteditable='true' ID="txtAmount" class="val2">@item.Amount</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.Amount</td>
+                                        }*@
+                                    <td ID="lblPrice1" class="multTotal1">@item.Amount</td>
+                                    @*<td>@item.Amount</td>*@
+                                    <td ID="lblPrice" class="multTotal">@item.Amount</td>
+                                    @*@if (!Model.IsIGSTInvoice)
+                                        {
+                                            <td>@item.CGSTRate</td>
+                                            <td>@item.CGSTAmount</td>
+                                            <td>@item.SGSTRate</td>
+                                            <td>@item.SGSTAmount</td>
+                                        }
+                                        else
+                                        {
+                                        <td ID="lblRate" class="IGSTRate">@item.IGSTRate</td>
+                                        <td ID="lblAmount" class="IGSTAmount">@item.IGSTAmount</td>
+                                        }*@
+                                    <td>0%</td>
+                                    <td>0.00</td>
+                                    <td>0%</td>
+                                    <td>0.00</td>
+                                    <td ID="lblRate" class="IGSTRate">@item.IGSTRate</td>
+                                    <td ID="lblAmount" class="IGSTAmount">@item.IGSTAmount</td>
+                                    <td ID="lblTotalAmount" class="TotalAmount">@item.Total</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="v7"></div>
+        <div class="v8"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="border: 1px solid black ; border-bottom-style: none">
+                    <div class="vl" style="height:432px"></div>
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            Total Invoice Amount in Words :  <br />
+                            <b> @Model.InvoiceDetails.AmountWords</b><br />
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            Total Amount Before Tax  :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.AmountBTax</b><br />
+                            Add CGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.CGSTTax</b><br />
+                            Add SGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.SGSTTax</b><br />
+                            Add IGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.IGSTTax</b><br />
+                            Tax Amount GST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.TotalTax</b><br />
+                            <div style="font-size:medium">
+                                Total Amount After Tax :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.Amount</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="border: 1px solid black ; border-bottom-style:none">
+                    <div class="row">
+
+
+                        <div class="col-xs-12">
+                            <b><font size="4">&nbsp;&nbsp;<u>Bank Details</u></font> </b>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <b style="font:large">&nbsp;&nbsp;Bank Account Number : &nbsp;&nbsp;</b>
+                        </div>
+                        <div class="col-xs-3">
+                            <b style="font:large"> @Model.BusinessDetails.AccountNumber @*@Model.BusinessDetails.AccountNumber Bank Name :@Model.BusinessDetails.BankName*@</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <b style="font:large">&nbsp;&nbsp;Bank Name :</b>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <b style="font:large">@Model.BusinessDetails.BankName</b>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <b style="font:large">&nbsp;&nbsp;Bank Branch IFSC :</b>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <b style="font:large">@Model.BusinessDetails.IFSCCode</b>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <b style="font:large">&nbsp;&nbsp;Bank Branch  :</b>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <b style="font:large">@Model.BusinessDetails.BankBranch</b>
+
+                        </div>
+                        @if (@Model.InvoiceDetails.EInVoiceQrCode != null)
+                        {
+                            <div class="col-xs-6 text-left">
+                                <b class="pull-right" style="margin-top:-56px;margin-right:40%">
+                                    <img src="~/Content/Images/QrCodeImages/@Model.InvoiceDetails.EInVoiceQrCode" width="140" height="123" />
+                                </b>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-6 text-left" />
+                        }
+
+                    </div>
+
+                </div>
+                <div style="border: 1px solid black">
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            <b>Terms and Conditions :</b>
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            Certified that the particulars given above are true and correct.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            @* 1. NOTE : CHARGABLE<br />
+                                2. Payment Terms : Advance Payment<br />
+                                3.  Please cover the Transit Insurance at your end.<br />
+                                4.  Repair Warranty  : 3 months, except PB & Tupulo Board.<br />
+                                5.  PB & Tupulo Board warranty,1 month only<br />
+                                6. GST Payable on Reverse Charges : No.*@
+
+
+                            &nbsp;&nbsp;1. NOTE :<strong> @Model.OrderDetails.PrintableRepairType</strong><br />
+                            &nbsp;&nbsp;2. Payment Terms : Advance Payment<br />
+                            &nbsp;&nbsp;3. Please cover the Transit Insurance at your end.<br />
+                            &nbsp;&nbsp;4. Repair Warranty :<strong>@Model.OrderDetails.WarrantyTime</strong><br />
+                            &nbsp;&nbsp;5. @Model.OrderDetails.WarrantyTimeNotes<br />
+                            &nbsp;&nbsp;6. GST Payable on Reverse Charges : No
+
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            <b><font size="5">For, PICANOL INDIA PVT. LTD.</font> </b><br />
+                            <center>Authorised Signatory</center>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    @if (@Model.previewOrigionalInv == "PerformaInvoice")
+    {
+
+        <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" id="dropdownlist-content">
+                    <div class="modal-header listdatadropdown ">
+                        <h4 class="modal-title listItem-Content," id="alertMessage" style="font-weight: bold">Confirm Detail</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body dropdownlist-body">
+                        <div class="d-flex text-left">
+                            <h3 class="text-center"><b>Are you sure to download Proforma Invoice with given details.</b></h3>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                        <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="printEInvoice()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" id="dropdownlist-content">
+                    <div class="modal-header listdatadropdown ">
+                        <h4 class="modal-title listItem-Content," id="alertMessage" style="font-weight: bold">Confirm Detail</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body dropdownlist-body">
+                        <div class="d-flex text-left">
+                            <h3 class="text-center"><b>Are you sure to download invoice with given details.</b></h3>
+                            <p class="text-center" style="color:red; font-size:16px;">*Invoice can be cancelled with in 24 hour only.</p>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                        <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="printEInvoice()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <div class="modal fade" id="errorAlertMsg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="alertMessage" style="font-weight: bold">Confirm Detail</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h3 class="text-center" id="errorMessage" style="color:black; font-size:22px; font-weight:bold"></h3>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="GoBack()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function GoBack() {
+            window.location = '@Url.Action("OrdersList", "Order")'
+     }
+
+    function printEInvoice() {
+    var SelectedValue = localStorage.getItem("selectedValue");
+    var RepairType = localStorage.getItem("RepairType");
+    var Status = localStorage.getItem("status");
+    var InvoiceNo = localStorage.getItem("invoiceNo");
+    var SelectedOrderId = localStorage.getItem("selectedOrderId");
+    var TrackingNumber = localStorage.getItem("trackingNumber");
+    var SelecetCustomerId = localStorage.getItem("selecetCustomerId");
+    var pi = localStorage.getItem("proformaInvoice");
+
+    var checktype = RepairType.toLowerCase(RepairType);
+    var fstring = checktype.charAt(0).toUpperCase() + checktype.slice(1);
+
+
+        if (SelectedOrderId != null || TrackingNumber != null) {
+            var OrdersViewModel = {
+                TrackingNo: TrackingNumber,
+                SelectedAction: SelectedValue,
+                SelecetCustomerId: SelecetCustomerId,
+                SelectedOrderId: SelectedOrderId
+            }
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("ProcessAction", "Invoice")', // name of PHP script
+                data: OrdersViewModel, // parameter name and value
+                success: function (response) {
+                    $('.spinner-wrapper').hide();
+                    if (response == "success") {
+                        window.location = '@Url.Action("ReturnView", "Invoice")';
+
+                    }
+                    else {
+                        $('#alertModal').modal('hide');
+                        //alert(response)
+                        //window.location.reload(true);
+                        var redirect = alert(response)
+
+                        @*if (redirect) {
+                            window.history.back();
+                        } else {
+                            window.history.back();
+                        }*@
+                        $('#errorMessage').text("Please select tracking to create invoice again.");
+                        $('#errorAlertMsg').modal('show')
+                    }
+
+                    localStorage.removeItem("selectedOrderId");
+                    localStorage.removeItem("trackingNumber");
+                    localStorage.removeItem("selecetCustomerId");
+                    localStorage.removeItem("selectedValue");
+                },
+
+            });
+        } else {
+            $('.spinner-wrapper').hide()
+            $('#errorMessage').text("Please select tracking to create invoice again.");
+            $('#errorAlertMsg').modal('show');
+        }
+}
+
+    </script>
+</body>
+</html>

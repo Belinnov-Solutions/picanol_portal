@@ -1,0 +1,118 @@
+﻿@model Picanol.ViewModels.ReportsViewModel
+<h2 align="center">PCB Board Summary Report</h2>
+<link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="row" style="font-family:Calibri">
+    <div class="col-sm-3">
+        <div class="form-group">
+            @Html.LabelFor(p => p.FromDate, new { @class = "" })
+            @Html.TextBoxFor(d => d.FromDate, "{0:dd/MM/yyyy}", new { id = "FromDate", @class = "form-control", maxlength = "500", autocomplete = "off", placeholder = "Enter FromDate" })
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            @Html.LabelFor(p => p.ToDate, new { @class = "" })
+            @Html.TextBoxFor(d => d.ToDate, "{0:dd/MM/yyyy}", new { id = "ToDate", @class = "form-control", maxlength = "500", autocomplete = "off", placeholder = "Enter ToDate" })
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="CustomerName">Board Name :</label>
+            <input name="id" class="form-control" type="search" list="CNList" placeholder="Enter BoardName" autocomplete="off" id="CustomerId" />
+
+        </div>
+    </div>
+   
+    <div class="col-sm-3" style="width: 12.499999995%">
+        <div class="form-group">
+            <button type="submit" style="margin-top:25px" value="Submit" onclick="submit()" id="btnSearch" class="btn btn-info">
+                Submit
+
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row" id="ReportDiv">
+    <iframe id="ReportFrame" src="" width="100%" height="1000px" style="border: none"></iframe>
+
+</div>
+<div class="signal"></div>
+
+<script type="text/javascript">
+
+
+    $("#FromDate").datepicker({
+
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        minDate: new Date('2018-10-1'),
+
+
+    });
+    $("#ToDate").datepicker({
+
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+
+
+    });
+</script>
+
+<script>
+
+
+    function submit() {
+
+        //var FromDate = $("#FromDate").val();
+        //if (FromDate == "")
+        //{
+        //    alert("Please enter From Date")
+        //    return false;
+        //}
+        //var ToDate = $("#ToDate").val();
+        //if (ToDate == "") {
+        //    alert("Please enter To Date")
+        //    return false;
+        //}
+        //if (FromDate != null && ToDate == "")
+        //{
+        //    alert("Please enter To Date")
+        //    return false;
+        //}
+        //if (FromDate == "" && ToDate != null) {
+        //    alert("Please enter From Date")
+        //    return false;
+        //}
+        var shownVal = document.getElementById("CustomerId").value;
+        if (shownVal != "") {
+            var partName = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+
+        }
+
+       
+        var src = '../ReportSet/PrintPCBboardSummary.aspx?';
+        // src = src + "Dates=" + FromDate + ";" + ToDate + ";" + partName+";" + RepairType;
+
+
+        var iframe = '<iframe id="reportFrame" width="100%" height="800px" scrolling="no" frameborder="0" src="' + src + '" allowfullscreen></iframe>';
+        $("#ReportDiv").html(iframe);
+
+    }
+
+</script>
+
+
+
+<datalist id="CNList">
+    @foreach (var item in Model.PartList)
+    {
+        <option id="@item.PartId" data-value="@item.PartId" value="@item.PartName"></option>
+
+    }
+</datalist>

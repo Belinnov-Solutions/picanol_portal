@@ -1,0 +1,2583 @@
+﻿@model Picanol.ViewModels.ServiceRequestViewModel
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    //int provisionalbillCount = Model.CustomersList.Count;
+    //int noOfPagesProvisional = provisionalbillCount / 10;
+    //int TotalNumberCounts = Model.TotalNumberCounts;
+    int provisionalCount = Model.CustomersList.Count;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = provisionalCount / PageSize;
+    int TotalNumberCounts = Model.TotalNumberCounts;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+
+    <style>
+        .datepicker {
+            z-index: 1151 !important;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            border-color: black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+
+
+        @*table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }*@
+
+        #lt_overlay {
+            display: none;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+        #lt_loading {
+            display: none;
+            position: fixed;
+            color: #ccc;
+            top: 45%;
+            left: 50%;
+            padding: 20px;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        #lt_overlay {
+            display: none;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+        #lt_loading {
+            display: none;
+            position: fixed;
+            color: #ccc;
+            top: 45%;
+            left: 50%;
+            padding: 20px;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+
+        #dropdownlist-content {
+            width: 480px;
+            margin-top: 15vh;
+            /*margin-left: -110px;*/
+           /* width: 550px;
+            margin-top: 40vh;
+            margin-left: 55px;*/
+        }
+
+        #creditnote-content {
+            width: 720px;
+            margin-top: 15vh;
+        }
+
+        h4.text-left.d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        span {
+            display: contents;
+            margin-top: -27px;
+        }
+
+        .close {
+            font-size: 28px;
+            color: #ffffff
+        }
+
+            .close:hover {
+                color: #ffffff
+            }
+
+        .listdatadropdown {
+            background-color: #1183ca;
+        }
+
+        #alertMessage {
+            Font-weight: bold;
+        }
+
+        div.modal-body.dropdownlist-body {
+            position: relative;
+            padding: 22px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .text-left d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        h4#alertMessage.modal-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        h4.text-left.d-inline-block.blockkk {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        p#PBillNo.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#PBillNoo.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#Usrnm.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#Usrnmm.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#text111.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#finalAmount.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#finalAmounts.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button btn.btn-primary.btnn {
+            padding: 6px 26px;
+        }
+
+        button btn.btn-secondary.btnn {
+            padding-right: 25px;
+        }
+
+        .modal-footer {
+            text-align: center !important;
+            background-color: #dadde061 !important;
+        }
+
+        .btn.btn-secondary.btnn {
+            margin-bottom: 0;
+            margin-left: 5px;
+            background-color: #a5adc2b0;
+        }
+
+        #text1.modal-title.listItem-Content {
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        div.paidtext {
+            width: 48px;
+            height: 27px;
+            margin-top:17px;
+            transform: rotate(-45deg);
+            transform-origin: left;
+            font-size: small;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    @if (userInfo.RoleId != 8)
+    {
+
+        <table id="myTable">
+            <thead>
+
+                <tr>
+                    <th>P.I. No</th>
+                    <th>Zone</th>
+                    <th>Customer Name</th>
+                    @if (userInfo.RoleId == 6 || userInfo.RoleId == 5)
+                    {
+                        <th>Invoice No.</th>
+                        <th>CRN</th>
+                        <th>DBN</th>
+
+                    }
+                    @if (userInfo.RoleId == 6)
+                    {
+                        <th>Last SendOn</th>
+                    }
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Username</th>
+                    <th>Amount</th>
+                    <th>CRN Amt</th>
+                    <th>Balance Amt</th>
+                    <th>Timesheet</th>
+                    <th hidden>Email</th>
+                    <th>Action</th>
+                    @if (userInfo.UserName == "Subodh Dixit")
+                    {
+                        <th>Action</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ServiceRequestList)
+                {
+
+                    if (item.Cancelled == true)
+                    {
+                        if (userInfo.RoleId == 6 || userInfo.UserName == "Subodh Dixit")
+                        {
+
+                            <tr style="background-color:red">
+
+                                <td>@item.ProvisionalBillNo </td>
+                                <td>@item.Zone</td>
+                                <td>@item.CustomerName</td>
+
+                                @if (userInfo.RoleId == 6)
+                                {
+                                    <td><strong>@item.InvoiceNumber</strong></td>
+                                    <td><strong>@item.creditNoteNumber</strong></td>
+                                    <td><strong>@item.DebitNoteNumber</strong></td>
+                                    if (item.LastEmailSendOn == null)
+                                    {
+                                        <td>@item.LastEmailSendOn</td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                    }
+                                }
+
+                                <td>@item.TillFromDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FinalAmount</td>
+                                <td>@item.CreditNoteTotalamount</td>
+                                <td>@item.BalanceAmount</td>
+                                <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+
+                                <td hidden>
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="ViewEmailView('@item.ProvisionalBillId','@item.AuthorizerEmail','@item.CustomerName','@item.Authorized','@item.WorkOrderId','@item.UserName')">Email</button>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View Proforma Invoice</a>
+                                </td>
+                                @if (userInfo.UserName == "Subodh Dixit")
+                                {
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')">Cancel PB</button>
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        if (item.Paid == true)
+                        {
+                            <tr style="background-color: #dff0d8">
+
+                                <td><div class="paidtext" id="msg" @*style="display:none"*@>Paid</div>@item.ProvisionalBillNo</td>
+                                <td>@item.Zone</td>
+                                <td>@item.CustomerName</td>
+                                @if (userInfo.RoleId == 6 || userInfo.RoleId == 5)
+                                {
+                                    <td><strong>@item.InvoiceNumber</strong></td>
+                                    <td><strong>@item.creditNoteNumber</strong></td>
+                                    <td><strong>@item.DebitNoteNumber</strong></td>
+
+                                }
+                                @if (userInfo.RoleId == 6)
+                                {
+                                    if (item.LastEmailSendOn == null)
+                                    {
+                                        <td>@item.LastEmailSendOn</td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                    }
+                                }
+
+                                <td>@item.TillFromDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FinalAmount</td>
+                                <td>@item.CreditNoteTotalamount</td>
+                                <td>@item.BalanceAmount</td>
+                                <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+                                <td hidden><button type="button" class="btn btn-danger btn-xs" onclick="ViewEmailView('@item.ProvisionalBillId','@item.AuthorizerEmail','@item.CustomerName','@item.Authorized','@item.WorkOrderId','@item.UserName')">Email</button></td>
+                                <td style="width:70px">
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="window.open('@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })')" style="width:135px">View Proforma Invoice</button>
+                                    @if (item.InvoiceNumber == "")
+                                    {
+                                        <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, provisionalbillno = item.ProvisionalBillNo, PreviewType = "PreviewDetails" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px;"> Preview Invoice </button>
+                                    }
+
+                                    @if (item.InvoiceNumber != "")
+                                    {
+                                        if (userInfo.RoleId == 5 || userInfo.RoleId == 6)
+                                        {
+                                            <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> View E-Invoice </button>
+                                        }
+                                    }
+                                    @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn != null)
+                                    {
+                                        <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px">Send Invoice</button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+
+                                    }
+                                    @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn == null)
+                                    {
+
+                                        <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px;">Send Invoice</button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+                                        if (@item.FinalAmount > 0)
+                                        {
+                                            if (item.creditNoteNumber != null && item.creditNoteNumber != "")
+                                            {
+                                                <button type="button" class="btn btn-warning btn-xs" onclick="downloadCreditNote('@Url.Action("CreateCreditNoteV2", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', '@item.CreditNoteTotalamount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                                if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.creditNoteNumber != "" && item.LastEmailSendOn == null)
+                                                {
+                                                    <button type="button" class="btn btn-warning btn-xs" onclick="cancelCreditNote('@item.creditNoteNumber')" style="width:135px;">Cancel E-Credit Note</button>
+                                                }
+                                                <button type="button" class="btn btn-warning btn-xs" onclick="DebitNote('@Url.Action("CreateDebitNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "DebitNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId', '@item.DebitNoteNumber', '@item.CreditNoteTotalamount')" style="width: 135px; background-color: #c19292de; ">Generate Debit Note</button>
+
+                                            }
+                                            else
+                                            { <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber','@item.WorkOrderId')" style="width:135px; display:none">Generate E-Credit Note</button>
+                                        }
+
+
+                                    }
+                                    @if ((userInfo.RoleId == 6 && item.InvoiceNumber == ""))
+                                    {
+                                        <button class="btn btn-secondary btn-xs" onclick="EditPaymentDetails('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.ProvisionalBillNo', '@item.ProvisionalBillId', event.target.innerText, '@item.UserName', '@item.CustomerId', '@item.InvoiceNumber', '@item.FinalAmount', '@item.PaymentNumber', '@item.PaymentNumber')" style="width: 135px; color: white; background-color: darkseagreen">Payment Details </button>
+                                        <button class="btn btn-danger btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> Generate E-Invoice </button>
+                                    }
+
+                                </td>
+
+
+                                @if (userInfo.UserName == "Subodh Dixit")
+                                {
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')">Cancel PB</button>
+
+                                    </td>
+
+
+                                }
+                            </tr>
+
+                        }
+                        else if (item.RemainOrderPayment == true)
+                        {
+                            {
+                                <tr>
+
+                                    <td><div class="paidtext" id="msg">UnPaid</div>@item.ProvisionalBillNo</td>
+                                    <td>@item.Zone</td>
+                                    <td>@item.CustomerName</td>
+                                    @if (userInfo.RoleId == 6 || userInfo.RoleId == 5)
+                                    {
+                                        <td><strong>@item.InvoiceNumber</strong></td>
+                                        <td><strong>@item.creditNoteNumber</strong></td>
+                                        <td><strong>@item.DebitNoteNumber</strong></td>
+
+                                    }
+                                    @if (userInfo.RoleId == 6)
+                                    {
+                                        if (item.LastEmailSendOn == null)
+                                        {
+                                            <td>@item.LastEmailSendOn</td>
+                                        }
+                                        else
+                                        {
+                                            <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                        }
+                                    }
+
+                                    <td>@item.TillFromDate.ToShortDateString()</td>
+                                    <td>@item.EndDate.ToShortDateString()</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.FinalAmount</td>
+                                    <td>@item.CreditNoteTotalamount</td>
+                                    <td>@item.BalanceAmount</td>
+                                    <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+                                    <td hidden><button type="button" class="btn btn-danger btn-xs" onclick="ViewEmailView('@item.ProvisionalBillId','@item.AuthorizerEmail','@item.CustomerName','@item.Authorized','@item.WorkOrderId','@item.UserName')">Email</button></td>
+                                    <td style="width:70px">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.open('@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })')" style="width:135px">View Proforma Invoice</button>
+                                        @if (item.InvoiceNumber == "")
+                                        {
+                                            <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, provisionalbillno = item.ProvisionalBillNo, PreviewType = "PreviewDetails" })', '@item.UserName', '@item.ProvisionalBillNo','@item.WorkOrderId','@item.FinalAmount', event.target.innerText)" style="width:135px;"> Preview Invoice </button>
+                                        }
+
+                                        @if (item.InvoiceNumber != "")
+                                        {
+                                            if (userInfo.RoleId == 5 || userInfo.RoleId == 6)
+                                            {
+                                                <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> View E-Invoice </button>
+                                            }
+                                        }
+                                        @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn != null)
+                                        {
+                                            <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px">Send Invoice</button>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+
+                                        }
+                                        @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn == null)
+                                        {
+
+                                            <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px;">Send Invoice</button>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+                                            if (@item.FinalAmount > 0)
+                                            {
+                                                if (item.creditNoteNumber != null && item.creditNoteNumber != "")
+                                                {
+                                                    <button type="button" class="btn btn-warning btn-xs" onclick="downloadCreditNote('@Url.Action("CreateCreditNoteV2", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', '@item.CreditNoteTotalamount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                                    if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.creditNoteNumber != "" && item.LastEmailSendOn == null)
+                                                    {
+                                                        <button type="button" class="btn btn-warning btn-xs" onclick="cancelCreditNote('@item.creditNoteNumber')" style="width:135px;">Cancel E-Credit Note</button>
+                                                    }
+                                                    <button type="button" class="btn btn-warning btn-xs" onclick="DebitNote('@Url.Action("CreateDebitNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "DebitNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId', '@item.DebitNoteNumber', '@item.CreditNoteTotalamount')" style="width: 135px; background-color: #c19292de; ">Generate Debit Note</button>
+
+                                                }
+                                                else
+                                                { <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber','@item.WorkOrderId')" style="width:135px; display:none">Generate E-Credit Note</button>
+                                            }
+
+
+                                        }
+                                        @if ((userInfo.RoleId == 6 && item.InvoiceNumber == ""))
+                                        {
+
+                                            <button class="btn btn-danger btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> Generate E-Invoice </button>
+                                            <button class="btn btn-secondary btn-xs" onclick="EditPaymentDetails('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.ProvisionalBillNo', '@item.ProvisionalBillId', event.target.innerText, '@item.UserName', '@item.CustomerId', '@item.InvoiceNumber', '@item.FinalAmount', '@item.PaymentNumber', '@item.PaymentNumber')" style="width: 135px; color: white; background-color: darkseagreen">Payment Details </button>
+
+
+                                        }
+
+
+                                    </td>
+
+
+                                    @if (userInfo.UserName == "Subodh Dixit")
+                                    {
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')" style="width:135px;">Cancel PB</button>
+
+                                        </td>
+
+
+                                    }
+                                </tr>
+
+                            }
+                        }
+
+                        else
+                        {
+                            <tr>
+
+                                <td>@item.ProvisionalBillNo</td>
+                                <td>@item.Zone</td>
+                                <td>@item.CustomerName</td>
+                                @if (userInfo.RoleId == 6 || userInfo.RoleId == 5)
+                                {
+                                    <td><strong>@item.InvoiceNumber</strong></td>
+                                    <td><strong>@item.creditNoteNumber</strong></td>
+                                    <td><strong>@item.DebitNoteNumber</strong></td>
+                                }
+                                @if (userInfo.RoleId == 6)
+                                {
+                                    if (item.LastEmailSendOn == null)
+                                    {
+                                        <td>@item.LastEmailSendOn</td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                    }
+                                }
+
+                                <td>@item.TillFromDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FinalAmount</td>
+                                <td>@item.CreditNoteTotalamount</td>
+                                <td>@item.BalanceAmount</td>
+                                <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+
+
+
+                                <td hidden><button type="button" class="btn btn-danger btn-xs" onclick="ViewEmailView('@item.ProvisionalBillId','@item.AuthorizerEmail','@item.CustomerName','@item.Authorized','@item.WorkOrderId','@item.UserName')">Email</button></td>
+
+                                @*<td><a href="@Url.Action("DownloadProvisionalBillPDF", "ServiceRequest", new { Id = item.ProvisionalBillId })" class="btn btn-primary btn-xs">View Provisional Bill</a></td>*@
+
+
+                                <td style="width:70px">
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="window.open('@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })')" style="width:135px">View Proforma Invoice</button>
+                                    @if (item.InvoiceNumber == "")
+                                    {
+                                        <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, provisionalbillno = item.ProvisionalBillNo, PreviewType = "PreviewDetails" })', '@item.UserName', '@item.ProvisionalBillNo','@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px;"> Preview Invoice </button>
+                                    }
+
+                                    @if (item.InvoiceNumber != "")
+                                    {
+                                        if (userInfo.RoleId == 5 || userInfo.RoleId == 6)
+                                        {
+                                            <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> View E-Invoice </button>
+                                        }
+                                    }
+                                    @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn != null)
+                                    {
+                                        <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px">Send Invoice</button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+
+                                    }
+                                    @if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.LastEmailSendOn == null)
+                                    {
+
+                                        <button type="button" class="btn btn-success btn-xs" onclick="SaveEmailDetails('@item.WorkOrderId','@item.ProvisionalBillId')" style="width:135px;">Send Invoice</button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelInvoiceDetail('@item.InvoiceNumber','@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px">Cancel Invoice</button>
+                                        if (@item.FinalAmount > 0)
+                                        {
+                                            if (item.creditNoteNumber != null && item.creditNoteNumber != "")
+                                            {
+                                                <button type="button" class="btn btn-warning btn-xs" onclick="downloadCreditNote('@Url.Action("CreateCreditNoteV2", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', '@item.CreditNoteTotalamount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                                if (userInfo.RoleId == 6 && item.InvoiceNumber != "" && item.creditNoteNumber != "" && item.LastEmailSendOn == null)
+                                                {
+                                                    <button type="button" class="btn btn-warning btn-xs" onclick="cancelCreditNote('@item.creditNoteNumber')" style="width:135px;">Cancel E-Credit Note</button>
+                                                }
+                                                <button type="button" class="btn btn-warning btn-xs" onclick="DebitNote('@Url.Action("CreateDebiteNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "DebitNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId', '@item.DebitNoteNumber', '@item.CreditNoteTotalamount')" style="width: 135px; background-color: #c19292de; ">Generate Debit Note</button>
+
+                                            }
+                                            else
+                                            { <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber', '@item.WorkOrderId',@item.ServiceDays,@item.ServiceCharge,@item.Fare,@item.PocketExpensesDays,@item.PocketExpenses,@item.BoardingDays,@item.BoardingCharges,@item.ConveyanceExpenses,@item.OvertimeHours,@item.OvertimeCharges,@item.ServiceChargeAmount,@item.FinalAmount,@item.AmountBeforeTax,)" style="width:135px">Generate E-Credit Note</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-warning btn-xs" onclick="createCreditInv('@Url.Action("CreateCreditNote", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "CreditNote", item.InvoiceNumber })', '@item.UserName', '@item.ProvisionalBillId', '@item.FinalAmount', event.target.innerText, '@item.InvoiceNumber','@item.WorkOrderId')" style="width:135px; display:none">E-Credit Note</button>
+                                        }
+                                        <button class="btn btn-secondary btn-xs" onclick="EditPaymentDetails('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.ProvisionalBillNo', '@item.ProvisionalBillId', event.target.innerText, '@item.UserName', '@item.CustomerId', '@item.InvoiceNumber', '@item.FinalAmount', '@item.PaymentNumber', '@item.PaymentNumber')" style="width: 135px; color: white; background-color: darkseagreen">Payment Details </button>
+
+
+                                    }
+                                    @if ((userInfo.RoleId == 6 && item.InvoiceNumber == ""))
+                                    {
+
+                                        <button class="btn btn-danger btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.UserName', '@item.ProvisionalBillNo', '@item.WorkOrderId', '@item.FinalAmount', event.target.innerText)" style="width:135px"> Generate E-Invoice </button>
+                                        <button class="btn btn-secondary btn-xs" onclick="RecordPayemnt('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })', '@item.ProvisionalBillNo', '@item.ProvisionalBillId', event.target.innerText, '@item.UserName', '@item.CustomerId', '@item.InvoiceNumber', '@item.FinalAmount', '@item.PaymentNumber')" style="width: 135px; color: white; background-color: darkseagreen"> Record Payment </button>
+
+                                    }
+
+                                </td>
+
+
+                                @if (userInfo.UserName == "Subodh Dixit")
+                                {
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo');">Cancel PB</button>
+
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>P.I. No.</th>
+                    <th>Zone</th>
+                    <th>Customer Name</th>
+                    @if (userInfo.RoleId == 8)
+                    {
+                        <th>Invoice Number</th>
+                        <th>Last SendOn</th>
+                    }
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Username</th>
+                    <th>Amount</th>
+                    <th>CRN</th>
+                    <th>Balance Amt</th>
+                    @*<th>Option</th>*@
+                    <th>Timesheet</th>
+                    @*<th>Email</th>*@
+                    @if (userInfo.RoleId == 8)
+                    {
+                        <th>Invoice</th>
+                    }
+                    @if (userInfo.UserName == "Subodh Dixit")
+                    {
+                        <th>Action</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ServiceRequestList)
+                {
+
+                    if (item.Cancelled == true)
+                    {
+
+                        <tr style="background-color:red">
+
+                            <td>@item.ProvisionalBillNo</td>
+                            <td>@item.Zone</td>
+                            <td>@item.CustomerName</td>
+                            @if (userInfo.RoleId == 8)
+                            {
+                                <td><strong>@item.InvoiceNumber</strong></td>
+                                @*<td><strong>@item.creditNoteNumber</strong></td>
+                                    <td><strong>@item.DebitNoteNumber</strong></td>*@
+                                if (item.LastEmailSendOn == null)
+                                {
+                                    <td>@item.LastEmailSendOn</td>
+                                }
+                                else
+                                {
+                                    <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                }
+                            }
+
+                            <td>@item.TillFromDate.ToShortDateString()</td>
+                            <td>@item.EndDate.ToShortDateString()</td>
+                            <td>@item.UserName</td>
+                            <td>@item.FinalAmount</td>
+                            <td>@item.CreditNoteTotalamount</td>
+                            <td>@item.BalanceAmount</td>
+                            <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+                            <td hidden id="WID" value="@item.WorkOrderId"></td>
+
+
+                            @if (userInfo.RoleId == 8)
+                            {
+
+                                <td style="width:70px">
+                                    <a href="@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View Proforma Invoice</a>
+                                    @if (userInfo.RoleId == 8 && item.InvoiceNumber != "")
+                                    {
+                                        <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice"})', '@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px; display:none"> View E-Invoice </button>
+
+                                    }
+                                </td>
+
+                            }
+
+                            @if (userInfo.UserName == "Subodh Dixit")
+                            {
+
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')" style="width:112px;">Cancel PB</button>
+                                </td>
+                            }
+                        </tr>
+
+                    }
+                    else
+                    {
+                        if (item.Paid == true)
+                        {
+                            <tr style="background-color: #dff0d8">
+
+                                <td>@item.ProvisionalBillNo</td>
+                                <td>@item.Zone</td>
+                                <td>@item.CustomerName</td>
+                                @if (userInfo.RoleId == 8)
+                                {
+                                    <td><strong>@item.InvoiceNumber</strong></td>
+                                    if (item.LastEmailSendOn == null)
+                                    {
+                                        <td>@item.LastEmailSendOn</td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                    }
+                                }
+
+                                <td>@item.TillFromDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FinalAmount</td>
+                                <td>@item.CreditNoteTotalamount</td>
+                                <td>@item.BalanceAmount</td>
+                                <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+
+                                @if (userInfo.RoleId == 8)
+                                {
+                                    <td style="width:70px">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.open('@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })')">View Proforma Invoice</button>
+                                        @*<a href="@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, PreviewType = "PreviewDetails" })" class="btn btn-primary btn-xs">PreView Invoice</a>*@
+
+                                        @if (userInfo.RoleId == 8 && item.InvoiceNumber != "")
+                                        {
+                                            <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px;"> View E-Invoice </button>
+
+                                        }
+
+                                    </td>
+
+                                }
+                                @if (userInfo.UserName == "Subodh Dixit")
+                                {
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')" style="width:112px;">Cancel PB</button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+
+                        else
+                        {
+                            <tr>
+
+                                <td>@item.ProvisionalBillNo</td>
+                                <td>@item.Zone</td>
+                                <td>@item.CustomerName</td>
+                                @if (userInfo.RoleId == 8)
+                                {
+                                    <td><strong>@item.InvoiceNumber</strong></td>
+                                    if (item.LastEmailSendOn == null)
+                                    {
+                                        <td>@item.LastEmailSendOn</td>
+                                    }
+                                    else
+                                    {
+                                        <td><strong>@item.LastEmailSendOn.Value.ToShortDateString()</strong></td>
+                                    }
+                                }
+
+                                <td>@item.TillFromDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.UserName</td>
+                                <td>@item.FinalAmount</td>
+                                <td>@item.CreditNoteTotalamount</td>
+                                <td>@item.BalanceAmount</td>
+                                <td><a href="@Url.Action("TimeSheet", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">View TimeSheet</a></td>
+
+                                @if (userInfo.RoleId == 8)
+                                {
+                                    <td style="width:70px">
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="window.open('@Url.Action("PreviewServiceRequest", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId })')">View Proforma Invoice</button>
+                                        @if (userInfo.RoleId == 8 && item.InvoiceNumber != "")
+                                        {
+                                            <button class="btn btn-info btn-xs" onclick="genInvoice('@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { ProvisionalBillId = item.ProvisionalBillId, workOrderId = item.WorkOrderId, Initiator = "ViewInvoice" })', '@item.UserName', '@item.ProvisionalBillNo', '@item.FinalAmount', event.target.innerText)" style="width:135px;"> View E-Invoice </button>
+
+                                        }
+                                    </td>
+
+                                }
+                                @if (userInfo.UserName == "Subodh Dixit")
+                                {
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="CancelPbInvoice('@item.ProvisionalBillId','@item.ProvisionalBillNo')" style="width:112px;">Cancel PB</button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+
+        <br />
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <td>
+                        @if (i != Model.CurrentPageIndex)
+                        {
+                            <a href="javascript:PagerClick(@i);">@i</a>
+                        }
+                        else
+                        {
+                            <span>@i</span>
+                        }
+                    </td>
+                }
+            </tr>
+        </table>
+    }
+
+
+    @if (TotalNumberCounts == PageSize)
+    {
+
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrnetPageNo == 1)
+                {
+                    <div class="col-md-4 cell" onclick="submitResult(@Model.CurrnetPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="submitResult(@Model.CurrnetPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-3 cell active" onclick="submitResult(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="submitResult(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="submitResult(@Model.CurrnetPageNo+1);">Next</div>
+            </div>
+        </div>
+    }
+    else if (TotalNumberCounts == 0)
+    {
+        <div class="col-lg-10"> There is no Record</div>
+        <div class="pagination">
+            <div class="row">
+                <div class="col-md-10 cell" onclick="submitResult(@Model.CurrentPageNo-1);">Prev</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPageNo == 1)
+                {
+                    <div class="col-md-6 cell" onclick="submitResult(@Model.CurrentPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-5 cell" onclick="submitResult(@Model.CurrentPageNo-1);">Prev</div>
+                }
+                @{
+
+                    int startIndex = Model.CurrentPageNo - (Model.CurrentPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrentPageNo; i++)
+                {
+                    if (i == Model.CurrentPageNo)
+                    {
+                        <div class="col-md-5 cell active" onclick="submitResult(@i);">@Model.CurrentPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 cell " onclick="submitResult(@i);">@i</div>
+                    }
+                }
+            </div>
+        </div>
+
+
+    }
+    <div class="pull-right">@TotalNumberCounts Records Found</div>
+
+    <div class="modal fade" id="myMailModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style=" padding: 0px; border-bottom: 1px solid #e5e5e5; background-color: #1183ca; color: white;">
+                    <div class="col-lg-12" style=" padding: 15px;">
+                        <h4 class="modal-title d-inline-block" style=" display: inline-block;">
+                            <label>Record Email Details </label>
+                        </h4>
+                        <button type="button" class="close" onclick="clearCache();" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+
+                    <label for="BankName">To</label>
+                    @Html.TextBoxFor(d => d.Customer.CustomerName, new { id = "PaymentDetails", @class = "form-control" })
+                    <label for="DatePaid">Send On</label>
+                    <input type="text" class="form-control" id="DateSendON" data-toggle="datepicker">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal" onclick="clearCache();">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="RecordEmail()" id="sendrecordpayment">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*Modal Region*@
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Send Email</h4>
+                </div>
+                <div class="modal-body">
+                    @if (userInfo.RoleId == 6)
+                    {
+                        <p style="color:red;">Notes: Please Make Sure that Invoice got gernerated, In Case of EmailInvoiceBill</p>
+
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="rado1" value="PB"> Email Proforma Invoice
+                        </label>
+                        <label class="radio-inline" id="radioInvoiceBillLabel">
+                            <input type="radio" name="inlineRadioOptions" id="radioInvoiceBill" value="IB"> Email E-Invoice
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="pro" value="PB" checked> Email Provisonal Bill
+                        </label>
+                    }
+                    <input type="text" name="bookId1" id="bookId1" value="" class="form-control" placeholder="Enter Email ID" />
+                    <input type="text" name="bookId2" id="bookId2" value="" style="margin-top:10px" class="form-control" placeholder="Add another Email ID" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal" onclick="fillDetails()">Close</button>
+                    <button type="button" class="btn btn-success pull-right" id="emailsubmit" onclick="SendEmail($('input[name=inlineRadioOptions]:checked').val());">Send</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="alertModall" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="text1" style=" font-weight: bold;  font-size: 20px; color: white; }"></h4>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Proforma Invoice No  :</b></h4>
+                        <p id="PBillNo" style="font-size: 16px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name  :</b></h4>
+
+                        <p id="Usrnm" style="font-size: 16px; padding-left: 0px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Total Amount  :</b></h4>
+                        <p id="finalAmount" style="font-size: 16px; padding-left: 0px;" class="text-left inline-block">$</p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="GetNextPage()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="creditNoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="creditnote-content">
+                <div class="modal-header listdatadropdown " style="height:50px;">
+                    <h4 class="modal-title listItem-Content," id="msg" style=" font-weight: bold;  font-size: 18px; color: white;">Generate E-CreditNote</h4>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">InvoiceNo:</b></h4>
+                            </div>
+                            <div class="col-md-3">
+                                <p id="invoiceNumber" style="font-size: 15px;font-weight:bold; margin-top:10px;"></p>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" value="" id="invoiceNumber" style="font-size: 16px; font-weight:bold; display:inline-block;" class="text-left inline-block">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:16px;">Amt Before Tax:</b></h4>
+                            </div>
+                            <div class="col-md-3">
+                                <p id="TotalAmountBeforeTax" style="font-size: 16px; font-weight: bold; color: darkgrey; margin-top: 10px"></p>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Username:</b></h4>
+                            </div>
+                            <div class="col-md-3">
+                                <p id="Name" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block;"></p>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="hidden" id="Name" style="font-size: 16px; font-weight: bold; display: inline-block;" class="text-left inline-block">
+                                <h4 class="text-left d-inline-block blockkk"><b style=" font-size:15px;">Amt After Tax : </b></h4>
+                            </div>
+                            <div class="col-md-3">
+                                <p id="TotalAmountAfterText" style="font-size:16px; font-weight: bold; display: inline-block; margin-left: 15px; color: darkgrey;"></p>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px">Service Charge  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <p id="ServiceChargeqty" hidden style="font-size:15px; padding-left: 0px; font-weight: bold; display: inline-block; color: darkgrey;" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" id="ServiceChargeRate" style="font-size: 16px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                                <input type="text" id="ServiceChargeAmount" style="font-size: 15px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block" oninput="CalCulatetotalCreditAmount()">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk "><b style="font-size:15px">To & fro air fare/rail fare  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <p id="railairfare" style="font-size: 16px; color: darkgrey; font-weight: bold; display: inline-block;" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" id="railairfareAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px" class="text-left inline-block" oninput="CalCulatetotalCreditAmount()">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px">Pocket Expence  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <p id="Pocketexpence" style="font-size: 15px; padding-left: 0px; font-weight: bold; color: darkgrey; display: inline-block; width: 100px" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" id="PocketexpenceQty" hidden style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 100px;margin-left:98px" class="text-left inline-block">
+                                <input type="text" id="PocketexpenceAmount" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" oninput="CalCulatetotalCreditAmount()" class="text-left inline-block">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Loading and Boarding  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" id="Amount" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block">
+                                <p id="LoadingBoarding" style="font-size: 15px; padding-left: 0px; font-weight: bold;  color:darkgray; display: inline-block; width: 100px" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" hidden id="LoadingBoardingQty" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block;width: 100px;margin-left:46px" class="text-left inline-block">
+                                <input type="hidden" hidden id="LoadingBoardingRate" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                                <input type="text" id="LoadingBoardingAmount" style="font-size:15px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px; margin-left:0px" class="text-left inline-block" oninput="CalCulatetotalCreditAmount()">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk "><b style="font-size:15px;">Convenyance & Inceidental Expenses  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" hidden id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block">
+                                <p id="ConvenyanceInceidentalExp" style="font-size: 15px; padding-left: 0px; font-weight: bold; color:darkgray; display: inline-block; width: 100px;" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input hidden type="hidden" id="ConvenyanceInceidentalExpQty" style="font-size: 16px; font-weight: bold; display: inline-block;" class="text-left inline-block">
+                                <input hidden type="hidden" id="ConvenyanceInceidentalRate" style="font-size: 16px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                                <input type="text" id="ConvenyanceInceidentalAmount" style="font-size: 16px; font-weight: bold; display: inline-block;  width: 100px;" class="text-left inline-block " oninput="CalCulatetotalCreditAmount()">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Over Time Hour  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <input hidden type="hidden" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block">
+                                <p id="OverTimehour" style="font-size: 15px; padding-left: 0px; font-weight: bold; color:darkgray; display: inline-block; width: 100px;" class="text-left inline-block"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <input hidden type="hidden" id="OverTimehourQty" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 100px;" class="text-left inline-block">
+                                <input hidden type="hidden" id="OverTimehourRate" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                                <input type="text" id="OverTimehourAmount" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px;" class="text-left inline-block" oninput="CalCulatetotalCreditAmount()">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px">Total Amount BeforeTax  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <p id="totalcreditAmt" style="font-size: 15px; font-weight: bold; color:darkgray; display: inline-block; width: 100px;" class="text-left inline-block"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Gst Amount :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <p id="GstAmount" style="font-size: 15px; color: darkgrey; font-weight: bold; display: inline-block; width: 100px;" class="text-left inline-block"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Total Amount After Tax  :</b></h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <p id="creditamountAfterTax" style="font-size: 18px; font-weight: bold; color:black; display: inline-block; width: 100px;" class="text-left inline-block"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-warning btnn" style="padding:6px 28px" data-dismiss="modal" onclick="CreateCreditNote()">Generate Credit Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="DebitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="text1" style=" font-weight: bold;  font-size: 20px; color: white;">Are You Sure To Generate DebitNote</h4>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Invoice No  :</b></h4>
+                        <p id="DebitnotePbillNo" style="font-size: 16px; font-weight:700;display:contents;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name  :</b></h4>
+
+                        <p id="DebitNoteUsername" style="font-size: 16px; font-weight: 700; display: contents; " class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Total Amount  :</b></h4>
+
+                        <p id="DebitNotefinalAmountt" style="font-size: 16px; font-weight: 700; display: contents;" class="text-left inline-block">$</p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="DebitnoteGenerated()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="alertModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," @*id="text11"*@ style=" font-weight: bold; font-size: 20px; color: white; }">Are you sure to cancel E-Invoice</h4>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        @*<h4 class="text-left d-inline-block blockkk"><b>PerformaInvoice No  :</b></h4>
+                            <p id="PBillNoo" style="font-size: 16px;" class="text-left inline-block"></p>
+                            <br />*@
+                        <h4 class="text-left d-inline-block blockkk"><b>Invoice No  :</b></h4>
+                        <p id="text111" style="font-size: 16px;" class="text-left inline-block"></p>
+                        <br />
+
+                        <h4 class="text-left d-inline-block blockkk"><b>User Name  :</b></h4>
+                        <p id="Usrnmm" style="font-size: 16px; padding-left: 0px;" class="text-left inline-block"></p>
+                        <br />
+
+                        <h4 class="text-left d-inline-block blockkk"><b>Total Amount  :</b></h4>
+                        <p id="finalAmounts" style="font-size: 16px; padding-left: 0px;" class="text-left inline-block">$</p>
+                        <br />
+
+                        <p id="warn" style="color:red;font-size:12px">*E-Invoice can be cancelled within 24 hours only!</p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturll" />
+                </div>
+                <div class="modal-footer" style="margin-top:-14px">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick=" cancellInvoice()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alertModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," style=" font-weight: bold; font-size: 20px; color: white; }">Alert</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <p id="Messagee" style="font-size: 16px; font-weight:bold;" class="text-left inline-block"></p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturll" />
+                </div>
+                <div class="modal-footer" style="margin-top:-14px">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="clearLocalstorage()">OK</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="RecordPayemntModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #31b0d5;padding:3px;">
+                    <button type="button" class="close" data-dismiss="modal" style="margin-bottom: -12px; padding-right: 14px; ">&times;</button>
+                    <div class="col-lg-12">
+                        <h4 class="modal-title">
+                            <label>Record Payment </label>
+
+                        </h4>
+                        <h4 class="modal-title" style="text-align:right">
+                            <label style="text-align:left;font-size:14px">Last Payment No.:</label>
+                            <label id="PaymentNumber" style="text-align:right;font-size:14px"> </label>
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="PaymentMethod">Customer Name :</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="PaymentMethod" id="CustomerName" style=" margin-left: -4px;"></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <div class="col-md-4 text-left">
+                            <label for="PaymentMethod">P.InvoiceNmber:</label>
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label for="PaymentMethod" id="InvoiceNumber" style=" margin-left: 0px;"></label>
+                        </div>
+
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">Invoice Amount</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="InvoiceAmount" style="width: 100%; margin-left: 0px;" disabled>
+                        </div>
+
+                        <div class="col-md-4" id="remainingamttxt" style="display:none;">
+                            <label for="PaymentMethod" id="RemainingAmounttext"></label>
+                        </div>
+                        <div class="col-md-2" id="remainingamt" style="display:none;">
+                            <label for="PaymentMethod" id="remainAmount" style=" margin-left: 7px; color: #CC3333;"></label>
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <div class=" row">
+
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">Amt. to be Paid</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="AmountPaid" style="width:100%" autocomplete="off">
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <label for="PaymentMethod">TDS</label>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <input type="text" id="TDS" style="width: 100%; margin-left: -14px;" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <div class=" row">
+                        <div class="col-md-3 text-left">
+                            <label for="PaymentMethod">Payment Date</label>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <input type="text" class="form-control" id="DatePaid" data-toggle="datepicker" style="width:100%;">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">Payment Mode</label>
+                        </div>
+                        @Html.DropDownListFor(p => p.OrderPayment.SelectedPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select", new { id = "PaymentMethod", @class = "form-control", style = " width: 20%; height: 28px;" })
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SavePaymentDetails()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="PaymentDetailsModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #31b0d5;padding:3px;height:53px;">
+                    @*<button type="button" class="close" data-dismiss="modal" style="margin-bottom: -12px; padding-right: 14px; ">&times;</button>*@
+                    <div class="col-lg-12">
+                        <h4 class="modal-title">
+                            <label> Payment Details</label>
+                            <label style="text-align:left;font-size:14px;margin-left:250px;">Last Payment No.:</label>
+                            <label id="paymentnumber" style="text-align:right;font-size:14px;"> </label>
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="PaymentMethod">Customer Name :</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="PaymentMethod" id="customername" style="margin-left: -41px; color: #3d76b8eb; font-weight: 500; "></label>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="PaymentMethod">P.Invoice Number :</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="PaymentMethod" id="pinvoicenumber" style="margin-left: -41px; color: #3d76b8eb; font-weight: 500; "></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=" row">
+                        <div class="col-md-4">
+                            <label for="PaymentMethod">Total Amount Paid</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="PaymentMethod" id="totalamoutpaid" style="margin-left:-40px; color: #3d76b8eb; font-weight: 400; "></label>
+                            @*<input type="text" id="AmountPaid" style="width:100%" disabled>*@
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">TDS Amount</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="PaymentMethod" id="tdsamount" style="margin-left: -17px; color: #3d76b8eb; font-weight: 400; "></label>
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class=" row">
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">Invoice Amount</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="PaymentMethod" id="invoiceamount" style="margin-left: 9px; color: #3d76b8eb; font-weight: 400; "></label>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="PaymentMethod">Payment Mode</label>
+                        </div>
+                        <label for="PaymentMethod" id="paymentmode" style="color: #3d76b8eb; font-weight: 400;"></label>
+
+                    </div>
+                    <br />
+                    <div class=" row">
+                        <div class="col-md-3 text-left">
+                            <label for="PaymentMethod">Payment Date</label>
+                        </div>
+                        <div class="col-md-3 text-left" style="display:contents">
+                            <label for="PaymentMethod" id="DateofPayment" style="margin-left: 23px; color: #3d76b8eb; font-weight: 400; "></label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row hidden">
+        <div class="col-md-3">
+            <h4 class="text-left d-inline-block blockkk"><b style="font-size:15px;">Username:</b></h4>
+        </div>
+        <div class="col-md-3">
+            <p id="Name" style="font-size: 15px; padding-left: 0px; font-weight: bold; display: inline-block;"></p>
+        </div>
+        <div class="col-md-3">
+            <input type="hidden" id="Name" style="font-size: 16px; font-weight: bold; display: inline-block;" class="text-left inline-block">
+            <h4 class="text-left d-inline-block blockkk"><b style=" font-size:15px;">Amt After Tax : </b></h4>
+        </div>
+        <div class="col-md-3">
+            <p id="TotalAmountAfterText" style="font-size:16px; font-weight: bold; display: inline-block; margin-left: 15px; color: darkgrey;"></p>
+        </div>
+
+    </div>
+    <script>
+        //$(document).ready(function () {
+        //    localStorage.removeItem("ServiceRequestViewModel");
+        //});
+
+    function createCreditInv(a, username, PBillNo, finalAmount, message, invNum, WID, ServiceDays, ServiceCharge, fare, PocketExpensesDays, PocketExpenses, BoardingDays, BoardingCharges, ConveyanceExpenses, OvertimeHours, OvertimeCharges, ServiceChargeAmount, FinalAmount, AmountBeforeTax) {
+        console.log(FinalAmount);
+        localStorage.setItem("Name", username);
+        localStorage.setItem("WID", WID);
+        localStorage.setItem("msg", message);
+        console.log(text1, a)
+        localStorage.setItem("PsbId", PBillNo);
+
+        localStorage.setItem("invoiceNumber", invNum)
+        var msgText = /*"Are you sure to " +*/ message;
+
+        $('#invoiceNumber').text(invNum);
+        $('#Name').text(username);
+        $('#LoadingBoardingAmount').val(BoardingDays * BoardingCharges);
+        $('#ServiceChargeAmount').val(ServiceChargeAmount);
+        $('#railairfareAmount').val(fare);
+        $('#PocketexpenceAmount').val(PocketExpensesDays * PocketExpenses);
+        $('#ConvenyanceInceidentalAmount').val(ConveyanceExpenses);
+        $('#OverTimehourAmount').val(OvertimeHours * OvertimeCharges);
+
+        document.getElementById("TotalAmountAfterText").innerHTML = FinalAmount;
+        document.getElementById("ServiceChargeqty").innerHTML = ServiceChargeAmount;
+        document.getElementById("railairfare").innerHTML = fare;
+        document.getElementById("Pocketexpence").innerHTML = (PocketExpensesDays * PocketExpenses);
+        document.getElementById("LoadingBoarding").innerHTML = (BoardingDays * BoardingCharges);
+        document.getElementById("ConvenyanceInceidentalExp").innerHTML = ConveyanceExpenses;
+        document.getElementById("OverTimehour").innerHTML = (OvertimeHours * OvertimeCharges);
+        document.getElementById("TotalAmountBeforeTax").innerHTML = (AmountBeforeTax);
+        document.getElementById("totalcreditAmt").innerHTML = (AmountBeforeTax);
+        document.getElementById("GstAmount").innerHTML = (FinalAmount - AmountBeforeTax);
+        $('#creditamountAfterTax').text(` ₹ ${FinalAmount}`);
+        localStorage.setItem("creditNotePartialAmt", FinalAmount);
+
+        $('#txtgeturl').val("");
+
+        var id = a;
+        if (id != '') {
+            $('#creditNoteModal').modal('show')
+            $('#txtgeturl').val(id);
+        }
+
+    }
+
+
+    function CalCulatetotalCreditAmount() {
+        let ServiceChargeAmount = document.getElementById('ServiceChargeAmount');
+        let railairfareAmount = document.getElementById('railairfareAmount');
+        let PocketexpenceAmount = document.getElementById('PocketexpenceAmount');
+        let LoadingBoardingAmount = document.getElementById('LoadingBoardingAmount');
+        let ConvenyanceInceidentalAmount = document.getElementById('ConvenyanceInceidentalAmount');
+        let OverTimehourAmount = document.getElementById('OverTimehourAmount');
+        var ttl = parseFloat(ServiceChargeAmount.value) + parseFloat(railairfareAmount.value) + parseFloat(PocketexpenceAmount.value) + parseFloat(LoadingBoardingAmount.value) + parseFloat(ConvenyanceInceidentalAmount.value) + parseFloat(OverTimehourAmount.value);
+
+        document.getElementById("totalcreditAmt").innerHTML = (ttl);
+
+
+        //var crnGst = parseFloat((ttl) * 18 / 100);
+        var crnGst = parseInt((ttl) * 18 / 100);
+        //crnGst = Math.round(crnGst);
+        debugger;
+        document.getElementById("GstAmount").innerHTML = crnGst;
+        $('#creditamountAfterTax').text(` ₹ ${parseFloat(crnGst) + parseFloat(ttl)}`);
+        localStorage.setItem("creditNotePartialAmt", parseFloat(crnGst) + parseFloat(ttl));
+
+        if (ServiceChargeAmount.value == "") {
+            $('#creditamountAfterTax').text(0);
+            $('#totalcreditAmt').text(0);
+            $('#GstAmount').text(0);
+        }
+
+        if (PocketexpenceAmount.value == "") {
+            $('#creditamountAfterTax').text(0);
+            $('#totalcreditAmt').text(0);
+            $('#GstAmount').text(0);
+        }
+        if (LoadingBoardingAmount.value == "") {
+            $('#creditamountAfterTax').text(0);
+            $('#totalcreditAmt').text(0);
+            $('#GstAmount').text(0);
+        }
+        if (OverTimehourAmount.value == "") {
+            $('#creditamountAfterTax').text(0);
+            $('#totalcreditAmt').text(0);
+            $('#GstAmount').text(0);
+        }
+    }
+
+
+    function CreateCreditNote() {
+        var PBillNo = localStorage.getItem("PsbId");
+        PBillNo = parseInt(PBillNo);
+        var WID = localStorage.getItem("WID");
+        WID = parseInt(WID);
+
+        var invoiceNumber = localStorage.getItem("invoiceNumber");
+        console.log(invoiceNumber);
+        console.log(PBillNo);
+
+
+        var ServiceChargeAmount = $('#ServiceChargeAmount').val();
+        ServiceChargeAmount = parseFloat(ServiceChargeAmount);
+
+
+        var railairfareAmount = $('#railairfareAmount').val();
+        railairfareAmount = parseFloat(railairfareAmount);
+        //if (railairfareAmount == "") {
+        //    railairfareAmount = "0"
+        //}
+
+        var PocketexpenceAmount = $('#PocketexpenceAmount').val();
+        PocketexpenceAmount = parseFloat(PocketexpenceAmount);
+        //if (PocketexpenceAmount == "") {
+        //    $('#PocketexpenceAmount').val(0);
+        //}
+
+        var LoadingBoardingAmount = $('#LoadingBoardingAmount').val();
+        LoadingBoardingAmount = parseFloat(LoadingBoardingAmount);
+
+
+        var ConvenyanceInceidentalAmount = $('#ConvenyanceInceidentalAmount').val();
+        ConvenyanceInceidentalAmount = parseFloat(ConvenyanceInceidentalAmount);
+
+        var OverTimehourAmount = $('#OverTimehourAmount').val();
+        OverTimehourAmount = parseFloat(OverTimehourAmount);
+
+        var crnPartialAmt = localStorage.getItem("creditNotePartialAmt");
+        console.log(crnPartialAmt);
+
+
+        @*var url = `@Url.Action("CreateCreditNoteV2", "ServiceRequest")?ProvisionalBillId=${PBillNo}&WorkOrderId=${WID}
+        &PreviewType=${"CreditNote"}&Initiator=${"ViewInvoice"}&invoiceNumber=${invoiceNumber}
+        &ServiceChargeAmount=${ServiceChargeAmount} &railairfareAmount=${railairfareAmount} &PocketexpenceAmount=${PocketexpenceAmount}
+        &LoadingBoardingAmount=${LoadingBoardingAmount} &ConvenyanceInceidentalAmount=${ConvenyanceInceidentalAmount}
+        &OverTimehourAmount=${OverTimehourAmount}`;*@
+
+
+        var url = `@Url.Action("CreateCreditNoteV2", "ServiceRequest")?ProvisionalBillId=${PBillNo}&WorkOrderId=${WID}
+        &PreviewType=${"CreditNote"}&Initiator=${"ViewInvoice"}&invoiceNumber=${invoiceNumber}
+        &ServiceChargeAmount=${ServiceChargeAmount} &railairfareAmount=${railairfareAmount} &PocketexpenceAmount=${PocketexpenceAmount}
+        &LoadingBoardingAmount=${LoadingBoardingAmount} &ConvenyanceInceidentalAmount=${ConvenyanceInceidentalAmount}
+        &OverTimehourAmount=${OverTimehourAmount}&totalCrnPartialAmt=${crnPartialAmt}`;
+        window.location.href = url;
+        localStorage.clear();
+
+    }
+
+        function downloadCreditNote(a, username, PBillNo, finalAmount, creditNoteAmont, message, invNum, WID) {
+
+        var invoiceNumber = invNum;
+
+        var ServiceChargeAmount = $('#ServiceChargeAmount').text();
+        if (ServiceChargeAmount == "") {
+            ServiceChargeAmount = 0;
+        }
+
+
+        var railairfareAmount = $('#railairfareAmount').text();
+        if (railairfareAmount == "") {
+            railairfareAmount = 0;
+        }
+
+        var PocketexpenceAmount = $('#PocketexpenceAmount').text();
+
+        if (PocketexpenceAmount == "") {
+            PocketexpenceAmount = 0;
+        }
+
+        var LoadingBoardingAmount = $('#LoadingBoardingAmount').text();
+        if (LoadingBoardingAmount == "") {
+            LoadingBoardingAmount = 0;
+        }
+
+        var ConvenyanceInceidentalAmount = $('#ConvenyanceInceidentalAmount').text();
+        if (ConvenyanceInceidentalAmount == "") {
+            ConvenyanceInceidentalAmount = 0;
+        }
+
+        var OverTimehourAmount = $('#OverTimehourAmount').text();
+        if (OverTimehourAmount == "") {
+            OverTimehourAmount = 0;
+            }
+            console.log(creditNoteAmont);
+
+        @* var crnPartialAmt = localStorage.getItem("creditNotePartialAmt");
+         console.log(crnPartialAmt);*@
+
+        var url = `@Url.Action("CreateCreditNoteV2", "ServiceRequest")?ProvisionalBillId=${PBillNo}&WorkOrderId=${WID}
+        &PreviewType=${"CreditNote"}&Initiator=${"ViewInvoice"}&invoiceNumber=${invoiceNumber}
+        &ServiceChargeAmount=${ServiceChargeAmount} &railairfareAmount=${railairfareAmount} &PocketexpenceAmount=${PocketexpenceAmount}
+        &LoadingBoardingAmount=${LoadingBoardingAmount} &ConvenyanceInceidentalAmount=${ConvenyanceInceidentalAmount}
+        &OverTimehourAmount=${OverTimehourAmount}&totalCrnPartialAmt=${creditNoteAmont}`;
+        window.location.href = url;
+    }
+
+
+        function DebitNote(a, username, PBillNo, finalAmount, message, invNum, WID, Debitenotenumber, CreditNoteTotalamount) {
+            var provisionalBillId = localStorage.setItem("PsbId", PBillNo);
+            console.log(provisionalBillId);
+        localStorage.setItem("WID", WID);
+        document.getElementById("DebitnotePbillNo").innerHTML = invNum;
+        document.getElementById("DebitNoteUsername").innerHTML = username;
+        document.getElementById("DebitNotefinalAmountt").innerHTML = CreditNoteTotalamount;
+        console.log(invoiceNumber);
+
+        var ServiceChargeAmount = $('#ServiceChargeAmount').text();
+        if (ServiceChargeAmount == "") {
+            ServiceChargeAmount = 0;
+        }
+
+
+        var railairfareAmount = $('#railairfareAmount').text();
+        if (railairfareAmount == "") {
+            railairfareAmount = 0;
+        }
+
+        var PocketexpenceAmount = $('#PocketexpenceAmount').text();
+
+        if (PocketexpenceAmount == "") {
+            PocketexpenceAmount = 0;
+        }
+
+        var LoadingBoardingAmount = $('#LoadingBoardingAmount').text();
+        if (LoadingBoardingAmount == "") {
+            LoadingBoardingAmount = 0;
+        }
+
+        var ConvenyanceInceidentalAmount = $('#ConvenyanceInceidentalAmount').text();
+        if (ConvenyanceInceidentalAmount == "") {
+            ConvenyanceInceidentalAmount = 0;
+        }
+
+        var OverTimehourAmount = $('#OverTimehourAmount').text();
+        if (OverTimehourAmount == "") {
+            OverTimehourAmount = 0;
+            }
+
+
+        if (Debitenotenumber != null && Debitenotenumber != 0 && Debitenotenumber != "") {
+        var url = `@Url.Action("CreateDebitNote", "ServiceRequest")?ProvisionalBillId=${PBillNo}&WorkOrderId=${WID}
+        &PreviewType=${"CreditNote"}&Initiator=${"CreateDebitNote"}&invoiceNumber=${invNum}
+        &ServiceChargeAmount=${ServiceChargeAmount} &railairfareAmount=${railairfareAmount} &PocketexpenceAmount=${PocketexpenceAmount}
+        &LoadingBoardingAmount=${LoadingBoardingAmount} &ConvenyanceInceidentalAmount=${ConvenyanceInceidentalAmount}
+        &OverTimehourAmount=${OverTimehourAmount}&crnTotalAmount=${CreditNoteTotalamount}`;
+        window.location.href = url;
+
+     } else {
+         $('#DebitModal').modal('show');
+     }
+
+
+ }
+
+
+
+    function DebitnoteGenerated() {
+        var PBillNo = localStorage.getItem("PsbId");
+        PBillNo = parseInt(PBillNo);
+        console.log(PBillNo);
+        var WID = localStorage.getItem("WID");
+        WID = parseInt(WID);
+
+        var invoiceNumber = localStorage.getItem("invoiceNumber");
+        var ServiceChargeAmount = $('#ServiceChargeAmount').text();
+        if (ServiceChargeAmount == "") {
+            ServiceChargeAmount = 0;
+        }
+
+
+        var railairfareAmount = $('#railairfareAmount').text();
+        if (railairfareAmount == "") {
+            railairfareAmount = 0;
+        }
+
+        var PocketexpenceAmount = $('#PocketexpenceAmount').text();
+
+        if (PocketexpenceAmount == "") {
+            PocketexpenceAmount = 0;
+        }
+
+        var LoadingBoardingAmount = $('#LoadingBoardingAmount').text();
+        if (LoadingBoardingAmount == "") {
+            LoadingBoardingAmount = 0;
+        }
+
+        var ConvenyanceInceidentalAmount = $('#ConvenyanceInceidentalAmount').text();
+        if (ConvenyanceInceidentalAmount == "") {
+            ConvenyanceInceidentalAmount = 0;
+        }
+
+        var OverTimehourAmount = $('#OverTimehourAmount').text();
+        if (OverTimehourAmount == "") {
+            OverTimehourAmount = 0;
+        }
+
+        var crnFinalAmount = $('#DebitNotefinalAmountt').text();
+        var invNumber = $('#DebitnotePbillNo').text();
+
+         var url = `@Url.Action("CreateDebitNote", "ServiceRequest")?ProvisionalBillId=${PBillNo}&WorkOrderId=${WID}
+        &PreviewType=${"CreditNote"}&Initiator=${"CreateDebitNote"}&invoiceNumber=${invNumber}
+        &ServiceChargeAmount=${ServiceChargeAmount} &railairfareAmount=${railairfareAmount} &PocketexpenceAmount=${PocketexpenceAmount}
+        &LoadingBoardingAmount=${LoadingBoardingAmount} &ConvenyanceInceidentalAmount=${ConvenyanceInceidentalAmount}
+        &OverTimehourAmount=${OverTimehourAmount}&crnTotalAmount=${crnFinalAmount}`;
+
+        window.location.href = url;
+        localStorage.removeItem("WID");
+        localStorage.removeItem("PsbId");
+    }
+
+
+        function genInvoice(a, Usrnm, PBillNo, WID, finalAmount, text1) {
+
+        localStorage.setItem("Usrnm", Usrnm);
+        localStorage.setItem("WID", WID);
+        localStorage.setItem("Usrnm", Usrnm);
+        localStorage.setItem("text1", text1);
+        console.log(text1)
+        localStorage.setItem("PBillNo", PBillNo);
+        localStorage.setItem("finalAmount", finalAmount);
+        var Message = "Are you sure to " + text1;
+        console.log(a, Usrnm, PBillNo,Message)
+
+        $('#text1').text(Message);
+        $('#PBillNo').text(PBillNo);
+        $('#Usrnm').text(Usrnm);
+        $('#finalAmount').text(` ₹ ${finalAmount}`);
+        $('#txtgeturl').val("");
+
+        var id = a;
+        if (id != '') {
+            $('#alertModall').modal('show')
+
+            $('#txtgeturl').val(id);
+        }
+    }
+
+        function GetNextPage() {
+            var geturl = $('#txtgeturl').val();
+            window.location.href = geturl;
+        }
+
+
+
+    function DownloadTimeSheet(Id)
+    {
+          $.ajax({
+            beforeSend: function () {
+                  $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("DownloadProvisionalBillPDF", "ServiceRequest")?id='+Id,
+            //data: data,
+              success: function (response) {
+                  $('.spinner-wrapper').hide();
+                window.open(response, "_blank");
+
+            },
+
+        });
+    }
+    function clearLocalstorage() {
+        localStorage.removeItem("Usrnmm");
+        localStorage.removeItem("text11");
+        localStorage.removeItem("PBillNoo");
+        localStorage.removeItem("finalAmounts");
+        localStorage.removeItem("invNo");
+        localStorage.removeItem("Usrnm");
+        localStorage.removeItem("text1");
+        localStorage.removeItem("PBillNo");
+        localStorage.removeItem("finalAmount");
+        localStorage.removeItem("customerId");
+
+    }
+
+
+
+    $(function () {
+        $('[data-toggle="datepicker"]').datepicker({
+            autoHide: true,
+            zIndex: 2048,
+            format: 'dd/mm/yyyy',
+        }).datepicker('setDate', new Date());
+    });
+
+    function showOverlay() {
+        // Adds the fullscreen overlay
+        var oDiv = $("<div></div>");
+        oDiv.attr("id", "lt_overlay");
+        oDiv.css("display", "block");
+        $("body").append(oDiv);
+
+        // Adds the spinner
+        var lDiv = $("<i></i>");
+        lDiv.attr("id", "lt_loading");
+        lDiv.addClass("fa fa-cog fa-spin fa-5x");
+        lDiv.css("display", "block");
+        $("body").append(lDiv);
+    }
+
+    function hideOverlay() {
+        $("#lt_loading").remove();
+        $("#lt_overlay").remove();
+    }
+
+
+
+    function CancelPbInvoice(pbid,pbNo) {
+        var result = confirm("Are you sure to cancel this proforma invoice ! "+ pbNo);
+        if (result) {
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                url: '@Url.Action("CancelPB", "ServiceRequest")?id=' + pbid,
+                async: false,
+                type: "POST",
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    debugger;
+                    //window.location.reload(true);
+                    var retrievedData = localStorage.getItem("ServiceRequestViewModel");
+                    var retrievedObject = JSON.parse(retrievedData);
+                    if (retrievedObject != null) {
+
+                        $.ajax({
+                            beforeSend: function () {
+                                $('.spinner-wrapper').show()
+                            },
+                            type: "POST",  // method of sending data
+                            url: '@Url.Action("ServiceRequestsList", "ServiceRequest")', // name of PHP script
+                            data: retrievedObject, // parameter name and value
+                            success: function (data) {
+                                $('.spinner-wrapper').hide();
+                                $("#divResultdata").html(data);
+                            },
+
+
+                            error: function (xhr, status, error) {
+
+                                $('.spinner-wrapper').hide();
+
+                                var errorMessage = xhr.status + ': ' + xhr.statusText
+
+                                alert('Error - ' + errorMessage);
+
+                            }
+
+
+                        });
+                    }
+                    else {
+                        window.location.reload(true);
+
+                    }
+
+                }
+            });
+        }
+    }
+    function ViewEmailView(ProvisionalBillId, AuthorizerEmail, customername, isAuthorized,worderid,username)
+    {
+
+        localStorage.setItem("ProvisionalBillId", ProvisionalBillId);
+        localStorage.setItem("AuthorizerEmail", AuthorizerEmail);
+        localStorage.setItem("CustomerName", customername);
+        localStorage.setItem("username",username);
+        localStorage.setItem("worderid", worderid);
+        $(".modal-body #bookId1").val(AuthorizerEmail);
+        $("#myModal").modal('show');
+    }
+    function SendEmail(id)
+    {
+
+        var item = id;
+        if (id == undefined)
+        {
+            alert("Please Select one Option");
+            return false;
+        }
+        var Email = $("#bookId1").val();
+        var MoreEmail = $("#bookId2").val();
+        var EmailID = Email + ';' + MoreEmail;
+        var data = {
+            ProvisionalBillId: localStorage.getItem("ProvisionalBillId"),
+            WorkOrderId: localStorage.getItem("worderid"),
+            EmailID: EmailID,
+            CName: localStorage.getItem("CustomerName"),
+            MailType: item,
+            UserName: localStorage.getItem("username")
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+                $("#emailsubmit").prop('disabled', true);
+            },
+            type: "POST",
+            url: '@Url.Action("SendEmail", "ServiceRequest")',
+            data: data,
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success") {
+                    alert("Email has been Sent!");
+                    location.reload(true);
+                    $("#myModal").modal('hide');
+                    $("#emailsubmit").prop('disabled', false);
+                    @*window.location = '@Url.Action("FilterServiceRequest", "ServiceRequest")';*@
+
+                    localStorage.removeItem("ProvisionalBillId");
+                    localStorage.removeItem("AuthorizerEmail");
+                    localStorage.removeItem("mailType");
+                    localStorage.removeItem("CustomerName");
+                    localStorage.removeItem("worderid");
+                    localStorage.removeItem("username");
+                }
+                else {
+                    alert(response);
+                    location.reload(true);
+                    $("#myModal").modal('hide');
+                    $("#emailsubmit").prop('disabled', false);
+                    @* window.location = '@Url.Action("FilterServiceRequest", "ServiceRequest")';*@
+
+                    localStorage.removeItem("ProvisionalBillId");
+                    localStorage.removeItem("AuthorizerEmail");
+                    localStorage.removeItem("mailType");
+                    localStorage.removeItem("CustomerName");
+                    localStorage.removeItem("worderid");
+                    localStorage.removeItem("username");
+                }
+
+            },
+
+        });
+
+    }
+    function fillDetails() {
+        hideOverlay();
+        $("#emailsubmit").prop('disabled', false);
+        localStorage.removeItem("ProvisionalBillId");
+        localStorage.removeItem("AuthorizerEmail");
+        localStorage.removeItem("mailType");
+        localStorage.removeItem("CustomerName");
+        localStorage.removeItem("worderid");
+        localStorage.removeItem("username");
+    }
+    function clearCache() {
+        localStorage.removeItem("WOID");
+        localStorage.removeItem("POID");
+        hideOverlay();
+    }
+    function SaveEmailDetails(workorderid,proId)
+    {
+        localStorage.setItem("WOID", workorderid);
+        localStorage.setItem("POID", proId);
+        $("#myMailModal").modal('show');
+    }
+
+    function CancelInvoiceDetail(InvoiceNumber, Usrnmm, PBillNoo, finalAmounts, text11) {
+        localStorage.setItem("Usrnmm", Usrnmm);
+        localStorage.setItem("text11", text11);
+        localStorage.setItem("PBillNoo", PBillNoo);
+        localStorage.setItem("finalAmounts", finalAmounts);
+        localStorage.setItem("invNo", InvoiceNumber);
+        console.log(Usrnmm, text1, PBillNo, finalAmount,InvoiceNumber)
+        $('#text11').text(text11);
+        $('#PBillNoo').text(PBillNoo);
+        $('#Usrnmm').text(Usrnmm);
+        $('#finalAmounts').text(` ₹ ${finalAmounts}`);
+        $('#text111').text(InvoiceNumber);
+
+       /* $('#alertModal4').modal('show')*/
+        $('#txtgeturll').val("");
+        var id = InvoiceNumber;
+        if (id != '') {
+            $('#alertModal4').modal('show')
+
+            $('#txtgeturll').val(id);
+        }
+    }
+
+    function RecordPayemnt(a, ProvisionalBillNo, ProvisionalBillid, meaasage, Username,CustomerID,InvoiceNumber,FinalAmount,PaymentNumber){
+        console.log(a, ProvisionalBillNo, meaasage, Username)
+        localStorage.setItem("CustomerID", CustomerID);
+        localStorage.setItem("ProvisionalBillid", ProvisionalBillid);
+        $('#CustomerName').text(Username);
+        $('#PaymentNumber').text(PaymentNumber);
+        $('#InvoiceNumber').text(ProvisionalBillNo);
+        $('#InvoiceAmount').val(FinalAmount);
+        $("#AmountPaid").val("");
+        $("#TDS").val("");
+        //var sT = dropForm.dropSelect;
+        //$("#paymentmode").val(sT[sT.selectedIndex].text());
+        $('#remainingamttxt').hide();
+        $('#remainingamt').hide();
+            $("#RecordPayemntModal").modal('show');
+    }
+
+
+        function PaymentDetails(a, ProvisionalBillNo, ProvisionalBillid, meaasage, Username, CustomerID, InvoiceNumber, FinalAmount, PaymentNumber) {
+            var InvoiceNo = ProvisionalBillNo;
+             var data = {
+                  InvoiceNo: InvoiceNo
+                }
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetPaymentDetails", "ServiceRequest")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response.OrderPayment == null) {
+                            alert("Payment not Done yet!")
+                        }
+                        else {
+                            document.getElementById("paymentnumber").innerHTML = response.OrderPayment.OrderPaymentId;
+                            document.getElementById("DateofPayment").innerHTML = response.OrderPayment.PDate;
+                            /*document.getElementById("PaymentGUID").innerHTML = response.OrderPayment.PaymentGUID;*/
+                            document.getElementById("totalamoutpaid").innerHTML = response.OrderPayment.AmountPaid;
+                            document.getElementById("tdsamount").innerHTML = response.OrderPayment.TDS;
+                            document.getElementById("paymentmode").innerHTML = response.OrderPayment.PaymentType;
+                            $('#customername').text(Username);
+                            $('#invoiceamount').text(FinalAmount);
+                            $('#pinvoicenumber').text(ProvisionalBillNo);
+                              $("#PaymentDetailsModal").modal('show');
+
+                        }
+                    },
+
+                });
+        }
+
+      function showDropInfo() {
+         var sT = dropForm.dropSelect;
+         var pF = document.getElementById('pF');
+         var pS = document.getElementById('pS');
+         var pT = document.getElementById('pT');
+
+      }
+
+
+    function SavePaymentDetails()
+    {
+        var ProvisionalBillId = localStorage.getItem("ProvisionalBillid");
+        var SelectedPaymentMethod = $('#PaymentMethod').val();
+        var remainingamt = $('#remainAmount').text()
+        var remainamount = remainingamt.split("₹");
+        remainamount = remainamount[1];
+        var OrderGUID = $("#OrderIdRP").val();
+        var InvoiceNo = $("#InvoiceNumber").text()
+        var InvoiceAmount = $('#InvoiceAmount').val();
+        var TDS = $("#TDS").val();
+        var AmountPaid = $("#AmountPaid").val();
+        if (TDS == "") {
+            TDS = 0;
+        }
+
+            var PaymentDetails = "";
+            var DispatchDate = $("#DatePaid").val();
+            var datearray = DispatchDate.split("/");
+            var DatePaid = datearray[1] + '-' + datearray[0] + '-' + datearray[2];
+            var checkAmount = parseFloat(AmountPaid) + parseFloat(TDS);
+            var invamt = parseFloat(InvoiceAmount);
+
+
+        if (invamt == parseFloat(remainamount)) {
+            alert("Total Payment has been done Allrady");
+            return false;
+        }
+        if ((invamt - parseFloat(remainamount)) < checkAmount) {
+            alert(" Amount should be less then Invoice amount");
+            return false;
+        }
+            if (invamt < checkAmount) {
+                alert("Amount must be less then Invoice Amount");
+                return false;
+        }
+
+        if (SelectedPaymentMethod == '' || SelectedPaymentMethod == null) {
+            alert("Please select mode");
+            return false;
+        }
+
+
+            var CustomerId = "";
+            var OrderPaymentDto = {
+                SelectedPaymentMethod: SelectedPaymentMethod,
+                OrderGUID: OrderGUID,
+                InvoiceNo: InvoiceNo,
+                AmountPaid: AmountPaid,
+                DatePaid: DatePaid,
+                CustomerId: localStorage.getItem("CustomerID"),
+                TDS: TDS,
+                InvoiceAmount: InvoiceAmount,
+                ProvisionalBillId: ProvisionalBillId
+            }
+            var InvoiceListViewModel = {
+                OrderPayment: OrderPaymentDto
+            }
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("SaveOrderPayments", "ServiceRequest")', // name of PHP script
+                data: InvoiceListViewModel, // parameter name and value
+                success: function (response) {
+                    $('.spinner-wrapper').hide();
+                    if (response == "success") {
+                        alert("Payment Recorded Successfully!");
+                        clearLocalstorage()
+                        $('#RecordPayemntModal').modal('hide');
+                        window.location.reload(true);
+                    }
+                    else {
+                        $('.spinner-wrapper').hide();
+                        alert("Payment Not Recorded..");
+                        $('#RecordPayemntModal').modal('hide');
+                    }
+                },
+
+            });
+
+    }
+
+
+        function GetPaymentDetails() {
+            var InvoiceNo = $("#InvoiceNumber").text()
+
+              var data = {
+                  InvoiceNo: InvoiceNo
+                }
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetPaymentDetails", "ServiceRequest")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response.OrderPayment == null) {
+                            alert("Payment not done yet!")
+                        }
+                        else {
+                            $("#DateofPayment").val(response.OrderPayment.PDate);
+                            $("#PaymentGUID").val(response.OrderPayment.PaymentGUID);
+                            $("#totalamoutpaid").val(response.OrderPayment.AmountPaid);
+                            $("#PaymentID").val(response.OrderPayment.TDS);
+                            $("#PaymentID").val(response.OrderPayment.PaymentType);
+                            $("#PaymentDetailsModal").modal('show');                        }
+                    },
+
+                });
+        }
+
+            function EditPaymentDetails(a, ProvisionalBillNo, ProvisionalBillid, meaasage, Username, CustomerID, InvoiceNumber, FinalAmount, PaymentNumber){
+                var InvoiceNo = ProvisionalBillNo;
+                localStorage.setItem("ProvisionalBillid", ProvisionalBillid);
+                localStorage.setItem("CustomerID", CustomerID);
+             var data = {
+                  InvoiceNo: InvoiceNo
+                }
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetPaymentDetails", "ServiceRequest")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response.OrderPayment == null) {
+                            alert("Payment not Done yet!")
+                        }
+                        else {
+                            var sT = new Array;
+                            var RemainingAmount = "Total Amt Received:";
+                            document.getElementById("PaymentNumber").innerHTML = response.OrderPayment.OrderPaymentId;
+                            document.getElementById("AmountPaid").innerHTML = response.OrderPayment.AmountPaid;
+                            $('#CustomerName').text(Username);
+                           /* $('#TDS').val(response.OrderPayment.TDS);*/
+                            $('#AmountPaid').val(FinalAmount - (response.OrderPayment.ReceivedAmount));
+                            $('#DatePaid').val(response.OrderPayment.PDate);
+                            $('#InvoiceAmount').val(FinalAmount);
+                            console.log(FinalAmount);
+                            $('#InvoiceNumber').text(ProvisionalBillNo);
+                            $('#RemainingAmounttext').text(RemainingAmount);
+                            $('#remainAmount').text(` ₹ ${(response.OrderPayment.ReceivedAmount)}`);
+                            $('#PaymentMethod').val(response.OrderPayment.PaymentType);
+                            $('#remainingamttxt').show();
+                            $('#remainingamt').show();
+                            $('#msg').show();
+                            $("#RecordPayemntModal").modal('show');
+
+                        }
+                    },
+
+                });
+        }
+
+
+    function cancellInvoice() {
+        console.log(geturl)
+        var geturl = $('#txtgeturll').val();
+        var data = {
+            InvoiceNumber: geturl
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("CancelInvoiceDetails", "ServiceRequest")',
+            data: data,
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "Success") {
+                    window.location.reload(true);
+                    alert("E-Invoice Cancelled");
+                    clearLocalStrorage();
+                }
+                else {
+                    $('#alertModal5').modal('show');
+                    $('#Messagee').text(response);
+
+                    localStorage.removeItem("Usrnmm");
+                    localStorage.removeItem("text11");
+                    localStorage.removeItem("PBillNoo");
+                    localStorage.removeItem("finalAmounts");
+                    localStorage.removeItem("invNo");
+                    localStorage.removeItem("Usrnm");
+                    localStorage.removeItem("text1");
+                    localStorage.removeItem("PBillNo");
+                    localStorage.removeItem("finalAmount");
+                }
+
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText
+           var msg=('Error - ' + errorMessage);
+                $('#alertModal5').modal('show');
+                $('#Messagee').text(msg);
+
+                localStorage.removeItem("Usrnmm");
+                localStorage.removeItem("text11");
+                localStorage.removeItem("PBillNoo");
+                localStorage.removeItem("finalAmounts");
+                localStorage.removeItem("invNo");
+                localStorage.removeItem("Usrnm");
+                localStorage.removeItem("text1");
+                localStorage.removeItem("PBillNo");
+                localStorage.removeItem("finalAmount");
+
+            }
+        });
+    }
+
+
+    function clearLocalstorage() {
+        localStorage.removeItem("Usrnmm");
+        localStorage.removeItem("text11");
+        localStorage.removeItem("PBillNoo");
+        localStorage.removeItem("finalAmounts");
+        localStorage.removeItem("invNo");
+        localStorage.removeItem("Usrnm");
+        localStorage.removeItem("text1");
+        localStorage.removeItem("PBillNo");
+        localStorage.removeItem("finalAmount");
+        localStorage.removeItem("customerId");
+        localStorage.removeItem("ProvisionalBillid");
+    }
+
+
+    function RecordEmail() {
+
+          var PaymentDetails = $("#PaymentDetails").val().trim();
+            if (PaymentDetails == '') {
+                alert('Please enter Email!');
+                 document.getElementById('<%=PaymentDetails%>').focus();
+                   return false;
+
+            }
+        var Date = $("#DateSendON").val();
+        var split = Date.split("/");
+        var dated = split[1]+"/" + split[0]+"/" + split[2];
+
+        var data =
+        {
+            WorkOrderId: localStorage.getItem("WOID"),
+            ProvisionalBillId: localStorage.getItem("POID"),
+            CustomerName:Name,
+            SendON: dated
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+                $("#sendrecordpayment").prop('disabled', true);
+            },
+            type: "POST",
+            url: '@Url.Action("SaveEmailRecord", "ServiceRequest")',
+            data: data,
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                    alert(response);
+                    location.reload(true);
+                    $("#myMailModal").modal('hide');
+                    $("#sendrecordpayment").prop('disabled', false);
+                    @*window.location = '@Url.Action("FilterServiceRequest", "ServiceRequest")';*@
+
+                localStorage.removeItem("WOID");
+                localStorage.removeItem("POID");
+
+            },
+
+        });
+        }
+
+        function cancelCreditNote(creditNoteNumber) {
+            if (confirm("Are you sure to cancel selected credit note?") == true) {
+                console.log(PBillNo);
+                console.log(creditNoteNumber);
+                var data = {
+                InvoiceNumber: creditNoteNumber
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("CancelCreditNote", "ServiceRequest")',
+            data: data,
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "Success") {
+                    window.location.reload(true);
+                    localStorage.clear();
+                    alert("Credit note Cancelled");
+                }
+                else {
+                    $('#alertModal5').modal('show');
+                    $('#Messagee').text(response);
+                    localStorage.clear();
+                }
+
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText
+           var msg=('Error - ' + errorMessage);
+                $('#alertModal5').modal('show');
+                $('#Messagee').text(msg);
+                localStorage.clear();
+
+            }
+        });
+            } else {
+                return false
+            }
+        }
+        //End
+    </script>
+</body>
+</html>

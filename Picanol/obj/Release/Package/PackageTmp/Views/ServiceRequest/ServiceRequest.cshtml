@@ -1,0 +1,1284 @@
+﻿@model Picanol.ViewModels.ServiceRequestViewModel
+@using Picanol.Helpers
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+</head>
+<body>
+    <button type="submit" class="btn btn-primary btn-large pull-left" onclick="history.back()">Back </button>
+    @*<a href="@Url.Action("OrdersList", "Order")" class="btn btn-primary btn-large pull-left" style="margin-top: -15px;">  <i class="fam-control-rewind-blue"></i> Back</a>*@
+
+    <h3 class="text-center"><b>Proforma Invoice</b></h3>
+    <div class="col-xl-12">
+        @if (Model.CustomerIsEdit == true)
+        {
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="CustomerName">Customer Name :</label>
+
+                        @Html.TextBoxFor(model => model.CustomerDetails.CustomerName, new { @class = "form-control", id = "CustomerName", @readonly = true })
+                        <input type="hidden" id="CustomerId" value=@Model.CustomerDetails.CustomerId>
+                        @Html.HiddenFor(model => model.ServiceRequest.ProvisionalBillId, new { id = "ProvisionalBillId" })
+                        @Html.HiddenFor(model => model.ServiceRequest.WorkOrderId, new { id = "WorkOrderId" })
+                    </div>
+                </div>
+                @if (Model.IsProvisional == true)
+                {
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="CustomerName">Sub Customer Name :</label>
+                            <input class="form-control" type="search" autocomplete="off" value="@Model.SubCustomer.SubCustomerName" list="CNList" id="SubCustomerId" placeholder="Enter Sub Customer Name" />
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="CustomerName">Sub Customer Name :</label>
+                            <input class="form-control" type="search" autocomplete="off" value="" list="CNList" id="SubCustomerId" placeholder="Enter Sub Customer Name" />
+
+                        </div>
+                    </div>
+                }
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="DateCreated">Date :</label>
+                        @Html.TextBoxFor(d => d.ServiceRequest.DateCreated, "{0:dd/MM/yyyy}", new { id = "Date", @class = "form-control", maxlength = "500" })
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CustomerName">Customer Name :</label>
+
+                        @Html.TextBoxFor(model => model.CustomerDetails.CustomerName, new { @class = "form-control", id = "CustomerName", @readonly = true })
+                        <input type="hidden" id="CustomerId" value=@Model.CustomerDetails.CustomerId>
+                        @Html.HiddenFor(model => model.ServiceRequest.ProvisionalBillId, new { id = "ProvisionalBillId" })
+                        @Html.HiddenFor(model => model.ServiceRequest.WorkOrderId, new { id = "WorkOrderId" })
+                    </div>
+                </div>
+                <div style="display:none">
+                    <div class="form-group">
+                        <label for="CustomerName">Sub Customer Name :</label>
+                        <input class="form-control" type="search" autocomplete="off" value="" list="CNList" id="SubCustomerId" placeholder="Enter Customer Name" />
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="DateCreated">Date :</label>
+                        @Html.TextBoxFor(d => d.ServiceRequest.DateCreated, "{0:dd/MM/yyyy}", new { id = "Date", @class = "form-control", maxlength = "500" })
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    <div class="col-xl-12">
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="Service">Machine Name :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.MachineName, new { @class = "form-control", id = "Service", @placeholder = "Enter Service" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="CallType">Call Type :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.CallType, new { @class = "form-control", id = "CallType", @readonly = true })
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="ServiceEngineerName">Service Engineer :</label>
+                    <input type="text" class="form-control" id="ServiceEngineerName" value=@userInfo.UserName readonly />
+                    <input type="hidden" id="custId" value=@userInfo.UserId>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <label for="Attended">
+            Days Attended
+        </label>
+    </div>
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-md-8" style="font-size:small;font-family:Calibri">
+                <div class="table-responsive-sm">
+
+
+                    <table class="table" id="dataTable">
+                        <thead>
+                            <tr style="background-color:azure;">
+                                <th scope="col">Attended From</th>
+                                <th scope="col">Attended To</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        @if (Model.ServiceRequest.ProvisionalBillId != 0)
+                        {
+                            int i = 0;
+                            foreach (var item in Model.ServiceRequest.ServiceDaysList)
+                            {
+                                i = i + 1;
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <input type="text" name="assigned_date[]" value="@item.FromDate.ToShortDateString()" id="AttendedFrom+:@(i)" onchange="CalculateDays(@(i))" class="assigned_date" />
+                                            <span class="text-danger"></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="last_date[]" value="@item.ToDate.ToShortDateString()" id="AttendedTo+:@(i)" onchange="CalculateDays(@(i))" class="last_date" />
+                                            <span class="text-danger"></span>
+                                        </td>
+                                        <td><input type="button" class="btn btn-danger btn-sm" onclick="submit" value="delete">
+
+                                    </tr>
+                                </tbody>
+                            }
+                        }
+                        else
+                        {
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        <input type="text" name="assigned_date[]" value="" id="AttendedFrom" class="assigned_date" onchange="CalculateDays(1)" />
+                                        <span class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="last_date[]" value="" id="AttendedTo" class="last_date" onchange="CalculateDays(1)" />
+                                        <span class="text-danger"></span>
+                                    </td>
+                                    <td><input type="button" class="btn btn-danger btn-sm" value="delete">
+
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <input class="btn btn-success pull-left" type="button" value="+" onclick="addRow('dataTable')" id="add_button" style="margin-bottom: 20px;" />
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TotalDays">Total Days :</label>
+                        <input type="text" class="form-control" value="1 " id="TotalDays" readonly />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TotalDays">Total Days :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.TotalDays, new { @class = "form-control", id = "TotalDays", @readonly = "readonly" })
+
+
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <label for="Attended">Loading and Boarding Expense :</label>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="row">
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBDays">No. Of Days :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.BoardingDays, new { @class = "form-control", id = "LBDays", onchange = "CheckDays();", oninput = "LBcalculate();", @placeholder = "Enter Days", @type = "number" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBAmount">Rate :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.BoardingCharges, new { @class = "form-control", id = "LBAmount", oninput = "LBcalculate();", @placeholder = "Enter Amount", @type = "number" })
+
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        <input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="LBTotal" readonly />
+                    </div>
+                </div>
+            }
+
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.BoardingAmount, new { @class = "form-control", id = "LBTotal", oninput = "TotalCalAm();", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <label for="Attended">Pocket Expense :</label>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="row">
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBDays">No. Of Days :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.PocketExpensesDays, new { @class = "form-control", id = "PEDays", onchange = "CheckDays();", @oninput = "PEcalculate();", @placeholder = "Enter Days", @type = "number" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBAmount">Rate :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.PocketExpenses, new { @class = "form-control", id = "PEAmount", oninput = "PEcalculate();", @placeholder = "Enter Amount", @type = "number" })
+
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        <input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="PETotal" readonly />
+                    </div>
+                </div>
+            }
+
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.PocketExpensesAmount, new { @class = "form-control", id = "PETotal", oninput = "TotalCalAm();", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+
+
+    <div class="col-xl-12">
+        <label for="Attended">Service Charge :</label>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="row">
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBDays">No. Of Days :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.ServiceDays, new { @class = "form-control", id = "NoOfDays", onchange = "CheckDays();", @oninput = "calculate();", @placeholder = "Enter Days", @type = "number" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBAmount">Rate :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.ServiceCharge, new { @class = "form-control", id = "Rate", oninput = "calculate();", @placeholder = "Enter Amount", @type = "number" })
+
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        <input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="Amount" readonly />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.ServiceChargeAmount, new { @class = "form-control", id = "Amount", oninput = "TotalCalAm();", @readonly = "readonly" })
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+
+    <div class="col-xl-12">
+        <label for="Attended">Over Time :</label>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="row">
+
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBDays">Over Time Hours :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.OvertimeHours, new { @class = "form-control", id = "OvertimeHours", oninput = "calculateOvertimeHours();", @placeholder = "Enter Days", @type = "number" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="LBAmount">Charge :</label>
+                    @Html.TextBoxFor(model => model.ServiceRequest.OvertimeCharges, new { @class = "form-control", id = "OvertimeCharges", oninput = "calculateOvertimeHours();", @placeholder = "Enter Amount", @type = "number" })
+
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Total Amount :</label>
+                        <input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="OvertimeAmount" readonly />
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="LBTotal">Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.OvertimeAmount, new { @class = "form-control", id = "OvertimeAmount", oninput = "TotalCalAm();", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+
+
+
+
+
+    <div class="col-xl-12">
+        <label>Conveyance & Incidental Expense :</label>
+    </div>
+    <div class="col-xl-12">
+        <table id="myTable">
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Delete</th>
+            </tr>
+            @if (Model.ServiceRequest.ProvisionalBillId != 0)
+            {
+                foreach (var item in Model.ServiceRequest.ConeyanceExpenseDetails)
+                {
+                    <tr>
+
+                        <td><input type="text" class="form-control" id="FromF" value=@item.ExpenseFrom /></td>
+                        <td><input type="text" class="form-control" id="ToF" value=@item.ExpenseTo /></td>
+                        <td><input type="text" class="form-control" id="AmountF" value=@item.Amount oninput="TotalCalAm();" onkeypress="return isNumberKey(event)" oninput="Final();" /></td>
+                        <td><input type="text" class="form-control" id="DiscriptionF" value=@item.Remarks /></td>
+                        <td hidden><input type="text" class="form-control" value="@ConstantsHelper.ExpenseType.Fare" /></td>
+                        <td><input type="button" class="btn btn-danger" value="Delete" /></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td><input type="text" class="form-control" id="FromSC" /></td>
+                    <td><input type="text" class="form-control" id="ToSC" /></td>
+                    <td><input type="text" class="form-control" id="AmountSC" value="0" oninput="TotalCalAm();" onkeypress="return isNumberKey(event)" oninput="Final();" /></td>
+                    <td><input type="text" class="form-control" id="DiscriptionSC" /></td>
+                    <td hidden><input type="text" class="form-control" value="@ConstantsHelper.ExpenseType.ConveyanceAndIncidental" /></td>
+                    <td><input type="button" class="btn btn-danger btn-sm" value="Delete" /></td>
+                </tr>
+            }
+        </table>
+        <p>
+            <input type="button" class="btn btn-success pull-right" value="Insert row">
+        </p>
+    </div>
+
+
+    <div class="col-xl-12">
+        <label>Air Fare / Rail Fare :</label>
+    </div>
+    <div class="col-xl-12">
+        <table id="Table">
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Delete</th>
+            </tr>
+            @if (Model.ServiceRequest.ProvisionalBillId != 0)
+            {
+                foreach (var item in Model.ServiceRequest.FareExpenseDetails)
+                {
+                    <tr>
+
+                        <td><input type="text" class="form-control" id="FromF" value=@item.ExpenseFrom /></td>
+                        <td><input type="text" class="form-control" id="ToF" value=@item.ExpenseTo /></td>
+                        <td><input type="text" class="form-control" id="AmountF" value=@item.Amount oninput="TotalCalAm();" onkeypress="return isNumberKey(event)" oninput="Final();" /></td>
+                        <td><input type="text" class="form-control" id="DiscriptionF" value=@item.Remarks /></td>
+                        <td hidden><input type="text" class="form-control" value="@ConstantsHelper.ExpenseType.Fare" /></td>
+                        <td><input type="button" class="btn btn-danger" value="Delete" /></td>
+                    </tr>
+                }
+
+
+            }
+            else
+            {
+                <tr>
+
+                    <td><input type="text" class="form-control" id="FromF" /></td>
+                    <td><input type="text" class="form-control" id="ToF" /></td>
+                    <td><input type="text" class="form-control" id="AmountF" value="0" oninput="TotalCalAm();" onkeypress="return isNumberKey(event)" oninput="Final();" /></td>
+                    <td><input type="text" class="form-control" id="DiscriptionF" /></td>
+                    <td hidden><input type="text" class="form-control" value="@ConstantsHelper.ExpenseType.Fare" /></td>
+                    <td><input type="button" class="btn btn-danger" value="Delete" /></td>
+                </tr>
+            }
+        </table>
+
+        <input type="button" onclick="AddRowTable();" class="btn btn-success pull-right" value="Insert row">
+
+    </div>
+    <br />
+
+
+    <div class="col-xl-12">
+        <div class="row">
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TotalAmount">Total Amount :</label>
+                        <input type="text" class="form-control" id="TotalAmount" readonly />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TotalAmount">Total Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.AmountBeforeTax, new { @class = "form-control", id = "TotalAmount", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="GST">GST % :</label>
+                    <input type="text" class="form-control" id="GST" value="18%" onchange="GSTChange();" />
+                </div>
+            </div>
+            @if (Model.ServiceRequest.ProvisionalBillId == 0)
+            {
+                <div class="col-sm-4" style="margin-top:-15px">
+                    <div class="form-group">
+                        <label for="FinalAmount">Final Amount :</label>
+                        <input type="text" class="form-control" id="FinalAmount" readonly />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TotalAmount">Final Amount :</label>
+                        @Html.TextBoxFor(model => model.ServiceRequest.FinalAmount, new { @class = "form-control", id = "FinalAmount", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <center><button type="submit" onclick="SendData()" value="1" id="saveBtn" class="btn btn-info btn-large">Save</button></center>
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+    <div id="pagingDiv"></div>
+
+    <datalist id="CNList">
+        @foreach (var item in Model.SubCustomerList)
+        {
+            <option id="@item.SubCustomerId" data-value="@item.SubCustomerId" value="@item.SubCustomerName"></option>
+
+        }
+
+    </datalist>
+    <br />
+    <br />
+    <script type="text/javascript">
+
+        $('#dataTable').on('click', 'input[type="button"]', function () {
+            var table = document.getElementById('dataTable');
+            var rowCount = table.rows.length;
+            if (rowCount <= 2) {
+                alert("Cannot delete all the rows.");
+                return false;
+            }
+
+            var $row = $(this).parents('tr');
+            var attendfrom = $row.find('input[name="assigned_date[]"]').val();
+            var attendedTill = $row.find('input[name="last_date[]"]').val();
+            if (attendfrom != "" && attendedTill != "") {
+                var x = attendfrom.split("-");
+                var y = attendedTill.split("-");
+                var Fdays = x[0];
+                var Fmonths = x[1];
+                var Fyear = x[2];
+
+                var Tdays = y[0];
+                var Tmonths = y[1];
+                var Tyear = y[2];
+                var fDate = Fyear + "-" + Fmonths + "-" + Fdays;
+                var tDate = Tyear + "-" + Tmonths + "-" + Tdays;
+
+                const timeDiff = (new Date(tDate)) - (new Date(fDate));
+                const fdays = timeDiff / (1000 * 60 * 60 * 24);
+                var totalDays = document.getElementById("TotalDays").value;
+                $('#TotalDays').val(parseInt(totalDays) - parseInt(fdays + 1));
+                $('#LBDays').val(parseInt(totalDays) - parseInt(fdays + 1));
+                $('#PEDays').val(parseInt(totalDays) - parseInt(fdays + 1));
+                $('#NoOfDays').val(parseInt(totalDays) - parseInt(fdays + 1));
+                LBcalculate();
+                PEcalculate();
+                calculate();
+            }
+            $(this).closest('tr').remove();
+
+
+        })
+
+        function addRow(tableID) {
+            $(".last_date").datepicker("destroy");
+            $(".assigned_date").datepicker("destroy");
+            var i = $("#dataTable").find("tr").not("thead tr").length;
+            $('#dataTable').append(' <tr><td><input type="text" name="assigned_date[]" value="" id="AttendedFrom' + i + '" class="assigned_date" onchange="CalculateDays(' + i + ')" /></td> <td><input type="text" name="last_date[]" value="" id="AttendedTo' + i + '" class="last_date" onchange="CalculateDays(' + i + ')"/> </td><td><input type="button" class="btn btn-danger btn-sm" value="delete"/></td></tr>')
+
+
+            $(".assigned_date").datepicker({ dateFormat: "dd-mm-yy" });
+            $(".last_date").datepicker({ dateFormat: "dd-mm-yy" });
+        }
+
+        function deleteRow(tableID) {
+            try {
+
+
+                var table = document.getElementById(tableID);
+                var rowCount = table.rows.length;
+
+                for (var i = 0; i < rowCount; i++) {
+                    var row = table.rows[i];
+                    var chkbox = row.cells[0].childNodes[0];
+                    if (null != chkbox && true == chkbox.checked) {
+                        if (rowCount <= 2) {
+                            alert("Cannot delete all the rows.");
+                            break;
+                        }
+                        table.deleteRow(i);
+                        rowCount--;
+                        i--;
+                    }
+
+
+                }
+
+            } catch (e) {
+                alert(e);
+            }
+        }
+        $(function () {
+            $(".assigned_date").datepicker({ dateFormat: "dd-mm-yy" });
+            $(".last_date").datepicker({ dateFormat: "dd-mm-yy" });
+        });
+
+    </script>
+    <!--new 080921-->
+    <script>
+        function ConfirmDelete() {
+            var x = confirm("Are you sure to delete?");
+            if (x)
+                return true;
+            else
+                return false;
+        }
+    </script>
+
+
+    <script>
+
+        function onchangeevent() {
+            var TotalDays = $("#TotalDays").val();
+            var lb = $("#LBDays").val();
+            if (lb > TotalDays) {
+                alert("Lb Days can't be greater than total days!");
+                $('#LBDays').val('');
+                return false;
+            }
+        }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+
+
+        function CheckDays() {
+            var BoardingDays = $("#LBDays").val();
+            var ServiceDays = $("#NoOfDays").val();
+            var PocketExpensesDays = $("#PEDays").val();
+            var ConveyanceExpensesDays = $("#CEDays").val();
+            var AttendedFrom = $("#AttendedFrom").val();
+            var AttendedTo = $("#AttendedTo").val();
+            var ProvisionalBillId = $("#ProvisionalBillId").val();
+
+            var fdays = $("#TotalDays").val();
+
+            if (parseInt(ServiceDays) > parseInt(fdays)) {
+                alert("Service Days can't be greater than total days!");
+                $('#NoOfDays').val('');
+                return false;
+            }
+            if (parseInt(BoardingDays) > parseInt(fdays)) {
+                alert("Boarding Days can't be greater than total days!");
+                $('#LBDays').val('');
+                return false;
+            }
+
+
+            if (parseInt(PocketExpensesDays) > parseInt(fdays)) {
+                alert("Pocket Expense Days can't be greater than total days!");
+                $('#PEDays').val('');
+                return false;
+            }
+            if (parseInt(ConveyanceExpensesDays) > parseInt(fdays)) {
+                alert("Conveyance Expense Days can't be greater than total days!");
+                $('#CEDays').val('');
+                return false;
+            }
+            LBcalculate();
+            PEcalculate();
+            calculate();
+        }
+        function CalculateDays(i) {
+            var oTable = document.getElementById('dataTable');
+            //gets rows of table
+            var rowLength = oTable.rows.length;
+
+            var TotalDays = 0;
+            //loops through rows
+            for (i = 1; i < rowLength; i++) {
+
+                //gets cells of current row
+                var oCells = oTable.rows.item(i).cells;
+
+                var AttendedFrom = oCells.item(0).children[0].value;
+                if (AttendedFrom == "") {
+                    alert("Please Delete Unfiled row ");
+                    return false;
+                }
+                var AttendedTo = oCells.item(1).children[0].value;
+                if (AttendedTo == "") {
+
+                }
+                var x = AttendedFrom.split("-");
+                var y = AttendedTo.split("-");
+                var Fdays = x[0];
+                var Fmonths = x[1];
+                var Fyear = x[2];
+
+                var Tdays = y[0];
+                var Tmonths = y[1];
+                var Tyear = y[2];
+                var fDate = Fyear + "-" + Fmonths + "-" + Fdays;
+                var tDate = Tyear + "-" + Tmonths + "-" + Tdays;
+
+                const timeDiff = (new Date(tDate)) - (new Date(fDate));
+                const fdays = timeDiff / (1000 * 60 * 60 * 24);
+                TotalDays = TotalDays + (fdays + 1);
+            }
+
+            $('#TotalDays').val(parseInt(TotalDays));
+            $('#LBDays').val(parseInt(TotalDays));
+            $('#PEDays').val(parseInt(TotalDays));
+            $('#NoOfDays').val(parseInt(TotalDays));
+            LBcalculate(i);
+            PEcalculate(i);
+            calculate(i);
+        }
+        function cal() {
+
+
+            var AttendedFrom = $("#AttendedFrom").val();
+            var AttendedTo = $("#AttendedTo").val();
+
+            var x = AttendedFrom.split("-");
+            var y = AttendedTo.split("-");
+            var Fdays = x[0];
+            var Fmonths = x[1];
+            var Fyear = x[2];
+
+            var Tdays = y[0];
+            var Tmonths = y[1];
+            var Tyear = y[2];
+            var fDate = Fyear + "-" + Fmonths + "-" + Fdays;
+            var tDate = Tyear + "-" + Tmonths + "-" + Tdays;
+
+            const timeDiff = (new Date(tDate)) - (new Date(fDate));
+            const fdays = timeDiff / (1000 * 60 * 60 * 24);
+
+
+            var fyear = Tyear - Fyear;
+            $('#TotalDays').val(fdays + 1);
+            $('#LBDays').val(fdays + 1);
+            $('#PEDays').val(fdays + 1);
+            $('#NoOfDays').val(fdays + 1);
+
+        }
+
+        function calculate() {
+            var myBox1 = document.getElementById('NoOfDays').value;
+            var myBox2 = document.getElementById('Rate').value;
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 * myBox2;
+            //document.getElementById('result').value = myResult;
+            $('#Amount').val(myResult);
+            TotalCalAm();
+        }
+
+        function calculateOvertimeHours() {
+            var myBox1 = document.getElementById('OvertimeHours').value;
+            var myBox2 = document.getElementById('OvertimeCharges').value;
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 * myBox2;
+            //document.getElementById('result').value = myResult;
+            $('#OvertimeAmount').val(myResult);
+            TotalCalAm();
+        }
+
+        function LBcalculate() {
+            var myBox1 = document.getElementById('LBDays').value;
+            var myBox2 = document.getElementById('LBAmount').value;
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 * myBox2;
+            //document.getElementById('result').value = myResult;
+            $('#LBTotal').val(myResult);
+            TotalCalAm();
+        }
+
+        function PEcalculate() {
+            var myBox1 = document.getElementById('PEDays').value;
+            var myBox2 = document.getElementById('PEAmount').value;
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 * myBox2;
+            //document.getElementById('result').value = myResult;
+            $('#PETotal').val(myResult);
+            TotalCalAm();
+        }
+
+        function CEcalculate() {
+            var myBox1 = document.getElementById('CEDays').value;
+            var myBox2 = document.getElementById('CEAmount').value;
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 * myBox2;
+            //document.getElementById('result').value = myResult;
+            $('#CETotal').val(myResult);
+            TotalCalAm();
+        }
+
+
+        function TotalCalAm() {
+
+            var oTable = document.getElementById('myTable');
+
+
+            var rowLength = oTable.rows.length;
+            var CAmount = 0;
+            var FAmount = 0;
+
+            for (i = 1; i < rowLength; i++) {
+                var oCells = oTable.rows.item(i).cells;
+                CAmount = CAmount + parseInt(oCells.item(2).children[0].value);
+            }
+
+
+            var oTable = document.getElementById('Table');
+
+
+            var rowLength = oTable.rows.length;
+
+
+            for (i = 1; i < rowLength; i++) {
+
+                var oCells = oTable.rows.item(i).cells;
+                FAmount = FAmount + parseInt(oCells.item(2).children[0].value);
+            }
+            var myBox1 = parseInt(document.getElementById('Amount').value);
+            var myBox2 = parseInt(document.getElementById('LBTotal').value);
+            //var myBox3 = parseInt(document.getElementById('Fare').value);
+            var myBox4 = parseInt(document.getElementById('PETotal').value);
+            var myBox5 = parseInt(document.getElementById('OvertimeAmount').value);
+            //var myBox5 = parseInt(document.getElementById('CETotal').value);
+            //var result = document.getElementById('Amount');
+            var myResult = myBox1 + myBox2 + myBox4 + CAmount + FAmount + myBox5;
+            //document.getElementById('result').value = myResult;
+            $('#TotalAmount').val(myResult);
+
+            var Tax = Math.round((myResult * 1) * (18 / 100))
+
+            var final = parseInt(Tax) + parseInt(myResult);
+            $('#FinalAmount').val(final);
+
+
+        }
+
+        function GSTChange() {
+            var myBox1 = parseInt(document.getElementById('TotalAmount').value);
+            var myBox2 = parseInt(document.getElementById('GST').value);
+            var m = Math.round((myBox1 * 1) * (myBox2 / 100))
+            var final = parseInt(myBox1) + parseInt(m);
+            $('#FinalAmount').val(final);
+
+        }
+
+
+
+    </script>
+
+    <script>
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+                $("button").click(function () {
+
+                    var shownVal = document.getElementById("SubCustomerId").value;
+                    if (shownVal != "") {
+                        var SubCustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+                    }
+             var oTable = document.getElementById('myTable');
+
+                //gets rows of table
+                var rowLength = oTable.rows.length;
+                var Conveyance = [];
+
+                //loops through rows
+                for (i = 1; i < rowLength; i++) {
+
+                    //gets cells of current row
+                    var oCells = oTable.rows.item(i).cells;
+
+                    var From = oCells.item(0).children[0].value;
+                    var To = oCells.item(1).children[0].value;
+                    var Amount = oCells.item(2).children[0].value;
+                    var Remarks = oCells.item(3).children[0].value;
+                    var Type = "ConveyanceAndIncidental";
+
+                    //loops through each cell in current row
+                    var DetailExpenseDto = {
+                         Type: Type,
+                        ExpenseFrom: From,
+                        ExpenseTo: To,
+                        Amount: Amount,
+                        Remarks: Remarks
+                    }
+                    Conveyance.push(DetailExpenseDto);
+
+                }
+                //var a = 0;
+                //Conveyance.map(function (aa) {
+                //    a += aa[2];
+                //    return a;
+                //});
+
+                var oTable = document.getElementById('Table');
+
+                //gets rows of table
+                var rowLength = oTable.rows.length;
+                var FareEx = [];
+
+                //loops through rows
+                for (i = 1; i < rowLength; i++) {
+
+                    //gets cells of current row
+                    var oCells = oTable.rows.item(i).cells;
+
+                    var From = oCells.item(0).children[0].value;
+                    var To = oCells.item(1).children[0].value;
+                    var Amount = oCells.item(2).children[0].value;
+                    var Remarks = oCells.item(3).children[0].value;
+                    var Type = "Fare";
+                    //loops through each cell in current row
+                    var DetailExpenseDto = {
+                        Type: Type,
+                        ExpenseFrom: From,
+                        ExpenseTo: To,
+                        Amount: Amount,
+                        Remarks: Remarks
+                    }
+                    FareEx.push(DetailExpenseDto);
+                }
+
+                    var oTable = document.getElementById('dataTable');
+                    //gets rows of table
+                    var rowLength = oTable.rows.length;
+                    var tServiceDays = [];
+
+                    //loops through rows
+                    for (i = 1; i < rowLength; i++) {
+
+                        //gets cells of current row
+                        var oCells = oTable.rows.item(i).cells;
+
+                        var AttendedFrom = oCells.item(0).children[0].value;
+                        if (AttendedFrom == "") {
+                            alert("Delete Unfiled row")
+                            return false;
+                        }
+                        var AttendedTo = oCells.item(1).children[0].value;
+
+
+                        //loops through each cell in current row
+                        var totalDaysDto = {
+                            FromDate: AttendedFrom,
+                            ToDate: AttendedTo
+
+                        }
+                        tServiceDays.push(totalDaysDto);
+                    }
+
+                var ProvisionalBillId = $("#ProvisionalBillId").val();
+                var WorkOrderId = $("#WorkOrderId").val();
+
+                var CustomerId = $("#CustomerId").val();
+                var DateCreated = $("#Date").val();
+                var MachineName = $("#Service").val();
+                var CallType = $("#CallType").val();
+                var UserId = $("#custId").val();
+                var FromDate = $("#AttendedFrom").val();
+                var ToDate = $("#AttendedTo").val();
+                var ServiceCharge = $("#Rate").val();
+                var Fare = $("#Fare").val();
+                var PocketExpenses = $("#PEAmount").val();
+                var ConveyanceExpenses = $("#CEAmount").val();
+                var BoardingCharges = $("#LBAmount").val();
+                var BoardingDays = $("#LBDays").val();
+                var OtherCharges = $("#ConveyanceExpense").val();
+                var GetGST = $("#GST").val();
+                GetGST = GetGST.slice(0, -1);
+                var GST = GetGST;
+                var FinalAmount = $("#FinalAmount").val();
+                var ServiceDays = $("#NoOfDays").val();
+                var PocketExpensesDays = $("#PEDays").val();
+                var ConveyanceExpensesDays = $("#CEDays").val();
+                var TotalDays = $("#TotalDays").val();
+                var OvertimeHours = $("#OvertimeHours").val();
+                var OvertimeCharges = $("#OvertimeCharges").val();
+                var OvertimeAmount = $("#OvertimeAmount").val();
+
+                //var i = TotalDays.indexOf(' ');
+                //var word = TotalDays.substring(0, i);
+                if (MachineName == "") {
+                    alert("Machine Name is Required ");
+                    return false;
+                }
+                if (FinalAmount == "") {
+                    alert("Final Amount is Null!");
+                    return false;
+                }
+
+                if (CallType == "") {
+                    alert("Call Type is Required ");
+                    return false;
+                }
+                if (parseInt(ServiceDays) > parseInt(TotalDays)) {
+                    alert("Service Days can't be greater than total days!");
+                    $('#NoOfDays').val('');
+                    return false;
+                }
+                if (parseInt(BoardingDays) > parseInt(TotalDays)) {
+                    alert("Boarding Days can't be greater than total days!");
+                    $('#LBDays').val('');
+                    return false;
+                }
+
+
+                if (parseInt(PocketExpensesDays) > parseInt(TotalDays)) {
+                    alert("Pocket Expense Days can't be greater than total days!");
+                    $('#PEDays').val('');
+                    return false;
+                }
+                if (parseInt(ConveyanceExpensesDays) > parseInt(TotalDays)) {
+                    alert("Conveyance Expense Days can't be greater than total days!");
+                    $('#CEDays').val('');
+                    return false;
+            }
+            var Submit = false;
+            if (confirm("Are You Sure to Submit? No Further Changes Will Be Done! ")) {
+                Submit = true;
+            }
+
+            var ServiceRequestDto =
+            {
+                ButtonValue: Submit,
+                WorkOrderId: WorkOrderId,
+                ProvisionalBillId: ProvisionalBillId,
+                CustomerId: CustomerId,
+                SubCustomerId: SubCustomerId,
+                DateCreated: DateCreated,
+                MachineName: MachineName,
+                CallType: CallType,
+                UserId: UserId,
+                FromDate: FromDate,
+                ToDate: ToDate,
+                ServiceCharge: ServiceCharge,
+                PocketExpenses: PocketExpenses,
+                ConveyanceExpenses: ConveyanceExpenses,
+                BoardingCharges: BoardingCharges,
+                BoardingDays: BoardingDays,
+                OtherCharges: OtherCharges,
+                GST: GST,
+                FinalAmount: FinalAmount,
+                ServiceDays: ServiceDays,
+                PocketExpensesDays: PocketExpensesDays,
+                ConveyanceExpensesDays: ConveyanceExpensesDays,
+                ServiceDaysList: tServiceDays,
+                FareExpenseDetails: FareEx,
+                ConeyanceExpenseDetails: Conveyance,
+                OvertimeHours: OvertimeHours,
+                OvertimeCharges: OvertimeCharges,
+                OvertimeAmount: OvertimeAmount,
+                TotalDays: TotalDays,
+                FinalSubmit:Submit
+                    };
+                    if (ServiceRequestDto.UserId != 0 && ServiceRequestDto.UserId != "0" && ServiceRequestDto.UserId!="") {
+                        console.log(UserId);
+                        $('#saveBtn').attr('disabled', 'disabled');
+                        $.ajax({
+                            beforeSend: function () {
+                                $('.spinner-wrapper').show()
+                            },
+                            type: "POST",  // method of sending data
+                            url: '@Url.Action("ServiceRequest", "ServiceRequest")', // name of PHP script
+                            data: ServiceRequestDto, // parameter name and value
+                            success: function (data) {
+                                $('.spinner-wrapper').hide();
+                                if (data == "success") {
+                                    alert("Details Submitted");
+                                    //window.location = '@Url.Action("WorkstFilter", "ServiceRequest")';
+                                    //location.reload(true);
+                                    window.location = '@Url.Action("ProvisionalBillList", "ServiceRequest")' + '?WorkOrderId=' + WorkOrderId;
+                                } else {
+                                    $('#saveBtn').attr('enabled', 'enabled');
+                                    alert("OOPS!! Something went wrong. Please try again latter");
+                                }
+
+                            },
+
+                        });
+                    } else {
+                        alert("Sorry, your session has expired. Please login again to continue");
+                        @*window.location.href = "@Url.Action("index","home")";*@
+                        window.location.href = "@Url.Action("Index", "Home", null)";
+                    }
+
+        });
+
+
+
+    </script>
+
+    <script>
+
+
+    </script>
+    <datalist id="CNList">
+        @foreach (var item in Model.SubCustomerList)
+        {
+            <option id="@item.SubCustomerId" data-value="@item.SubCustomerId" value="@item.SubCustomerName"></option>
+
+        }
+    </datalist>
+    <script type="text/javascript">
+        var ServiceChargeArray = [];
+        function add_row() {
+            var From = document.getElementById("FromSC").value;
+            var To = document.getElementById("ToSc").value;
+            var Amount = document.getElementById("AmountSC").value;
+            var Discription = document.getElementById("DiscriptionSC").value;
+        }
+
+    </script>
+    <script type="text/javascript">
+        var AirFairArray = [];
+        function add_row() {
+            var From = document.getElementById("FromF").value;
+            var To = document.getElementById("ToF").value;
+            var Amount = document.getElementById("AmountF").value;
+            var Discription = document.getElementById("DiscriptionF").value;
+        }
+
+        function addField(n) {
+            var tr = n.parentNode.parentNode.cloneNode(true);
+            document.getElementById('tbl').appendChild(tr);
+        }
+    </script>
+
+    <script>
+        $('#myTable').on('click', 'input[type="button"]', function () {
+            $(this).closest('tr').remove();
+            TotalCalAm();
+        })
+        $('p input[type="button"]').click(function () {
+            $('#myTable').append('<tr><td><input type="text" class="form-control" id="FromSC" /></td><td><input type="text" class="form-control" id="ToSC" /></td><td><input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="AmountSC" /></td><td><input type="text" class="form-control" id="DiscriptionSC" /></td><td><input type="button" class="btn btn-danger" value="Delete" /></td></tr>')
+        });
+    </script>
+    <script>
+        $('#Table').on('click', 'input[type="button"]', function () {
+            $(this).closest('tr').remove();
+            TotalCalAm();
+        })
+        function AddRowTable() {
+            $('#Table').append('<tr><td><input type="text" class="form-control" id="FromF" /></td><td><input type="text" class="form-control" id="ToF" /></td><td><input type="text" class="form-control" value="0" oninput="TotalCalAm();" id="AmountF" /></td><td><input type="text" class="form-control" id="DiscriptionF" /></td><td><input type="button" class="btn btn-danger" value="Delete" /></td></tr>')
+        }
+    </script>
+
+    <script>
+        $("#LBDays").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#LBAmount").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#PEDays").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#PEAmount").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#NoOfDays").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#Rate").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#OvertimeHours").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+        $("#OvertimeCharges").on("click", function () {
+            if ($(this).val() == 0)
+                $(this).val("")
+        });
+
+
+
+    </script>
+</body>
+</html>

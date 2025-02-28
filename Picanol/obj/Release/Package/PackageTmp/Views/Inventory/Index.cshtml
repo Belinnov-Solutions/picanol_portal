@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Inventory Management";
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+    <div class="container margin-top-lg pull-left">
+
+        <h2>Inventory Management Application</h2>
+        @if (userInfo.RoleId != 8)
+        {
+    <div class="margin-top-md">
+        <h4>Please select an application area that you want to access:</h4>
+
+        <div class="row">
+            <!--commented By himanshu for new view addpart-->
+            @*<div class="col-md-3"><a href="@Url.Action("AddNewPart", "Parts")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> Add New </a></div>*@
+            <div class="col-md-3"><a href="@Url.Action("AddNewPart", "Parts")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> Add New </a></div>
+            <div class="col-md-9">@*<b>Configurations : </b>*@ Section to add new Board or Component.</div>
+        </div>
+
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("UpdatePrice", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i> Upload Components sheet</a>
+            </div>
+            <div class="col-md-9">@*<b>Waste - Loss - Loan Management :</b>*@ Section to upload updated stock sheet received from Accounts.</div>
+        </div>
+
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("Index", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>Edit</a>
+            </div>
+            <div class="col-md-9">@*<b>Waste - Loss - Loan Management :</b>*@ Section to edit Components stock and consumption.</div>
+        </div>
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("AddStock", "Parts", new { id = 2 })" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>View Stock</a>
+            </div>
+            <div class="col-md-9"> Section to View stock of parts procured.</div>
+        </div>
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("AddStock", "Parts", new { id = 1 })" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>View Low Stock</a>
+            </div>
+            <div class="col-md-9"> Section to View low stock of parts procured.</div>
+        </div>
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("GetCurrentInventory", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>Download Inventory Excel</a>
+            </div>
+            <div class="col-md-9">@*<b>Waste - Loss - Loan Management :</b>*@ Download Current Inventory Data</div>
+        </div>
+    </div>
+        }
+        else
+        {
+    <div class="margin-top-md">
+        <h4>Please select an application area that you want to access:</h4>
+
+        @*<div class="row">
+            <div class="col-md-3"><a href="@Url.Action("AddNewPart", "Parts")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> Add New </a></div>
+            <div class="col-md-9"> Section to add new Board or Component.</div>
+        </div>*@
+
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("UpdatePrice", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i> Upload Components sheet</a>
+            </div>
+            <div class="col-md-9">@*<b>Waste - Loss - Loan Management :</b>*@ Section to upload updated stock sheet received from Accounts.</div>
+        </div>
+
+        @*<div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("Index", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>Edit</a>
+            </div>
+            <div class="col-md-9"> Section to edit Components stock and consumption.</div>
+        </div>*@
+        @*<div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("AddStock", "Parts", new { id = 2 })" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>View Stock</a>
+            </div>
+            <div class="col-md-9"> Section to View stock of parts procured.</div>
+        </div>*@
+        @*<div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("AddStock", "Parts", new { id = 1 })" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>View Low Stock</a>
+            </div>
+            <div class="col-md-9"> Section to View low stock of parts procured.</div>
+        </div>*@
+        <div class="row margin-top-sm">
+            <div class="col-md-3">
+                <a href="@Url.Action("GetCurrentInventory", "Parts")" class="btn red-buton btn-large"> <i class="fam-calculator-delete"></i>Download Inventory Excel</a>
+            </div>
+            <div class="col-md-9">@*<b>Waste - Loss - Loan Management :</b>*@ Download Current Inventory Data</div>
+        </div>
+    </div>
+        }
+    </div>
+
+<div class="row margin-bottom-lg"></div>
+<br />
+

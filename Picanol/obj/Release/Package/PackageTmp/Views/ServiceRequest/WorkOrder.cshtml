@@ -1,0 +1,562 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+@{
+    ViewBag.Title = "WorkOrder";
+}
+<head>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script type="text/javascript">
+
+        $("#Date").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#StartDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#EndDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+    
+
+
+    <style>
+
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+    </style>
+
+</head>
+
+
+<body>
+    <a href="@Url.Action("WorkOrderListFilter", "ServiceRequest")" class="btn btn-primary btn-large pull-left"> Back</a>
+
+    <div class="text-center">
+        <h3><b>Work Order</b></h3>
+    </div>
+
+    <div class="row" id="loading">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="WorkOrder">Work Order No. :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.WorkOrder, new { id = "WorkOrder", @class = "form-control", @placeholder = "Enter Work Order Number" })
+                @Html.HiddenFor(model => model.WorkOrder.WorkOrderId, new { id = "WorkOrderId" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="DateCreated">Date :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.DateCreated, "{0:dd/MM/yyyy}", new { id = "Date", @class = "form-control", maxlength = "500" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="CustomerName">Customer Name</label>
+                <input name="id" class="form-control" type="search" value="@Model.WorkOrder.CustomerName" list="CNList" autocomplete="on" id="CustomerId" placeholder="Enter Customer Name" onchange="getCustomerDetails()" />
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group">
+                <label for="ContractNo">Address :</label>
+                @Html.TextAreaFor(d => d.WorkOrder.FullAddress, new { id = "FullAddress", @class = "form-control", @placeholder = "Address Of Customer" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="ContractNo">GSTIN :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.GstIn, new { id = "GstIn", @class = "form-control", @readonly = "true" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="ContactPerson">Contact Person :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.ContactPerson, new { id = "ContactPerson", @class = "form-control", @placeholder = "Enter Contact Person" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="MobileNo">Mobile :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.Mobile, new { id = "MobileNo", @class = "form-control", @placeholder = "Customer Mobile Number" })
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="Email">Email :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.EmailId, new { id = "Email", @class = "form-control", @placeholder = "Customer Email" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="StartDate">Start Date :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.StartDate, "{0:dd-MM-yyyy}", new { id = "StartDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="EndDate">End Date :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.EndDate, "{0:dd-MM-yyyy}", new { id = "EndDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="ContractNo">ContractNo :</label>
+                @Html.TextBoxFor(d => d.WorkOrder.ContractNumber, new { id = "ContractNo", @class = "form-control", @placeholder = "Enter Contract Number" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="UserName">Assigned To</label>
+                <input name="id" class="form-control" type="search" value="@Model.WorkOrder.AssignedUserName" list="UserList" placeholder="Enter Name" autocomplete="on" id="UserId" />
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="WorkOrderType">Work Order Type :</label>
+                @Html.DropDownListFor(p => p.WorkOrder.WorkOrderType, new SelectList(Model.WorkOrderTypeList, "Text", "Text"), "Select", new { id = "WorkOrderType", @class = "form-control" })
+
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="WorkOrderType">Call Type :</label>
+                @Html.DropDownListFor(p => p.WorkOrder.CallType, new SelectList(Model.CallTypeList, "Description", "Description"), "Select Call Type", new { id = "CallType", @class = "form-control" })
+            </div>
+        </div>
+
+
+
+
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="Description">Mission Description :</label>
+                @Html.TextAreaFor(d => d.WorkOrder.Description, new { id = "Description", @class = "form-control", @placeholder = "Enter Description" })
+            </div>
+        </div>
+
+
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="Condition">Mission Condition :</label>
+                @Html.TextAreaFor(d => d.WorkOrder.Conditions, new { id = "Condition", @rows = "10", @class = "form-control", @placeholder = "Enter Condition" })
+            </div>
+        </div>
+        <div class="col-sm-12" id="imageData">
+
+            <input type="file" id="flImage" onchange='UploadTempImage()' name="ImageUpload" multiple />
+            <p style="color:red;">Notes: Select only one image at a time,Please Use different image Name</></p>
+
+        </div>
+        <div id="imgPreview"></div>
+        @if (Model.workOrderImageList.Count() == 0)
+        {
+
+        }
+        else
+        {
+            <div class="row">
+
+                @foreach (var item in Model.workOrderImageList)
+                {
+                    <div class="col-md-2">
+                        <span class="img">
+                            <button style="font-size:10px;Margin-left:15px;" id=@item.ImageName onclick="RemoveImage(id)">@item.ImageName<i class="fa fa-close"></i></button><br />
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @if (Model.WorkOrder.WorkOrderId != 0 && Model.Edit == 0)
+    {
+        <a href="@Url.Action("ProvisionalBillList", "ServiceRequest", new { WorkOrderId = Model.WorkOrder.WorkOrderId })" class="btn btn-success btn-large">Proforma Invoice</a>
+    }
+
+    else
+    {
+        <center><button type="submit" id="myBtn" onclick="Submitbtn()" class="btn btn-success"> Submit </button></center>
+    }
+
+    <datalist id="CNList">
+        @foreach (var item in Model.Customers)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+
+    </datalist>
+
+    <datalist id="UserList">
+        @foreach (var item in Model.Users)
+        {
+            <option id="@item.UserId" data-value="@item.UserId" value="@item.UserName"></option>
+
+        }
+
+    </datalist>
+
+
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $("#Date").datepicker({
+
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#StartDate").datepicker({
+
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#EndDate").datepicker({
+
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+    <script type="text/javascript">
+     function UploadTempImage() {
+            var formData = new FormData();
+            formData.append('file', $('#flImage')[0].files[0]);
+         $.ajax({
+             beforeSend: function () {
+                 $('.spinner-wrapper').show()
+             },
+                type: 'post',
+                url: '@Url.Action("ImageTest", "ServiceRequest")',
+                data: formData,
+             success: function (response) {
+                 $('.spinner-wrapper').hide();
+                    if (response != null) {
+                        var path = "/Content/Temp/" + response;
+                        var image = '<p><button style="font-size:10px;Margin-left:15px;" id=' + response + ' onclick="RemoveItem(\'' + response + '\')">' + response + ' <i class="fa fa-close"></i></button></p>';
+                        $("#imgPreview").append(image);
+
+                    }
+                },
+                processData: false,
+                contentType: false,
+                error: function () {
+                    alert("Oops something went wrong!");
+                }
+            });
+        }
+    </script>
+    <script>
+
+        function RemoveItem(filename) {
+
+            var searchString = filename;
+
+            var data = {
+                imageName: searchString,
+
+            };
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+            type: "POST",
+            url: '@Url.Action("RemoveFile", "ServiceRequest")',
+            data: data,
+                success: function (response) {
+                    //$("#divID").html(response);
+                    $('.spinner-wrapper').hide();
+                    $("#" + filename).hide();
+                //$("#imgPreview").load(" #imgPreview");
+
+
+              },
+
+        });
+        }
+        function RemoveImage(filename)
+        {
+
+            var searchString = filename;
+            var data = {
+                imageName: searchString,
+            };
+
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+            type: "POST",
+            url: '@Url.Action("RemoveImage", "ServiceRequest")',
+            data: data,
+                success: function (response) {
+                    $('.spinner-wrapper').hide();
+                    //$("#divID").html(response);
+                    //$("#loading").load("#loading");
+                    window.location.reload(true);
+                //$("#imgPreview").load(" #imgPreview");
+
+
+              },
+
+        });
+        }
+
+     function getCustomerDetails() {
+        var shownVal = document.getElementById("CustomerId").value;
+        var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+
+        var data = {
+            CustomerId: CustomerId
+        };
+         $.ajax({
+             beforeSend: function () {
+                 $('.spinner-wrapper').show()
+             },
+            type: "POST",
+            url: '@Url.Action("GetCustomerDetails", "ServiceRequest")',
+            data: data,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $("#FullAddress").val(data.WorkOrder.FullAddress);
+                $("#MobileNo").val(data.WorkOrder.Mobile);
+                $("#Email").val(data.WorkOrder.EmailId);
+                $("#ContactPerson").val(data.WorkOrder.ContactPerson);
+				 $("#GstIn").val(data.WorkOrder.GstIn);
+				 localStorage.setItem("CustomerGstIN", data.WorkOrder.GstIn);
+				 localStorage.setItem("CustomerActiveState", data.CustomerDetails.InActive);
+            },
+
+        });
+    }
+    </script>
+    <script>
+
+    function Submitbtn() {
+
+        var WorkOrderId = $("#WorkOrderId").val();
+        var ContactPerson = $("#ContactPerson").val();
+        var WorkOrder = $("#WorkOrder").val();
+        var DateCreated = $("#Date").val();
+        var SDate = $("#StartDate").val();
+        var EDate = $("#EndDate").val();
+        var Mobile = $("#MobileNo").val();
+        var shownVal = document.getElementById("CustomerId").value;
+        if (shownVal == '') {
+            alert('Please enter Customer Name!');
+            document.getElementById('CustomerId').focus();
+            return false;
+        }
+
+
+		 var inActive = localStorage.getItem("CustomerActiveState");
+        if (inActive == "true") {
+            alert('InActive Customer.WorkOrder Cannot be Created!');
+            return false;
+        }
+		 var checkGsTIN = localStorage.getItem("CustomerGstIN");
+		 var checkEditGstIn = $("#GstIn").val();
+        if ( (checkEditGstIn==""||checkEditGstIn == "Null" )&& (checkGsTIN == ""||checkGsTIN == "Null" )) {
+            alert("Please enter Customer GSTIN!");
+            document.getElementById('GstIn').focus();
+            return false;
+        }
+        var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+        var CustomerAddress = document.getElementById("FullAddress").value;
+
+        if (ContactPerson == '') {
+            alert("Please enter Contact Person Name");
+            document.getElementById('ContactPerson').focus();
+            return false;
+        }
+        if (Mobile == '') {
+            alert("Please enter Mobile Number");
+            document.getElementById('MobileNo').focus();
+            return false;
+        }
+
+        var sdate = moment(SDate, 'dd-mm-yyyy').format('x');
+
+        var edate = moment(EDate, 'dd-mm-yyyy').format('x');
+        if (edate < sdate) {
+            alert('End Date should be always greater than Start Date !.');
+            document.getElementById('EndDate').focus();
+            return false;
+
+
+        }
+
+        if (SDate == '') {
+            alert("Please  Select Start Date");
+            document.getElementById('StartDate').focus();
+            return false;
+        }
+        if (EDate == '') {
+            alert("Please select End Date");
+            document.getElementById('EndDate').focus();
+            return false;
+        }
+
+
+        var shown = document.getElementById("UserId").value;
+        if (shown == '') {
+            alert("Please assigned to customer!.");
+            document.getElementById('UserId').focus();
+            return false;
+        }
+
+
+        var AssignedTo = document.querySelector("#UserList option[value='" + shown + "']").dataset.value;
+        var WorkOrderType = $("#WorkOrderType").val();
+        var ContractNo = $("#ContractNo").val();
+        var Condition = $("#Condition").val();
+
+        if (ContractNo == '') {
+            alert('Please enter Contract No !.');
+            document.getElementById('ContractNo').focus();
+            return false;
+        }
+
+        var Description = $("#Description").val();
+        if (Description == '') {
+            alert('Please Fill Mission Description!');
+            document.getElementById('Description').focus();
+            return false;
+        }
+
+        if (Condition == '') {
+            alert('Please eneter Mission Condition!');
+            document.getElementById('Condition').focus();
+            return false;
+        }
+
+        
+        var CallType = $("#CallType").val();
+        var EmailId = $("#Email").val();
+
+
+        var WorkOrderDto = {
+            WorkOrder : WorkOrder,
+            DateCreated: DateCreated,
+            SDate: SDate,
+            EDate: EDate,
+            ContactPerson: ContactPerson,
+            CustomerId: CustomerId,
+            WorkOrderType: WorkOrderType,
+            ContractNumber: ContractNo,
+            Conditions: Condition,
+            Description: Description,
+            Mobile: Mobile,
+            EmailId: EmailId,
+            AssignedTo: AssignedTo,
+            WorkOrderId: WorkOrderId,
+            CallType: CallType,
+            CustomerAddress: CustomerAddress,
+
+        }
+
+        var WorkOrderViewModel = {
+            WorkOrder: WorkOrderDto
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+                    $("#myBtn").attr("disabled", true)
+            },
+            type: "POST",
+            url: '@Url.Action("SaveWorkOrder", "ServiceRequest")',
+            data: WorkOrderViewModel,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                if (data == "Updated") {
+                    window.location = '@Url.Action("DownloadAndDeleteWorkOrder", "ServiceRequest")';
+                    $("#myBtn").attr("disabled", false);
+                    alert("Data Submitted");
+                    window.location = '@Url.Action("WorkOrderListFilter", "ServiceRequest")';
+					localStorage.removeItem("CustomerGstIN");
+                    localStorage.removeItem("CustomerActiveState");
+                    //window.location = '@Url.Action("DownloadAndDeleteWorkOrder", "ServiceRequest")';
+
+
+                           }
+                else {
+                    $('.spinner-wrapper').hide();
+                    alert("Data Edited");
+                    $("#myBtn").attr("disabled", false);
+					 localStorage.removeItem("CustomerGstIN");
+					 localStorage.removeItem("CustomerActiveState");
+                   // window.location = '@Url.Action("WorkOrderListFilter", "ServiceRequest")';
+                }
+            },
+        });
+    }
+    </script>
+</body>

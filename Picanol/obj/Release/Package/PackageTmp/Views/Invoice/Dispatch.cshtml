@@ -1,0 +1,220 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+@{
+    ViewBag.Title = "Dispatch";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <h3 class="text-center"><b>Dispatch</b></h3>
+    @using (Html.BeginForm("RecordDispatchDetails", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data", Id = "form0" }))
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ChallanNo">Challan Number</label>
+                    @Html.TextBoxFor(d => d.ChallanNo, new { id = "ChallanNo", @class = "form-control" })
+                </div>
+            </div>
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="DispatchDate">Dispatch Date</label>
+                    @Html.TextBoxFor(d => d.DispatchDate, "{0:dd/MM/yyyy}", new { id = "DispatchDate", @class = "form-control", maxlength = "500" })
+                    @Html.HiddenFor(model => model.InvoiceNo, new { id = "DDInvoiceNo" })
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="TotalBoxes">Total Boxes</label>
+                    @Html.TextBoxFor(d => d.TotBox, new { id = "TotBox", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="DispatchDetails">Dispatch Details</label>
+                    @Html.TextAreaFor(d => d.DispatchDetails, new { id = "DispatchDetails", @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="TrackingRef">Tracking Refernce</label>
+                    @Html.TextBoxFor(d => d.TrackingRef, new { id = "TrackingRef", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(p => p.DisImage.DisImages, new { @class = "" })
+                    <div class="field" align="left">
+                        <input type="file" id="files" name="images" multiple="multiple" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <br />
+        <br />
+        <button type="submit" class="btn btn-success " id="btnSave2" value="Save">Submit </button>
+
+        <br />
+        <br />
+
+    }
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#DispatchDate").datepicker({
+            //dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //autoclose: true,
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+
+        });
+    </script>
+    <script type="text/javascript">
+        $("#btnSave2").click(function () {
+            var InvoiceNumber = $("#Table #InvoiceNumber").text();
+            $('#DDInvoiceNo').val(InvoiceNumber)
+
+            var TrackingNo = $('#TrackingNo').val();
+            if (TrackingNo == '') {
+                alert('Please fill your TrackingNo!');
+                return false;
+            }
+            var Board = $('#Board').val();
+            if (Board == '') {
+                alert('Please fill your Board!');
+                return false;
+            }
+            var TotBox = $('#TotBox').val();
+            if (TotBox == '') {
+                alert('Please fill your TotalBoxes!');
+                return false;
+            }
+            var DisDate = $('#DisDate').val();
+            if (DisDate == '') {
+                alert('Please Select your Date!');
+                return false;
+            }
+            var Company = $('#Company').val();
+            if (Company == '') {
+                alert('Please fill your Company!');
+                return false;
+            }
+            var TrackingRef = $('#TrackingRef').val();
+            if (TrackingRef == '') {
+                alert('Please fill your TrackingRef!');
+                return false;
+            }
+            var files = $('#fileDispatch').val();
+            if (files == '') {
+                alert('Please Select your Image!');
+                return false;
+            }
+            @*var InvoiceViewModel = {
+			 TrackingNo: TrackingNo,
+			 Board: Board,
+			 TotBox: TotBox,
+			 DisDate: DisDate,
+			 Company: Company,
+			 TrackingRef: TrackingRef,
+			 files: files,
+
+
+        };
+        $.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("ListInvoices", "Invoice")', // name of PHP script
+			data: InvoiceViewModel, // parameter name and value
+			success: function (data) {
+
+			},
+
+			});*@
+        });
+    </script>
+    <style>
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+    </style>
+    <script>
+        $(document).ready(function () {
+            if (window.File && window.FileList && window.FileReader) {
+                $("#files").on("change", function (e) {
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function (e) {
+                            var file = e.target;
+                            $("<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                                "<br/><span class=\"remove\">Remove image</span>" +
+                                "</span>").insertAfter("#files");
+                            $(".remove").click(function () {
+                                $(this).parent(".pip").remove();
+                            });
+
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
+    </script>
+</body>
+</html>

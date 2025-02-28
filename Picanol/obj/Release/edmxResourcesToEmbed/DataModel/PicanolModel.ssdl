@@ -1,0 +1,939 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PicanolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Logs">
+    <Key>
+      <PropertyRef Name="LogId" />
+    </Key>
+    <Property Name="LogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Level" Type="nvarchar(max)" />
+    <Property Name="CallSite" Type="nvarchar(max)" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="Message" Type="nvarchar(max)" />
+    <Property Name="StackTrace" Type="nvarchar(max)" />
+    <Property Name="InnerException" Type="nvarchar(max)" />
+    <Property Name="AdditionalInfo" Type="nvarchar(max)" />
+    <Property Name="LoggedOnDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tblAudit">
+    <Key>
+      <PropertyRef Name="ActionId" />
+    </Key>
+    <Property Name="ActionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ActionName" Type="nvarchar(max)" />
+    <Property Name="TableName" Type="varchar" MaxLength="500" />
+    <Property Name="IPAddress" Type="varchar(max)" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="Browser" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblBusiness">
+    <Key>
+      <PropertyRef Name="BusinessId" />
+    </Key>
+    <Property Name="BusinessId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" />
+    <Property Name="AddressLine1" Type="nvarchar" MaxLength="100" />
+    <Property Name="AddressLine2" Type="nvarchar" MaxLength="100" />
+    <Property Name="District" Type="varchar" MaxLength="50" />
+    <Property Name="City" Type="varchar" MaxLength="50" />
+    <Property Name="State" Type="varchar" MaxLength="50" />
+    <Property Name="PIN" Type="varchar" MaxLength="50" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="Mobile" Type="varchar" MaxLength="50" />
+    <Property Name="GSTIN" Type="varchar" MaxLength="50" />
+    <Property Name="PAN" Type="varchar" MaxLength="50" />
+    <Property Name="ParentBusinessID" Type="int" />
+    <Property Name="Longitude" Type="nvarchar" MaxLength="100" />
+    <Property Name="Latitude" Type="nvarchar" MaxLength="100" />
+    <Property Name="AccountNumber" Type="varchar" MaxLength="50" />
+    <Property Name="IFSCCode" Type="varchar" MaxLength="15" />
+    <Property Name="BankName" Type="varchar" MaxLength="50" />
+    <Property Name="BankBranch" Type="varchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="tblChallan">
+    <Key>
+      <PropertyRef Name="ChallanId" />
+    </Key>
+    <Property Name="ChallanId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChallanNumber" Type="varchar" MaxLength="50" />
+    <Property Name="ChallanDate" Type="date" />
+    <Property Name="ReferenceNo" Type="varchar" MaxLength="50" />
+    <Property Name="DateReceived" Type="date" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="ChallanType" Type="nchar" MaxLength="10" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="Remarks" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tblCreditNote">
+    <Key>
+      <PropertyRef Name="CreditNoteId" />
+    </Key>
+    <Property Name="CreditNoteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreditNoteNo" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="CreditNoteDate" Type="datetime" Nullable="false" />
+    <Property Name="InvoiceNumber" Type="nvarchar" MaxLength="255" />
+    <Property Name="TaxableAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="CreditNoteFileName" Type="varchar" MaxLength="200" />
+    <Property Name="Createdby" Type="int" />
+    <Property Name="ProvisionalBillId" Type="int" Nullable="false" />
+    <Property Name="ComponentCost" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="LabourCost" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="ServiceCharge" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="Fare" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="PocketExpeses" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="BoardingCharges" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="BoardingDays" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="ServiceDays" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="ConveyanceExpenses" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="ConveyanceExpenseDays" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="PocketExpenseDays" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="OvertimeHours" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="OvertimeCharges" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="OvertimeAmount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="CRNCreated" Type="bit" Nullable="false" />
+    <Property Name="Cancelled" Type="bit" Nullable="false" />
+    <Property Name="CancelledBy" Type="int" Nullable="false" />
+    <Property Name="CancelledDate" Type="datetime" />
+    <Property Name="SubCustomerId" Type="int" Nullable="false" />
+    <Property Name="PackagingForwarding" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblCustomer">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="AddressLine1" Type="varchar" MaxLength="200" />
+    <Property Name="AddressLine2" Type="varchar" MaxLength="200" />
+    <Property Name="District" Type="varchar" MaxLength="50" />
+    <Property Name="City" Type="varchar" MaxLength="50" />
+    <Property Name="State" Type="varchar" MaxLength="50" />
+    <Property Name="PIN" Type="varchar" MaxLength="10" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="PhoneNo" Type="varchar" MaxLength="20" />
+    <Property Name="Mobile" Type="varchar" MaxLength="50" />
+    <Property Name="ContactPerson" Type="varchar" MaxLength="50" />
+    <Property Name="GSTIN" Type="varchar" MaxLength="20" />
+    <Property Name="PAN" Type="varchar" MaxLength="20" />
+    <Property Name="BusinessId" Type="int" Nullable="false" />
+    <Property Name="BigPacking" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="BigForwarding" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="SmallPacking" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="SmallForwarding" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="ShippingAddressLine1" Type="varchar" MaxLength="200" />
+    <Property Name="ShippingAddressLine2" Type="varchar" MaxLength="200" />
+    <Property Name="ShippingDistrict" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingCity" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingState" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingPIN" Type="varchar" MaxLength="10" />
+    <Property Name="StateCode" Type="varchar" MaxLength="10" />
+    <Property Name="RepairCharges" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="Active" Type="bit" />
+    <Property Name="Delind" Type="bit" />
+    <Property Name="Zone" Type="varchar" MaxLength="255" />
+    <Property Name="ShippingStateCode" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Picannol.dbo.tblCustomerContact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tblCustomerContact">
+    <Key>
+      <PropertyRef Name="CustomerContactId" />
+      <PropertyRef Name="CustomerId" />
+      <PropertyRef Name="DelInd" />
+    </Key>
+    <Property Name="CustomerContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="Department" Type="varchar" MaxLength="50" />
+    <Property Name="ContactPersonName" Type="varchar" MaxLength="100" />
+    <Property Name="Mobile" Type="varchar" MaxLength="20" />
+    <Property Name="EmailId" Type="varchar" MaxLength="200" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblDebitNote">
+    <Key>
+      <PropertyRef Name="DebitNoteId" />
+    </Key>
+    <Property Name="DebitNoteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DebitNoteNo" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="CreditNoteNo" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="InvoiceNo" Type="nvarchar" MaxLength="255" />
+    <Property Name="DebitNoteDate" Type="datetime" Nullable="false" />
+    <Property Name="DebitNoteFileName" Type="varchar" MaxLength="200" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="ProvisionalBillId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="SubCustomerId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblDetailedExpenses">
+    <Key>
+      <PropertyRef Name="DetailedExpensesId" />
+    </Key>
+    <Property Name="DetailedExpensesId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderGUID" Type="uniqueidentifier" />
+    <Property Name="ProvisionalBillId" Type="int" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="Type" Type="varchar" MaxLength="50" />
+    <Property Name="ExpenseFrom" Type="varchar" MaxLength="250" />
+    <Property Name="ExpenseTo" Type="varchar" MaxLength="250" />
+    <Property Name="Amount" Type="money" />
+    <Property Name="Remarks" Type="varchar" MaxLength="500" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblDispatchDetails">
+    <Key>
+      <PropertyRef Name="DispatchId" />
+    </Key>
+    <Property Name="DispatchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TrackingNumber" Type="bigint" Nullable="false" />
+    <Property Name="OrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="InvoiceNo" Type="varchar" MaxLength="50" />
+    <Property Name="DocketNo" Type="varchar" MaxLength="50" />
+    <Property Name="DispatchDate" Type="date" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="DispatchDetails" Type="nvarchar" MaxLength="500" />
+    <Property Name="ImageName" Type="varchar" MaxLength="100" />
+    <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblEInvoice">
+    <Key>
+      <PropertyRef Name="EInvoiceId" />
+    </Key>
+    <Property Name="EInvoiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderID" Type="uniqueidentifier" />
+    <Property Name="InvoiceNo" Type="varchar" MaxLength="255" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="IRN" Type="nvarchar(max)" />
+    <Property Name="QRCodeBase64" Type="nvarchar(max)" />
+    <Property Name="QRCode" Type="varchar" MaxLength="255" />
+    <Property Name="Type" Type="varchar" MaxLength="255" />
+    <Property Name="Status" Type="varchar" MaxLength="255" />
+    <Property Name="IRNGeneratedBy" Type="varchar" MaxLength="255" />
+    <Property Name="CancelledBy" Type="varchar" MaxLength="255" />
+    <Property Name="CancelledDate" Type="datetime" />
+    <Property Name="LastModified" Type="datetime" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="InvoiceDate" Type="date" />
+    <Property Name="Cancelled" Type="bit" />
+    <Property Name="ProvisionalBillId" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Picannol.dbo.tblGSTStates' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tblGSTStates">
+    <Key>
+      <PropertyRef Name="GSTStateId" />
+      <PropertyRef Name="StateName" />
+      <PropertyRef Name="StateCode" />
+      <PropertyRef Name="DelInd" />
+    </Key>
+    <Property Name="GSTStateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StateName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="StateInitials" Type="varchar" MaxLength="10" />
+    <Property Name="StateCode" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="StateType" Type="varchar" MaxLength="50" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblInvoices">
+    <Key>
+      <PropertyRef Name="InvoiceId" />
+    </Key>
+    <Property Name="InvoiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InvoiceNo" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="OrderGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="InvoiceDate" Type="date" />
+    <Property Name="DueDate" Type="date" />
+    <Property Name="InvoiceType" Type="varchar" MaxLength="50" />
+    <Property Name="Cancelled" Type="bit" />
+    <Property Name="CancelledBy" Type="int" />
+    <Property Name="CancelledDate" Type="datetime" />
+    <Property Name="InvoiceFileName" Type="varchar" MaxLength="200" />
+    <Property Name="SendOnDate" Type="datetime" />
+    <Property Name="SendTo" Type="nvarchar" MaxLength="255" />
+    <Property Name="ProvisionalBillId" Type="int" />
+    <Property Name="SubCustomerId" Type="int" />
+    <Property Name="Packing" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="Forwading" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="RepairCharge" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="ComponentCost" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="GeneratedByUserId" Type="int" />
+    <Property Name="BillingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="StateCode" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="ShippingStateCode" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblOrder">
+    <Key>
+      <PropertyRef Name="OrderGUID" />
+    </Key>
+    <Property Name="OrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="TrackingNumber" Type="bigint" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="ChallanId" Type="int" Nullable="false" />
+    <Property Name="AssignedUserId" Type="int" />
+    <Property Name="RepairType" Type="varchar" MaxLength="50" />
+    <Property Name="Status" Type="varchar" MaxLength="50" />
+    <Property Name="Remarks" Type="varchar" MaxLength="100" />
+    <Property Name="LastModified" Type="datetime" />
+    <Property Name="DelInd" Type="bit" />
+    <Property Name="PartId" Type="int" Nullable="false" />
+    <Property Name="RepairTime" Type="numeric" Precision="10" Scale="2" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="PackingType" Type="varchar" MaxLength="50" />
+    <Property Name="OrderDate" Type="date" Nullable="false" />
+    <Property Name="EditedBy" Type="int" />
+    <Property Name="DateEdited" Type="datetime" />
+    <Property Name="Dispatched" Type="bit" />
+    <Property Name="Paid" Type="bit" />
+    <Property Name="ExemptLabourCost" Type="bit" />
+    <Property Name="ExemptComponentCost" Type="bit" />
+    <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="tblOrderPart">
+    <Key>
+      <PropertyRef Name="OrderPartId" />
+    </Key>
+    <Property Name="OrderPartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PartId" Type="int" Nullable="false" />
+    <Property Name="Qty" Type="int" Nullable="false" />
+    <Property Name="Price" Type="money" />
+    <Property Name="Total" Type="money" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="LastModified" Type="datetime" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Deletedby" Type="int" Nullable="false" />
+    <Property Name="DeletedDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tblOrderPayments">
+    <Key>
+      <PropertyRef Name="OrderPaymentId" />
+    </Key>
+    <Property Name="OrderPaymentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PaymentGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="InvoiceNo" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="DatePaid" Type="date" />
+    <Property Name="PaymentType" Type="varchar" MaxLength="50" />
+    <Property Name="PaymentDetails" Type="nvarchar" MaxLength="500" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="TDS" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="Paid" Type="bit" Nullable="false" />
+    <Property Name="InvoiceAmount" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="ProvisionalBillId" Type="int" Nullable="false" />
+    <Property Name="ReceivedAmount" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Status" Type="varchar" MaxLength="255" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="BalanceAmount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPart">
+    <Key>
+      <PropertyRef Name="PartId" />
+    </Key>
+    <Property Name="PartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PartNumber" Type="varchar" MaxLength="50" />
+    <Property Name="PartName" Type="varchar" MaxLength="500" />
+    <Property Name="SerialNo" Type="varchar" MaxLength="75" />
+    <Property Name="Price" Type="money" />
+    <Property Name="GST" Type="decimal" Precision="2" Scale="2" />
+    <Property Name="Stock" Type="int" />
+    <Property Name="PartTypeId" Type="int" Nullable="false" />
+    <Property Name="DelInd" Type="bit" />
+    <Property Name="OpeningStock" Type="int" />
+    <Property Name="OpeningStockDate" Type="date" />
+    <Property Name="Location" Type="varchar" MaxLength="100" />
+    <Property Name="ModifiedBy" Type="int" Nullable="false" />
+    <Property Name="ModifiedDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tblPartHistory">
+    <Key>
+      <PropertyRef Name="PartHistoryId" />
+    </Key>
+    <Property Name="PartHistoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PartId" Type="int" Nullable="false" />
+    <Property Name="PartNumber" Type="varchar" MaxLength="50" />
+    <Property Name="PartName" Type="varchar" MaxLength="500" />
+    <Property Name="SerialNo" Type="varchar" MaxLength="75" />
+    <Property Name="Price" Type="money" />
+    <Property Name="GST" Type="decimal" Precision="2" Scale="2" />
+    <Property Name="Stock" Type="int" />
+    <Property Name="PartTypeId" Type="int" Nullable="false" />
+    <Property Name="DelInd" Type="bit" />
+    <Property Name="OpeningStock" Type="int" />
+    <Property Name="OpeningStockDate" Type="date" />
+    <Property Name="Location" Type="varchar" MaxLength="100" />
+    <Property Name="DateCreated" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tblPartLoan">
+    <Key>
+      <PropertyRef Name="LoanId" />
+    </Key>
+    <Property Name="OrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="Returned" Type="bit" Nullable="false" />
+    <Property Name="ReturnedBy" Type="int" />
+    <Property Name="ReturnDate" Type="date" />
+    <Property Name="Remarks" Type="varchar" MaxLength="255" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="LoanId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblPartType">
+    <Key>
+      <PropertyRef Name="PartTypeId" />
+    </Key>
+    <Property Name="PartTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PartTypeName" Type="varchar" MaxLength="50" />
+    <Property Name="DelInd" Type="bit" />
+  </EntityType>
+  <EntityType Name="tblProformaInvoices">
+    <Key>
+      <PropertyRef Name="ProformaInvoiceId" />
+    </Key>
+    <Property Name="ProformaInvoiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProformaInvoiceNo" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="OrderGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="ProformaInvoiceDate" Type="date" />
+    <Property Name="FileName" Type="varchar" MaxLength="500" />
+    <Property Name="EditedBy" Type="int" />
+    <Property Name="DateEdited" Type="datetime" />
+    <Property Name="CreatedBy" Type="int" />
+    <Property Name="Packing" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="Forwading" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="RepairCharge" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="ComponentCost" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="PackingType" Type="varchar" MaxLength="255" />
+    <Property Name="BillingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="StateCode" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="ShippingStateCode" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblProvisionalBill">
+    <Key>
+      <PropertyRef Name="ProvisionalBillId" />
+    </Key>
+    <Property Name="ProvisionalBillId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="MachineName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CallType" Type="varchar" MaxLength="50" />
+    <Property Name="FromDate" Type="date" Nullable="false" />
+    <Property Name="ToDate" Type="date" Nullable="false" />
+    <Property Name="ServiceCharge" Type="int" Nullable="false" />
+    <Property Name="Fare" Type="int" Nullable="false" />
+    <Property Name="PocketExpenses" Type="int" Nullable="false" />
+    <Property Name="BoardingCharges" Type="int" Nullable="false" />
+    <Property Name="BoardingDays" Type="int" Nullable="false" />
+    <Property Name="ConveyanceExpenses" Type="int" Nullable="false" />
+    <Property Name="OtherCharges" Type="int" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="GST" Type="int" Nullable="false" />
+    <Property Name="FinalAmount" Type="int" Nullable="false" />
+    <Property Name="ServiceDays" Type="int" Nullable="false" />
+    <Property Name="AuthorizedBy" Type="varchar" MaxLength="50" />
+    <Property Name="Designation" Type="varchar" MaxLength="50" />
+    <Property Name="EmailId" Type="nvarchar" MaxLength="100" />
+    <Property Name="ImageId" Type="varchar" MaxLength="50" />
+    <Property Name="WorkOrderId" Type="int" />
+    <Property Name="ConveyanceExpenseDays" Type="int" />
+    <Property Name="PocketExpenseDays" Type="int" />
+    <Property Name="Authorized" Type="bit" />
+    <Property Name="AuthorizedOn" Type="datetime" />
+    <Property Name="ServiceBillNo" Type="varchar" MaxLength="50" />
+    <Property Name="OvertimeHours" Type="int" />
+    <Property Name="OvertimeCharges" Type="int" />
+    <Property Name="OvertimeAmount" Type="int" />
+    <Property Name="UserSignatureId" Type="varchar" MaxLength="50" />
+    <Property Name="TotalDays" Type="int" />
+    <Property Name="FinalSubmit" Type="bit" />
+    <Property Name="SubCustomerId" Type="int" />
+    <Property Name="Cancelled" Type="bit" />
+    <Property Name="IsProvisionalEmailSent" Type="bit" />
+    <Property Name="ReminderEmailSend" Type="bit" Nullable="false" />
+    <Property Name="ReminderEmailDate" Type="datetime" />
+    <Property Name="FinalReminderSent" Type="bit" Nullable="false" />
+    <Property Name="Paid" Type="bit" Nullable="false" />
+    <Property Name="BillingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="StateCode" Type="varchar" MaxLength="50" />
+    <Property Name="ShippingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="ShippingStateCode" Type="varchar" MaxLength="50" />
+    <Property Name="SubCustomerBillingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="SubCustomerStateCode" Type="varchar" MaxLength="50" />
+    <Property Name="SubCustomerShippingAddress" Type="varchar" MaxLength="500" />
+    <Property Name="SubCustomerShippingStateCode" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblPurchase">
+    <Key>
+      <PropertyRef Name="PurchaseId" />
+    </Key>
+    <Property Name="PartId" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="PurchaseDate" Type="date" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="Remarks" Type="varchar" MaxLength="255" />
+    <Property Name="DelInd" Type="bit" />
+    <Property Name="PurchaseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Price" Type="money" />
+  </EntityType>
+  <EntityType Name="tblRoles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Picannol.dbo.tblServiceCallTypes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tblServiceCallTypes">
+    <Key>
+      <PropertyRef Name="CallTypeId" />
+      <PropertyRef Name="CallTypeNumber" />
+      <PropertyRef Name="Description" />
+      <PropertyRef Name="ServiceCharges" />
+      <PropertyRef Name="DelInd" />
+    </Key>
+    <Property Name="CallTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CallTypeNumber" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ServiceCharges" Type="bit" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblServiceDays">
+    <Key>
+      <PropertyRef Name="ServiceBillDayId" />
+    </Key>
+    <Property Name="ServiceBillDayId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FromDate" Type="date" Nullable="false" />
+    <Property Name="ToDate" Type="date" Nullable="false" />
+    <Property Name="ProvisionalBillId" Type="int" />
+  </EntityType>
+  <EntityType Name="tblServiceRequest">
+    <Key>
+      <PropertyRef Name="ServiceRequestId" />
+    </Key>
+    <Property Name="ServiceRequestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="MachineName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CallType" Type="varchar" MaxLength="50" />
+    <Property Name="FromDate" Type="date" Nullable="false" />
+    <Property Name="ToDate" Type="date" Nullable="false" />
+    <Property Name="ServiceCharge" Type="int" Nullable="false" />
+    <Property Name="Fare" Type="int" Nullable="false" />
+    <Property Name="PocketExpenses" Type="int" Nullable="false" />
+    <Property Name="BoardingCharges" Type="int" Nullable="false" />
+    <Property Name="BoardingDays" Type="int" Nullable="false" />
+    <Property Name="ConveyanceExpenses" Type="int" Nullable="false" />
+    <Property Name="OtherCharges" Type="int" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="GST" Type="int" Nullable="false" />
+    <Property Name="FinalAmount" Type="int" Nullable="false" />
+    <Property Name="ServiceDays" Type="int" Nullable="false" />
+    <Property Name="AuthorizedBy" Type="varchar" MaxLength="50" />
+    <Property Name="Designation" Type="varchar" MaxLength="50" />
+    <Property Name="EmailId" Type="nvarchar" MaxLength="100" />
+    <Property Name="ImageId" Type="varchar" MaxLength="50" />
+    <Property Name="WorkOrderId" Type="int" />
+    <Property Name="ConveyanceExpenseDays" Type="int" />
+    <Property Name="PocketExpenseDays" Type="int" />
+    <Property Name="Authorized" Type="bit" />
+    <Property Name="AuthorizedOn" Type="datetime" />
+    <Property Name="ServiceBillNo" Type="varchar" MaxLength="50" />
+    <Property Name="OvertimeHours" Type="int" />
+    <Property Name="OvertimeCharges" Type="int" />
+    <Property Name="OvertimeAmount" Type="int" />
+    <Property Name="UserSignatureId" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblSubCustomer">
+    <Key>
+      <PropertyRef Name="SubCustomerId" />
+    </Key>
+    <Property Name="SubCustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SubCustomerName" Type="nvarchar" MaxLength="100" />
+    <Property Name="AddressLine1" Type="nvarchar" MaxLength="200" />
+    <Property Name="AddressLine2" Type="nvarchar" MaxLength="200" />
+    <Property Name="District" Type="varchar" MaxLength="55" />
+    <Property Name="City" Type="varchar" MaxLength="55" />
+    <Property Name="State" Type="varchar" MaxLength="55" />
+    <Property Name="StateCode" Type="nvarchar" MaxLength="40" />
+    <Property Name="PIN" Type="nvarchar" MaxLength="50" />
+    <Property Name="ConatctPerson" Type="varchar" MaxLength="200" />
+    <Property Name="Mobile" Type="varchar" MaxLength="28" />
+    <Property Name="Email" Type="nvarchar" MaxLength="200" />
+    <Property Name="GSTIN" Type="varchar" MaxLength="200" />
+    <Property Name="CustomerId" Type="int" />
+    <Property Name="DelInd" Type="bit" />
+  </EntityType>
+  <EntityType Name="tblTimeSheet">
+    <Key>
+      <PropertyRef Name="TimeSheetId" />
+    </Key>
+    <Property Name="TimeSheetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TimeSheetNo" Type="varchar" MaxLength="50" />
+    <Property Name="WorkOrderId" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="Remarks" Type="varchar" MaxLength="1000" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="AuthorizedBy" Type="varchar" MaxLength="50" />
+    <Property Name="AuthorizedOn" Type="datetime" />
+    <Property Name="Authorized" Type="bit" Nullable="false" />
+    <Property Name="ImageId" Type="varchar" MaxLength="100" />
+    <Property Name="TimeSheetFileName" Type="varchar" MaxLength="100" />
+    <Property Name="FromDate" Type="date" />
+    <Property Name="ToDate" Type="date" />
+    <Property Name="EmailId" Type="varchar" MaxLength="100" />
+    <Property Name="Designation" Type="varchar" MaxLength="50" />
+    <Property Name="UserSignatureId" Type="varchar" MaxLength="100" />
+    <Property Name="FinalSubmit" Type="bit" />
+    <Property Name="ProvisionalBillId" Type="int" />
+  </EntityType>
+  <EntityType Name="tblTimeSheetDetails">
+    <Key>
+      <PropertyRef Name="TimeSheetDetailId" />
+    </Key>
+    <Property Name="TimeSheetDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TimeSheetId" Type="int" Nullable="false" />
+    <Property Name="WorkDate" Type="varchar" MaxLength="50" />
+    <Property Name="TotalHours" Type="varchar" MaxLength="100" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="WeekNo" Type="int" />
+  </EntityType>
+  <EntityType Name="tblUser">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="varchar" MaxLength="50" />
+    <Property Name="Email" Type="varchar" MaxLength="50" />
+    <Property Name="Password" Type="varchar" MaxLength="100" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="NotificationId" Type="nvarchar(max)" />
+    <Property Name="DelInd" Type="bit" />
+    <Property Name="OTP" Type="varchar" MaxLength="50" />
+    <Property Name="OtpVarify" Type="bit" />
+    <Property Name="MobileNo" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblWorkOrderImage">
+    <Key>
+      <PropertyRef Name="WorkOrderImageId" />
+    </Key>
+    <Property Name="WorkOrderImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="WorkOrderId" Type="int" />
+    <Property Name="ImageName" Type="nvarchar" MaxLength="255" />
+    <Property Name="DelInd" Type="bit" />
+  </EntityType>
+  <EntityType Name="tblWorkOrders">
+    <Key>
+      <PropertyRef Name="WorkOrderId" />
+    </Key>
+    <Property Name="WorkOrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="WorkOrderGUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="WorkOrderNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="AssignedTo" Type="int" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="WorkOrderType" Type="nvarchar(max)" />
+    <Property Name="ContractNumber" Type="varchar" MaxLength="100" />
+    <Property Name="ContactPerson" Type="varchar" MaxLength="500" />
+    <Property Name="EmailId" Type="nvarchar" MaxLength="500" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobile" Type="varchar" MaxLength="500" />
+    <Property Name="Conditions" Type="nvarchar(max)" />
+    <Property Name="StartDate" Type="date" />
+    <Property Name="EndDate" Type="date" />
+    <Property Name="Description" Type="varchar(max)" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+    <Property Name="CallType" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tblZone">
+    <Key>
+      <PropertyRef Name="ZoneId" />
+    </Key>
+    <Property Name="Zone" Type="nvarchar(max)" />
+    <Property Name="ZoneId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DelInd" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__tblProvis__SubCu__75A278F5">
+    <End Role="tblSubCustomer" Type="Self.tblSubCustomer" Multiplicity="0..1" />
+    <End Role="tblProvisionalBill" Type="Self.tblProvisionalBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblSubCustomer">
+        <PropertyRef Name="SubCustomerId" />
+      </Principal>
+      <Dependent Role="tblProvisionalBill">
+        <PropertyRef Name="SubCustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblServic__Provi__76969D2E">
+    <End Role="tblProvisionalBill" Type="Self.tblProvisionalBill" Multiplicity="0..1" />
+    <End Role="tblServiceDays" Type="Self.tblServiceDays" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProvisionalBill">
+        <PropertyRef Name="ProvisionalBillId" />
+      </Principal>
+      <Dependent Role="tblServiceDays">
+        <PropertyRef Name="ProvisionalBillId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblSubCus__Custo__6ABAD62E">
+    <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+    <End Role="tblSubCustomer" Type="Self.tblSubCustomer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="tblSubCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblSubCus__Custo__778AC167">
+    <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="0..1" />
+    <End Role="tblSubCustomer" Type="Self.tblSubCustomer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="tblSubCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblWorkOr__WorkO__797309D9">
+    <End Role="tblWorkOrders" Type="Self.tblWorkOrders" Multiplicity="0..1" />
+    <End Role="tblWorkOrderImage" Type="Self.tblWorkOrderImage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblWorkOrders">
+        <PropertyRef Name="WorkOrderId" />
+      </Principal>
+      <Dependent Role="tblWorkOrderImage">
+        <PropertyRef Name="WorkOrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblChallan_tblCustomer">
+    <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="1" />
+    <End Role="tblChallan" Type="Self.tblChallan" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="tblChallan">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrder_tblCustomer">
+    <End Role="tblCustomer" Type="Self.tblCustomer" Multiplicity="1" />
+    <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCustomer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="tblOrder">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrder_tblPart">
+    <End Role="tblPart" Type="Self.tblPart" Multiplicity="1" />
+    <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPart">
+        <PropertyRef Name="PartId" />
+      </Principal>
+      <Dependent Role="tblOrder">
+        <PropertyRef Name="PartId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrderPart_tblOrder">
+    <End Role="tblOrder" Type="Self.tblOrder" Multiplicity="1" />
+    <End Role="tblOrderPart" Type="Self.tblOrderPart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblOrder">
+        <PropertyRef Name="OrderGUID" />
+      </Principal>
+      <Dependent Role="tblOrderPart">
+        <PropertyRef Name="OrderGUID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPart_tblPartType">
+    <End Role="tblPartType" Type="Self.tblPartType" Multiplicity="1" />
+    <End Role="tblPart" Type="Self.tblPart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblPartType">
+        <PropertyRef Name="PartTypeId" />
+      </Principal>
+      <Dependent Role="tblPart">
+        <PropertyRef Name="PartTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUser_tblRoles">
+    <End Role="tblRoles" Type="Self.tblRoles" Multiplicity="1" />
+    <End Role="tblUser" Type="Self.tblUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblRoles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="tblUser">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="usp_UpdatetblPart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PartId" Type="int" Mode="In" />
+    <Parameter Name="PartName" Type="varchar" Mode="In" />
+    <Parameter Name="PartNumber" Type="varchar" Mode="In" />
+    <Parameter Name="SerialNumber" Type="varchar" Mode="In" />
+    <Parameter Name="NewStock" Type="int" Mode="In" />
+    <Parameter Name="Price" Type="money" Mode="In" />
+    <Parameter Name="Remarks" Type="varchar" Mode="In" />
+    <Parameter Name="UserId" Type="int" Mode="In" />
+    <Parameter Name="PurchaseDate" Type="date" Mode="In" />
+  </Function>
+  <EntityContainer Name="PicanolModelStoreContainer">
+    <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblAudit" EntityType="Self.tblAudit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblBusiness" EntityType="Self.tblBusiness" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblChallan" EntityType="Self.tblChallan" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCreditNote" EntityType="Self.tblCreditNote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCustomer" EntityType="Self.tblCustomer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDebitNote" EntityType="Self.tblDebitNote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDetailedExpenses" EntityType="Self.tblDetailedExpenses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblDispatchDetails" EntityType="Self.tblDispatchDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblEInvoice" EntityType="Self.tblEInvoice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblInvoices" EntityType="Self.tblInvoices" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblOrder" EntityType="Self.tblOrder" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblOrderPart" EntityType="Self.tblOrderPart" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblOrderPayments" EntityType="Self.tblOrderPayments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPart" EntityType="Self.tblPart" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPartHistory" EntityType="Self.tblPartHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPartLoan" EntityType="Self.tblPartLoan" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPartType" EntityType="Self.tblPartType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblProformaInvoices" EntityType="Self.tblProformaInvoices" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblProvisionalBill" EntityType="Self.tblProvisionalBill" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblPurchase" EntityType="Self.tblPurchase" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblRoles" EntityType="Self.tblRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblServiceDays" EntityType="Self.tblServiceDays" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblServiceRequest" EntityType="Self.tblServiceRequest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblSubCustomer" EntityType="Self.tblSubCustomer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblTimeSheet" EntityType="Self.tblTimeSheet" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblTimeSheetDetails" EntityType="Self.tblTimeSheetDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblWorkOrderImage" EntityType="Self.tblWorkOrderImage" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblWorkOrders" EntityType="Self.tblWorkOrders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblZone" EntityType="Self.tblZone" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblCustomerContact" EntityType="Self.tblCustomerContact" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tblCustomerContact].[CustomerContactId] AS [CustomerContactId], 
+[tblCustomerContact].[CustomerId] AS [CustomerId], 
+[tblCustomerContact].[Department] AS [Department], 
+[tblCustomerContact].[ContactPersonName] AS [ContactPersonName], 
+[tblCustomerContact].[Mobile] AS [Mobile], 
+[tblCustomerContact].[EmailId] AS [EmailId], 
+[tblCustomerContact].[DelInd] AS [DelInd]
+FROM [dbo].[tblCustomerContact] AS [tblCustomerContact]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tblGSTStates" EntityType="Self.tblGSTStates" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tblGSTStates].[GSTStateId] AS [GSTStateId], 
+[tblGSTStates].[StateName] AS [StateName], 
+[tblGSTStates].[StateInitials] AS [StateInitials], 
+[tblGSTStates].[StateCode] AS [StateCode], 
+[tblGSTStates].[StateType] AS [StateType], 
+[tblGSTStates].[DelInd] AS [DelInd]
+FROM [dbo].[tblGSTStates] AS [tblGSTStates]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="tblServiceCallTypes" EntityType="Self.tblServiceCallTypes" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+[tblServiceCallTypes].[CallTypeId] AS [CallTypeId], 
+[tblServiceCallTypes].[CallTypeNumber] AS [CallTypeNumber], 
+[tblServiceCallTypes].[Description] AS [Description], 
+[tblServiceCallTypes].[ServiceCharges] AS [ServiceCharges], 
+[tblServiceCallTypes].[DelInd] AS [DelInd]
+FROM [dbo].[tblServiceCallTypes] AS [tblServiceCallTypes]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__tblProvis__SubCu__75A278F5" Association="Self.FK__tblProvis__SubCu__75A278F5">
+      <End Role="tblSubCustomer" EntitySet="tblSubCustomer" />
+      <End Role="tblProvisionalBill" EntitySet="tblProvisionalBill" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblServic__Provi__76969D2E" Association="Self.FK__tblServic__Provi__76969D2E">
+      <End Role="tblProvisionalBill" EntitySet="tblProvisionalBill" />
+      <End Role="tblServiceDays" EntitySet="tblServiceDays" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblSubCus__Custo__6ABAD62E" Association="Self.FK__tblSubCus__Custo__6ABAD62E">
+      <End Role="tblCustomer" EntitySet="tblCustomer" />
+      <End Role="tblSubCustomer" EntitySet="tblSubCustomer" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblSubCus__Custo__778AC167" Association="Self.FK__tblSubCus__Custo__778AC167">
+      <End Role="tblCustomer" EntitySet="tblCustomer" />
+      <End Role="tblSubCustomer" EntitySet="tblSubCustomer" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblWorkOr__WorkO__797309D9" Association="Self.FK__tblWorkOr__WorkO__797309D9">
+      <End Role="tblWorkOrders" EntitySet="tblWorkOrders" />
+      <End Role="tblWorkOrderImage" EntitySet="tblWorkOrderImage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblChallan_tblCustomer" Association="Self.FK_tblChallan_tblCustomer">
+      <End Role="tblCustomer" EntitySet="tblCustomer" />
+      <End Role="tblChallan" EntitySet="tblChallan" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrder_tblCustomer" Association="Self.FK_tblOrder_tblCustomer">
+      <End Role="tblCustomer" EntitySet="tblCustomer" />
+      <End Role="tblOrder" EntitySet="tblOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrder_tblPart" Association="Self.FK_tblOrder_tblPart">
+      <End Role="tblPart" EntitySet="tblPart" />
+      <End Role="tblOrder" EntitySet="tblOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrderPart_tblOrder" Association="Self.FK_tblOrderPart_tblOrder">
+      <End Role="tblOrder" EntitySet="tblOrder" />
+      <End Role="tblOrderPart" EntitySet="tblOrderPart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPart_tblPartType" Association="Self.FK_tblPart_tblPartType">
+      <End Role="tblPartType" EntitySet="tblPartType" />
+      <End Role="tblPart" EntitySet="tblPart" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUser_tblRoles" Association="Self.FK_tblUser_tblRoles">
+      <End Role="tblRoles" EntitySet="tblRoles" />
+      <End Role="tblUser" EntitySet="tblUser" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

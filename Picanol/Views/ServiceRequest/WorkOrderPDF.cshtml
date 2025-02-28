@@ -1,0 +1,89 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+@{
+
+    Layout = "../Shared/_WOandTS.cshtml";
+}
+<br /><br /><br /><br /><br /><br />
+<div class="container">
+
+    @*<div class="col-lg-12">
+
+        <div class="text-right" style="margin-top:-20px">
+            GSTIN - 07AAECP4023H1ZO
+        </div>
+    </div>*@
+
+    <div class="col-xl-12">
+        <table rules="all" border="1" style="width:100%">
+
+            <tr>
+                <td align="center" style="font-size:large"><b>Work Order Details</b></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>&nbsp;&nbsp;Customer Details</b><br />
+                    &nbsp;&nbsp;Customer Name :@Model.WorkOrder.CustomerName<br />
+                    &nbsp;&nbsp;Customer Address : @Model.WorkOrder.CustomerAddress<br />
+                   
+                </td>
+                
+
+            </tr>
+            <tr>
+                <td><b>&nbsp;&nbsp; Details</b><br />
+                    &nbsp;&nbsp;Start Date : @Model.WorkOrder.SDate<br />
+                    &nbsp;&nbsp;End Date : @Model.WorkOrder.EDate<br />
+                    &nbsp;&nbsp;Work Order Type : @Model.WorkOrder.WorkOrderType<br />
+                    &nbsp;&nbsp;Contract Number : @Model.WorkOrder.ContractNumber<br />
+                    &nbsp;&nbsp;Mission Description : @Model.WorkOrder.Description<br />
+                    &nbsp;&nbsp;Mission Condition : @Model.WorkOrder.Conditions<br />
+                    
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    &nbsp;&nbsp;Contact Person : @Model.WorkOrder.ContactPerson<br />
+                    &nbsp;&nbsp;Contact Person Email : @Model.WorkOrder.EmailId<br />
+                    &nbsp;&nbsp;Contact Person Number: @Model.WorkOrder.Mobile<br />
+                </td>
+            </tr>
+            </table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>

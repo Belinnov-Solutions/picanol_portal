@@ -1,0 +1,43 @@
+﻿@model Picanol.ViewModels.ServiceRequestViewModel
+@{
+    ViewBag.Title = "ServiceRequestList";
+}
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+<h2>Service Request List</h2>
+
+<table>
+    <tr>
+        <th>Service Request Id</th>
+        <th>Customer Name</th>
+        <th>From Date</th>
+        <th>ToDate</th>
+
+    </tr>
+
+    @foreach (var item in Model.ServiceRequestList)
+    {
+        <tr>
+            <td>@item.ProvisionalBillId</td>
+            <td>@item.CustomerName</td>
+            <td>@item.FromDate</td>
+            <td>@item.ToDate</td>
+        </tr>
+    }
+</table>

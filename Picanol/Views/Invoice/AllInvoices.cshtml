@@ -1,0 +1,266 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+
+@{
+    ViewBag.Title = "AllInvoices";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="pull-left">
+
+                <a href="@Url.Action("ListInvoices", "Invoice")" class="btn btn-primary btn-large"> Back</a>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="text-center">
+
+                <h3><b>All Invoices</b></h3>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="pull-right">
+
+            </div>
+        </div>
+
+    </div>
+
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="CustomerName">Customer Name</label>
+                    <input name="for" class="form-control" type="search" list="languages" autocomplete="off" id="ID" />
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="FromDate">From Date</label>
+                    @Html.TextBoxFor(d => d.FromDate, "{0:dd/MM/yyyy}", new { id = "FromDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="ToDate">To Date</label>
+                    @Html.TextBoxFor(d => d.ToDate, "{0:dd/MM/yyyy}", new { id = "ToDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <button type="submit" style="margin-top:25px" class="btn btn-danger" id="btnSubmit" onclick="SubmitClick(1)"> Submit </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div id="updateData" class="table-responsive">
+            </div>
+        </div>
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+    $("#FromDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        format: 'dd/mm/yyyy',
+    });
+
+    $("#ToDate").datepicker({
+
+        changeMonth: true,
+        changeYear: true,
+        format: 'dd/mm/yyyy',
+
+
+    });
+
+
+    function SubmitClick(val) {
+    //$("#btnSubmit").click(function () {
+
+        var fromdate = $('#FromDate').val();
+        //var arr = fromdate.split['/'];
+        //var fDate = arr[2] + "-" + arr[1] + "-" + arr[0];
+        var todate = $('#ToDate').val();
+        //var arr = todate.split['/'];
+        //var tDate = arr[2] + "-" + arr[1] + "-" + arr[0];
+        var PageSize = 10;
+        var PageNo=val
+        var shownVal = document.getElementById("ID").value;
+        if (shownVal != "")
+        {
+            var CustomerId = document.querySelector("#languages option[value='" + shownVal + "']").dataset.value;
+
+        }
+        if (fromdate != '' && todate == '') {
+            alert('Please Select To Date!');
+            return false;
+
+        }
+        if (fromdate == '' && todate != '') {
+            alert('Please Select To From Date!');
+            return false;
+
+        }
+        if (todate == '' && todate == '' && shownVal == '') {
+            alert('Please Select Any Filter!');
+            return false;
+
+        }
+
+        var InvoiceListViewModel = {
+            fDate: fromdate,
+            tDate: todate,
+            SelectedCustomer: CustomerId,
+            PageSize: PageSize,
+            PageNo:PageNo,
+
+        };
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GetAllInvoices", "Invoice")', // name of PHP script
+            data: InvoiceListViewModel, // parameter name and value
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $('#updateData').html(data);
+            },
+        });
+    }/*)*/;
+
+
+        </script>
+
+        <datalist id="languages">
+            @foreach (var item in Model.CustomersList)
+            {
+                <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+            }
+
+        </datalist>
+
+        <script>
+
+    function SendRecordPayments()
+    {
+        var SelectedPaymentMethod = $("#PaymentMethod").val();
+        var OrderGUID = $("#OrderIdRP").val();
+        var InvoiceNo = $("#InvoiceNoRP").val();
+        var PaymentDetails = $("#PaymentDetails").val();
+        var DatePaid = $("#DatePaid").val();
+
+        var OrderPaymentDto = {
+            SelectedPaymentMethod: SelectedPaymentMethod,
+            OrderGUID: OrderGUID,
+            InvoiceNo: InvoiceNo,
+            PaymentDetails: PaymentDetails,
+            DatePaid: DatePaid
+
+        }
+        var InvoiceListViewModel = {
+            OrderPayment: OrderPaymentDto
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SaveOrderPayments", "Invoice")', // name of PHP script
+            data: InvoiceListViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success") {
+                    alert("Payment Recorded Successfully!");
+                $('#myModal').modal('hide');
+                }
+                else {
+                    alert("Payment Not Recorded..");
+                    $('#myModal').modal('hide');
+                }
+                },
+
+        });
+
+
+    }
+
+
+    function SendDispatchDetails() {
+        var ChallanNo = $("#ChallanNoDis").val();
+        var DispatchDate = $("#DispatchDate").val();
+        var InvoiceNo = $("#InvoiceNoDis").val();
+        var DispatchDetails = $("#DispatchDetails").val();
+        var Amount = $("#Amount").val();
+
+        var DispatchDetailsDto = {
+            ChallanNo: ChallanNo,
+            DispatchDate: DispatchDate,
+            InvoiceNo: InvoiceNo,
+            DispatchDetails: DispatchDetails,
+            Amount: Amount
+
+        }
+        var InvoiceListViewModel = {
+            DispatchDetails: DispatchDetailsDto
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SaveDispatchDetails", "Invoice")', // name of PHP script
+            data: InvoiceListViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide()
+                $('#myModal1').modal('hide');
+
+            },
+
+        });
+    }
+
+        </script>
+
+        <script>
+            function ShowDatePicker() {
+                $("#ToDate").datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true,
+                });
+            };
+        </script>
+</body>
+</html>

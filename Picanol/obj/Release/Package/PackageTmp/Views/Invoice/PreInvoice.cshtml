@@ -1,0 +1,331 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@{
+	ViewBag.Title = "PreInvoice";
+}
+<style>
+	.invoice-title h2, .invoice-title h3 {
+		display: inline-block;
+	}
+
+	.table > tbody > tr > .no-line {
+		border-top: none;
+	}
+
+	.table > thead > tr > .no-line {
+		border-bottom: none;
+	}
+
+	td, th {
+		text-align: center;
+	}
+
+	.table > tbody > tr > .thick-line {
+		border-top: 2px solid;
+	}
+</style>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-4">
+					<img src="~/Content/Images/L.png">
+				</div>
+				<div class="col-xs-8">
+					<div class="text-left">
+						<font size="6"><u><b>@Model.Business.Name</b></u></font><br />
+						<font size="4"><b>@Model.Business.AddressLine1 </b></font><br />
+						<font size="4"><b>@Model.Business.AddressLine2 , @Model.Business.City , @Model.Business.State , @Model.Business.PIN</b></font><br />
+						<font size="4"><b>GSTIN :@Model.Business.GSTIN</b></font><br />
+
+
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+        <div class="col-xs-12">
+            <div class="invoice-title" style="margin-left: 350px;">
+                <center> <h2>TAX INVOICE</h2></center>@*<h4 class="pull-right"><div style="margin-left: -25px">✔ Original for Recipient</div>Duplicate for Supplier/Transporter<br />Triplicate for Supplier</h4>*@
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Reverse Charge :  <br />
+                            Invoice No.    : <b>@Model.InvoiceNumber</b><br />
+                            Invoice Date   : <b>@Model.InvoiceDate</b><br />
+                            State          : <b>@Model.Business.State</b><br />
+                            State Code     : <b>07</b><br />
+                        </div>
+                        @if (Model.CustomerDetails.ShippingState != null && Model.CustomerDetails.StateCode != null)
+                        {
+                            <div class="col-xs-6 text-left">
+                                Transportation Mode :Courier<br />
+                                Vehicle Number :<br />
+                                Date of Supply :<br />
+                                Place of Supply :@Model.CustomerDetails.ShippingState @Model.CustomerDetails.StateCode  <br />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-6 text-left">
+                                Transportation Mode :<br />
+                                Vehicle Number :<br />
+                                Date of Supply :<br />
+                                Place of Supply :<br />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <address>
+                                <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                                Name :<b>@Model.Customer.CustomerName</b><br />
+                                Name :<b>@Model.Customer.CustomerName</b><br>
+                                Address :<b>@Model.Customer.AddressLine1 + @Model.Customer.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN</b><br>
+                                Contact :<br>
+                                GSTIN :<b>@Model.Customer.GSTIN</b> <br />
+                                State : <b>@Model.Customer.State</b> <br />
+                                State Code : <b>@Model.Customer.StateCode</b> <br />
+                            </address>
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            <address>
+                                <strong><u>Details of Consignee / Shipped To:</u></strong><br>
+                                Name : <b>@Model.Customer.CustomerName</b><br>
+                                Address :<b>@Model.Customer.ShippingAddressLine1 + @Model.Customer.ShippingAddressLine2 @Model.CustomerDetails.ShippingDistrict @Model.CustomerDetails.ShippingCity @Model.CustomerDetails.ShippingPIN</b><br>
+                                GSTIN :<b>@Model.Customer.GSTIN</b> <br>
+                                State :<b>@Model.Customer.State</b><br />
+                                State Code :<b>@Model.Customer.StateCode</b><br />
+                            </address>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-xs-3">
+                            <b> Your Ref. No. :  </b>
+                        </div>
+                        <div class="col-xs-3">
+                            DATE :
+                        </div>
+
+
+
+                        <div class="col-xs-6 text-left">
+                            <b> Our Ref.No.</b>
+                        </div>
+                    </div>
+
+                    <br />
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><strong>Order summary</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial No.</th>
+                                            <th>Name of Product / Service</th>
+                                            <th>HSN /SAC Code</th>
+                                            <th>Unit of Measurement</th>
+                                            <th>Qty</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>Taxable Value</th>
+                                            <th colspan="2">CGST</th>
+                                            <th colspan="2">SGST</th>
+                                            <th colspan="2">IGST</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                        @foreach (var item in Model.InvoiceItems)
+                                        {
+                                            <tr>
+                                                <td>1</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.HSNCode</td>
+                                                <td>@item.UnitOfMeasurement</td>
+
+                                                <td>@Html.TextBoxFor(d => @item.Qty, new { onchange = "calculate()", id = "Qty", @class = "form-control" })</td>
+
+
+                                                <td>@Html.TextAreaFor(d => @item.Amount, new { onchange = "calculate()", id = "Amount", @class = "form-control" })</td>
+
+                                                <td>@item.Amount</td>
+                                                <td>@item.Amount</td>
+                                                <td>@item.CGSTRate</td>
+                                                <td>@item.CGSTAmount</td>
+                                                <td>@item.SGSTRate</td>
+                                                <td>@item.SGSTAmount</td>
+                                                <td>@item.IGSTRate</td>
+                                                <td>@item.IGSTAmount</td>
+
+                                                <td>@Html.TextAreaFor(d => @item.Total, new { onclick = "Totalbtn()", id = "Total", @class = "form-control" })</td>
+
+                                            </tr>
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Total Invoice Amount in Words : @Model.AmountInWords <br />
+                        </div>
+
+                        <div class="col-xs-6 text-left">
+                            Total Amount Before Tax  :<b>@Model.TotalAmountBTax</b><br />
+                            Add CGST : 0 <br />
+                            Add SGST : 0 <br />
+                            Add IGST 18% : <br />
+                            Tax Amount : GST<br />
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-6">
+                            <b><font size="4"><u>Bank Details</u></font> </b>
+                        </div>
+
+                        <div class="col-xs-6 text-left">
+                            Total Amount After Tax :
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-xs-3">
+                            Bank Account Number :<b>@Model.Business.AccountNumber</b>
+                        </div>
+                        <div class="col-xs-3">
+                            Bank Name :<b>@Model.Business.BankName</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            Bank Branch IFSC :<b>@Model.Business.IFSCCode</b>
+                        </div>
+                        <div class="col-xs-3">
+                            Bank Branch :<b>@Model.Business.BankBranch</b>
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            GST Payable on Reverse Charges :
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            <b>Terms and Conditions :</b>
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            Certified that the particulars given above are true and correct.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            <b>1. NOTE :</b><br />
+                            <b>2. Payment Terms :</b><br />
+                            <b> 3.  Please cover the Transit Insurance at your end.</b><br />
+                            <b>4.  Repair Warranty  :</b>
+                        </div>
+                        <div class="col-xs-6 text-left">
+                            <b><font size="5">For, PICANOL INDIA PVT. LTD.</font> </b><br />
+                            <br />
+                            <br />
+                            <br />
+                            <center>Authorised Signatory</center>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+<script type="text/javascript">
+		function calculate() {
+		var Qty = document.getElementById('Qty').value;
+		var Amount = document.getElementById('Amount').value;
+		var Total = document.getElementById('Total');
+		var myResult = Qty * Amount;
+		Total.innerHTML = myResult;
+
+		}
+</script>
+
+
+
+
+
+

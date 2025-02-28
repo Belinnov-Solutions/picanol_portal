@@ -1,0 +1,957 @@
+﻿@model Picanol.ViewModels.ServiceRequestViewModel
+@{
+    ViewBag.Title = "PreviewServiceRequest";
+    Layout = "../Shared/_InvoiceLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+
+
+
+    <style>
+        #lt_overlay {
+            display: none;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+        #lt_loading {
+            display: none;
+            position: fixed;
+            color: #ccc;
+            top: 45%;
+            left: 50%;
+            padding: 20px;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+    </style>
+</head>
+
+<body>
+
+    @*<script>
+            function showOverlay() {
+                // Adds the fullscreen overlay
+                var oDiv = $("<div></div>");
+                oDiv.attr("id", "lt_overlay");
+                oDiv.css("display", "block");
+                $("body").append(oDiv);
+
+                // Adds the spinner
+                var lDiv = $("<i></i>");
+                lDiv.attr("id", "lt_loading");
+                lDiv.addClass("fa fa-cog fa-spin fa-5x");
+                lDiv.css("display", "block");
+                $("body").append(lDiv);
+            }
+
+            function hideOverlay() {
+                $("#lt_loading").remove();
+                $("#lt_overlay").remove();
+            }
+
+        </script>*@
+
+
+    <script type="text/javascript">
+
+        $("#Date").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#StartDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#EndDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+
+
+
+
+    <script type="text/javascript">
+        function CalcConveyance()//conveyance table oninput calc
+        {
+            TotalCalAm();
+        }
+        function cal() //oncahnge in date filter
+        {
+            var AttendedFrom = $("#FDate").val();
+            var AttendedTo = $("#TDate").val();
+            var x = AttendedFrom.split("-");
+            var y = AttendedTo.split("-");
+            var Fdays = x[0];
+            var Fmonths = x[1];
+            var Fyear = x[2];
+            var Tdays = y[0];
+            var Tmonths = y[1];
+            var Tyear = y[2];
+            var fDate = Fyear + "-" + Fmonths + "-" + Fdays;
+            var tDate = Tyear + "-" + Tmonths + "-" + Tdays;
+            const timeDiff = (new Date(tDate)) - (new Date(fDate));
+            const fdays = timeDiff / (1000 * 60 * 60 * 24);
+            var fyear = Tyear - Fyear;
+            $('#BoardingDays').val(fdays + 1);
+            $('#PocketExpensesDays').val(fdays + 1);
+            $('#ServiceDays').val(fdays + 1);
+            SCcalculate();
+            PCcalculate();
+            LCcalculate();
+            TotalCalAm();
+        }
+
+        function SCcalculate()//Service Charge calculations
+        {
+            var myBox1 = document.getElementById('ServiceDays').value;
+            var myBox2 = document.getElementById('ServiceCharge').value;
+            var myResult = myBox1 * myBox2;
+             $('#ServiceChargeAmount').val(myResult);
+            TotalCalAm();
+        }
+        function PCcalculate() //PocketExpenses Calculations
+        {
+            var myBox1 = document.getElementById('PocketExpensesDays').value;
+            var myBox2 = document.getElementById('PocketExpenses').value;
+            var myResult = myBox1 * myBox2;
+            $('#PocketExpensesAmount').val(myResult);
+            TotalCalAm();
+        }
+        function LCcalculate()//loarding calculations
+        {
+            var myBox1 = document.getElementById('BoardingDays').value;
+            var myBox2 = document.getElementById('BoardingCharges').value;
+           var myResult = myBox1 * myBox2;
+           $('#BoardingAmount').val(myResult);
+            TotalCalAm();
+        }
+        function OTcalculate()//Overtime calculations
+        {
+            var myBox1 = document.getElementById('OvertimeCharges').value;
+            var myBox2 = document.getElementById('OvertimeHours').value;
+            var myResult = myBox1 * myBox2;
+            $('#OvertimeAmount').val(myResult);
+            TotalCalAm();
+        }
+        function TotalCalAm()//Gerneral Calc
+        {
+            var oTable = document.getElementById('myTable');//ConveyanceExpense table
+            var rowLength = oTable.rows.length;
+            var CAmount = 0;
+            var FAmount = 0;
+            for (i = 1; i < rowLength; i++)
+            {
+                var oCells = oTable.rows.item(i).cells;
+                if (oCells.item(3) != null)
+                {
+                    CAmount = CAmount + parseInt(oCells.item(3).children[0].value);
+                }
+            }
+            $('#ConveyanceExpensesamt').val(CAmount);
+            var oTable = document.getElementById('Table');//airfare table
+             var rowLength = oTable.rows.length;
+            for (i = 1; i < rowLength; i++)
+            {
+                var oCells = oTable.rows.item(i).cells;
+                if (oCells.item(3) != null)
+                {
+                    FAmount = FAmount + parseInt(oCells.item(3).children[0].value);
+                }
+            }
+            $('#faretotal').val(FAmount);
+            var servicetotal = document.getElementById('ServiceChargeAmount').value;
+            var pockettotal = document.getElementById('PocketExpensesAmount').value;
+            var boardingtotal = document.getElementById('BoardingAmount').value;
+            var overtimetotal = document.getElementById('OvertimeAmount').value;
+            var conveyancetotal = document.getElementById('ConveyanceExpensesamt').value;
+            var airfairtotal = document.getElementById('faretotal').value;
+            var total = parseInt(servicetotal) + parseInt(pockettotal) + parseInt(boardingtotal) + parseInt(overtimetotal) + parseInt(conveyancetotal) + parseInt(airfairtotal);
+            $('#TotalAmountBeforeTax').val(total);
+            var Tax = Math.round((total * 1) * (18 / 100));
+            $('#TaxAmount').val(Tax);
+            var grandtotal = parseInt(Tax) + parseInt(total);
+            $('#FinalAmount').val(grandtotal);
+            var amtinwors = convertNumberToWords(grandtotal);
+            $('#amountinwords').val(amtinwors);
+        }
+
+       function Save()//final Submit clik
+        {
+
+             var oTable = document.getElementById('myTable');
+             var rowLength = oTable.rows.length;
+             var Conveyance = [];
+             var From = 0;
+             var To = 0;
+             var Description = "";
+             var Amount = 0;
+            for (i = 1; i < rowLength - 1; i++)
+            {
+                var oCells = oTable.rows.item(i).cells;
+                if (oCells.item(0) != null && oCells.item(0).children[0] != null)
+                {
+                From = oCells.item(0).children[0].value;
+            }
+                if (oCells.item(1) != null && oCells.item(1).children[0] != null)
+                {
+                 To = oCells.item(1).children[0].value;
+            }
+                if (oCells.item(2) != null && oCells.item(2).children[0] != null)
+                {
+                 Description = oCells.item(2).children[0].value;
+            }
+                if (oCells.item(3) != null && oCells.item(3).children[0] != null)
+                {
+                 Amount = oCells.item(3).children[0].value;
+                }
+            var Type = "ConveyanceAndIncidental";
+                var DetailExpenseDto =
+                {
+                Type: Type,
+                ExpenseFrom: From,
+                ExpenseTo: To,
+                Amount: Amount,
+                Remarks: Description
+            }
+            Conveyance.push(DetailExpenseDto);
+            }
+        var oTable = document.getElementById('Table');
+        var rowLength = oTable.rows.length;
+        var FareEx = [];
+        for (i = 1; i < rowLength-1; i++) {
+            var oCells = oTable.rows.item(i).cells;
+            if (oCells.item(0) != null && oCells.item(0).children[0] != null)
+            {
+                var From = oCells.item(0).children[0].value;
+            }
+            if (oCells.item(1) != null && oCells.item(1).children[0] != null)
+            {
+                var To = oCells.item(1).children[0].value;
+            }
+            if (oCells.item(2) != null && oCells.item(2).children[0] != null)
+            {
+                var Amount = oCells.item(2).children[0].value;
+            }
+            if (oCells.item(3) != null && oCells.item(3).children[0] != null)
+            {
+                var Remarks = oCells.item(3).children[0].value;
+            }
+            var Type = "Fare";
+            var DetailExpenseDto =
+            {
+                Type: Type,
+                ExpenseFrom: From,
+                ExpenseTo: To,
+                Amount:Remarks,
+                Remarks: Amount
+            }
+            FareEx.push(DetailExpenseDto);
+             }
+             var ProvisionalBillId = $("#provisonalbillId").val();
+             var TotalDays = $("#TotalDays").val();
+             var workorderId = $("#workorderId").val();
+             var UserId = $("#custId").val();
+             var FDate = $("#FDate").val();
+             var TDate = $("#TDate").val();
+             var ServiceDays = $("#ServiceDays").val();
+             var ServiceCharge = $("#ServiceCharge").val();
+             var PoecketExpensDays = $("#PocketExpensesDays").val();
+             var PoecketExpensCharge = $("#PocketExpenses").val();
+             var BoardingDays = $("#BoardingDays").val();
+             var BoardingCharges = $("#BoardingCharges").val();
+             var OvertimeHours = $("#OvertimeHours").val();
+             var OvertimeCharge = $("#OvertimeCharges").val();
+             var OvertimeAmount = $("#OvertimeAmount").val();
+            var FinalAmounts = $("#FinalAmount").val();
+            var splitedamt = FinalAmounts.replace("\u20b9", '');
+             var ConveyanceExpensesamt = $("#ConveyanceExpensesamt").val();
+             var ServiceRequestDto =
+             {
+                 ProvisionalBillId: ProvisionalBillId,
+                 WorkOrderId: workorderId,
+                 UserId: UserId,
+                 FromDate: FDate,
+                 ToDate: TDate,
+                 ServiceCharge: ServiceCharge,
+                 ServiceDays: ServiceDays,
+                 BoardingCharges: BoardingCharges,
+                 BoardingDays: BoardingDays,
+                 PocketExpensesDays: PoecketExpensDays,
+                 PocketExpenses: PoecketExpensCharge,
+                 OvertimeHours: OvertimeHours,
+                 OvertimeCharges: OvertimeCharge,
+                 OvertimeAmount: OvertimeAmount,
+                 ConveyanceExpenses: ConveyanceExpensesamt,
+                 FinalAmount: splitedamt,
+
+                 FareExpenseDetails: FareEx,
+                 ConeyanceExpenseDetails: Conveyance,
+            };
+            console.log(ServiceRequestDto);
+        $.ajax({
+            beforeSend: function () {
+                /*$('.signal').show()*/
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("EditPreviewProvisonalBill", "ServiceRequest")',
+            data: ServiceRequestDto,
+            success: function (data)
+            {
+                $('.spinner-wrapper').hide();
+                alert("Details Added Successfully");
+                window.location.href = "@Url.Action("PrintProvisionalBill", "ServiceRequest")?ProvisionalBillId=@Model.ServiceRequest.ProvisionalBillId&WorkOrderId=@Model.ServiceRequest.WorkOrderId";
+            },
+
+        });
+    }
+    </script>
+
+    @*<a href="@Url.Action("FilterServiceRequest", "ServiceRequest")" class="btn btn-primary btn-large pull-right"> Back</a>*@
+
+
+
+    <div class="container" style="width:950px;">
+        <button type="button" class="btn btn-info btn-default pull-right" onclick="Save()" id="btnsubmit">Download</button>
+
+        <center><h3>Picanol India Private Limited</h3></center>
+
+        <table style="width:100%">
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;Tel.: +91-11-42464024<br />
+                    &nbsp;&nbsp;&nbsp;Fax : +91-11-42461202<br />
+                    &nbsp;&nbsp;&nbsp;Email : sreekala.balakrishnan@picanol.be<br />
+                </td>
+                <td>
+                    <h3>
+                        <b>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            PICANOL
+                        </b>
+                    </h3>
+
+
+                </td>
+                <td>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSM 621 & 622, DLF Towers<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block-IV,15 Shivaji Marg,Near moti nagar<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New-Delhi - 110015<br />
+                    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GSTIN - 07AAECP4023H1ZO</b><br />
+                </td>
+            </tr>
+        </table>
+        <div class="col-lg-12">
+            <div class="text-left">
+                State Code :07
+            </div>
+
+        </div>
+
+        <div class="col-lg-12">
+
+            <table rules="all" border="1" style="width:100% ; border-width:medium">
+                <tr>
+
+                    @*<td align="center" colspan="5" style="font-size:large"><b>PROVISIONAL SERVICE BILL</b></td>*@
+
+                    <td align="center" colspan="5" style="font-size:large"><b>PROFORMA INVOICE</b></td>
+
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="text-left">
+                                    <div class="col-lg-6">Proforma Invoice No. : @Model.ServiceRequest.ProvisionalBillNo</div>
+                                    <input type="hidden" id="provisonalbillId" value="@Model.ServiceRequest.ProvisionalBillId" />
+                                    <input type="hidden" id="workorderId" value="@Model.ServiceRequest.WorkOrderId" />
+                                    <input type="hidden" id="custId" value=@Model.ServiceRequest.UserId>
+                                    <div class="col-lg-6">Date of Supply :</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="text-left">
+                                    <div class="col-lg-6">Date : @Model.ServiceRequest.Date</div>
+                                    <div class="col-lg-6">Place of Supply :</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    @*<td colspan="5" align="center">Details of Receiver / Billed to</td>*@
+                </tr>
+                @*<tr>
+                        <td colspan="5">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                                    @if (Model.SubCustomer == null)
+                                    {
+                                        <address>
+                                            Name : @Model.CustomerDetails.CustomerName <br />
+                                            Address : @Model.CustomerDetails.AddressLine1, @Model.CustomerDetails.AddressLine2, @Model.CustomerDetails.District,
+                                            @Model.CustomerDetails.City - @Model.CustomerDetails.PIN  <br />
+                                            State : @Model.CustomerDetails.State<br />
+                                            State Code : @Model.CustomerDetails.StateCode<br />
+                                            GSTIN : @Model.CustomerDetails.GSTIN<br />
+
+                                        </address>
+                                    }
+                                    else
+                                    {
+                                        <address>
+                                            Name : @Model.SubCustomer.SubCustomerName <br />
+                                            Address : @Model.SubCustomer.AddressLine1, @Model.SubCustomer.AddressLine2,
+                                            @Model.CustomerDetails.District, @Model.CustomerDetails.City - @Model.CustomerDetails.PIN  <br />
+                                            State : @Model.SubCustomer.State<br />
+                                            State Code : @Model.SubCustomer.StateCode<br />
+                                            GSTIN : @Model.SubCustomer.GSTIN<br />
+
+
+                                        </address>
+                                    }
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong><u>Details of Consignee / Shipped To:</u></strong><br>
+                                    <address>
+                                        Name : @Model.CustomerDetails.CustomerName <br />
+                                        Address : @Model.CustomerDetails.ShippingAddressLine1, @Model.CustomerDetails.ShippingAddressLine2, @Model.CustomerDetails.ShippingDistrict,@Model.CustomerDetails.ShippingCity - @Model.CustomerDetails.PIN <br />
+                                        State : @Model.CustomerDetails.State<br />
+                                        State Code : @Model.CustomerDetails.StateCode<br />
+                                        GSTIN : @Model.CustomerDetails.GSTIN<br />
+                                    </address>
+                                </div>
+
+                                </div>
+                            </div>
+                    </tr>*@
+
+                <tr>
+                    <td colspan="5">
+                        <div class="row">
+
+
+                            <div class="col-xs-6">
+                                <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                                @if (Model.SubCustomer == null)
+                                {
+                                    <address>
+                                        Name : <strong>@Model.CustomerDetails.CustomerName</strong><br />
+                                        Address : <strong>@Model.CustomerDetails.AddressLine1</strong> <strong>@Model.CustomerDetails.AddressLine2</strong>
+                                        <strong>@Model.CustomerDetails.District</strong> <strong>@Model.CustomerDetails.City</strong> - <strong>@Model.CustomerDetails.PIN</strong><br />
+                                        State : <strong>@Model.CustomerDetails.State</strong><br />
+                                        State Code : <strong>@Model.CustomerDetails.StateCode</strong><br />
+                                        GSTIN : <strong>@Model.CustomerDetails.GSTIN</strong><br />
+                                    </address>
+                                }
+                                else
+                                {
+                                    <address>
+                                        Name : <strong>@Model.SubCustomer.SubCustomerName</strong><br />
+                                        Address : <strong>@Model.SubCustomer.AddressLine1</strong> <strong>@Model.SubCustomer.AddressLine2</strong>
+                                        <strong>@Model.CustomerDetails.District</strong><strong>@Model.CustomerDetails.City</strong> - <strong>@Model.CustomerDetails.PIN</strong><br />
+                                        State : <strong>@Model.SubCustomer.State</strong><br />
+                                        State Code : <strong>@Model.SubCustomer.StateCode</strong><br />
+                                        GSTIN : <strong>@Model.SubCustomer.GSTIN</strong><br />
+                                    </address>
+                                }
+                            </div>
+                            <div class="col-xs-6">
+                                <strong><u>Details of Consignee / Shipped To:</u></strong><br />
+                                <address>
+                                    Name: <strong>@Model.CustomerDetails.CustomerName</strong><br />
+
+                                    @if (Model.ServiceRequest.ShippingAddress != null)
+                                    {
+                                        <text>Address: <strong>@Model.ServiceRequest.ShippingAddress</strong></text><br />
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            Address: <strong>@Model.CustomerDetails.ShippingAddressLine1</strong>,
+                                            <strong>@Model.CustomerDetails.ShippingAddressLine2</strong>,
+                                            <strong>@Model.CustomerDetails.ShippingDistrict</strong>,
+                                            <strong>@Model.CustomerDetails.ShippingCity</strong> -
+                                            <strong>@Model.CustomerDetails.PIN</strong>
+                                        </text><br />
+                                    }
+
+                                    State: <strong>@Model.CustomerDetails.State</strong><br />
+
+                                    @if (Model.ServiceRequest.ShippingStateCode != null)
+                                    {
+                                        <text>State Code: <strong>@Model.ServiceRequest.ShippingStateCode</strong></text><br />
+                                    }
+                                    else
+                                    {
+                                        <text>State Code: <strong>@Model.CustomerDetails.StateCode</strong></text><br />
+                                    }
+
+                                    GSTIN: <strong>@Model.CustomerDetails.GSTIN</strong><br />
+                                </address>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td align="center">Sr. No.</td>
+                    <td align="center">Particulars of Service</td>
+                    <td align="center">SAC</td>
+                    <td align="center"></td>
+                    <td align="center">Amount (in Rs.)</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;1</td>
+                    <td>&nbsp;Service rendered to your (M/c type):- </td>
+                    <td></td>
+                    <td align="center"> @Model.ServiceRequest.MachineName</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;2</td>
+                    <td>&nbsp;Call Type :- </td>
+                    <td></td>
+                    <td align="center">@Model.ServiceRequest.CallType</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;3</td>
+                    <td>&nbsp;Service Engineer Name:- </td>
+                    <td></td>
+                    <td align="center">@Model.ServiceRequest.UserName</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;4</td>
+                    <td>
+                        &nbsp;<b>Days Attended</b> <br />
+                        <table rules="all" border="1" style="width:50% ; margin-left:5px">
+                            <tr>
+                                <td>&nbsp;&nbsp;Attended From</td>
+                                <td>&nbsp;&nbsp;Attended To</td>
+
+
+                            </tr>
+
+                            @foreach (var item in Model.ServiceRequest.ServiceDaysList)
+                            {
+                                <tr>
+                                    <td>&nbsp;&nbsp;@item.FromDate.ToShortDateString()</td>
+                                    <td>&nbsp;&nbsp;@item.ToDate.ToShortDateString()</td>
+
+                                </tr>
+                            }
+
+
+                        </table>
+
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;5</td>
+                    <td>&nbsp;Service charge for <b><input type="text" value="@Model.ServiceRequest.ServiceDays" id="ServiceDays" size="10" oninput="SCcalculate();" /></b> Days <b>Rs:-<input type="text" value=" @Model.ServiceRequest.ServiceCharge" id="ServiceCharge" size="10" oninput="SCcalculate();" /></b> /-per day</td>
+                    <td align="center">998739</td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.ServiceChargeAmount" id="ServiceChargeAmount" size="10" readonly /></td>
+                </tr>
+
+                <tr>
+                    <td>&nbsp;6</td>
+                    <td>&nbsp;Pocket Expense for <b><input type="text" value="@Model.ServiceRequest.PocketExpensesDays" id="PocketExpensesDays" size="10" oninput="PCcalculate();" /></b> Days <b>Rs:- <input type="text" value="@Model.ServiceRequest.PocketExpenses" id="PocketExpenses" oninput="PCcalculate();" size="10" /></b> /-per day</td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.PocketExpensesAmount" id="PocketExpensesAmount" size="10" readonly /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;7</td>
+                    <td>&nbsp;Loading and Boarding Expense for<b><input type="text" value="@Model.ServiceRequest.BoardingDays" id="BoardingDays" size="10" oninput="LCcalculate();" /> </b> Days <b>Rs:-<input type="text" value="@Model.ServiceRequest.BoardingCharges" id="BoardingCharges" oninput="LCcalculate();" size="10" /> </b> /- per day</td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.BoardingAmount" id="BoardingAmount" size="10" readonly /></td>
+                </tr>
+
+                <tr>
+                    <td>&nbsp;8</td>
+                    <td>&nbsp;Overtime Expense for<b><input type="text" value="@Model.ServiceRequest.OvertimeHours" id="OvertimeHours" size="10" oninput="OTcalculate();" /> </b> Hours <b>Rs:-<input type="text" value="@Model.ServiceRequest.OvertimeCharges" id="OvertimeCharges" oninput="OTcalculate();" size="10" /></b> /- per Hour</td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.OvertimeAmount" id="OvertimeAmount" size="10" readonly /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;9</td>
+                    <td>
+                        &nbsp;<b>Conveyance & Incidental Expense</b> <br />
+                        <table id="myTable" rules="all" border="1" style="width:40% ; margin-left:5px">
+                            <tr>
+                                <td>&nbsp;&nbsp;From</td>
+                                <td>&nbsp;&nbsp;To</td>
+                                <td>&nbsp;&nbsp;Description</td>
+                                <td>&nbsp;&nbsp;Amount</td>
+
+                            </tr>
+
+                            @foreach (var item in Model.ServiceRequest.ConeyanceExpenseDetails)
+                            {
+                                <tr>
+                                    <td><input type="text" value="@item.ExpenseFrom" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.ExpenseTo" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.Remarks" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.Amount" id="amountofconveyance" size="10" oninput="CalcConveyance();" /></td>
+
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                @*<td hidden>&nbsp;&nbsp;<input type="text" value="@Model.ServiceRequest.ConveyanceExpenses" id="ConveyanceExpensesamt" size="10" /></td>*@
+
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.ConveyanceExpenses" id="ConveyanceExpensesamt" size="10" /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;10</td>
+                    <td>
+                        &nbsp;<b>Air Fare / Rail Fare</b> <br />
+                        <table id="Table" rules="all" border="1" style="width:40% ; margin-left:5px">
+                            <tr>
+                                <td>&nbsp;&nbsp;From</td>
+                                <td>&nbsp;&nbsp;To</td>
+                                <td>&nbsp;&nbsp;Description</td>
+                                <td>&nbsp;&nbsp;Amount</td>
+
+                            </tr>
+
+                            @foreach (var item in Model.ServiceRequest.FareExpenseDetails)
+                            {
+                                <tr>
+                                    <td><input type="text" value="@item.ExpenseFrom" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.ExpenseTo" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.Remarks" id="PocketExpensesAmount" size="10" /></td>
+                                    <td><input type="text" value="@item.Amount" id="PocketExpensesAmount1" oninput="CalcConveyance();" size="10" /></td>
+
+                                </tr>
+                            }
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                @*<td hidden>&nbsp;&nbsp;<input type="text" value="@Model.ServiceRequest.Fare" id="PocketExpensesAmount" size="10" /></td>*@
+
+                            </tr>
+
+                        </table>
+
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.Fare" id="faretotal" size="10" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Total Amount Before Tax</td>
+                    <td>&nbsp; <input type="text" value="₹@Model.ServiceRequest.AmountBeforeTax" id="TotalAmountBeforeTax" size="10" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Add: CGST</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Add: SGST</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Add: IGST</td>
+                    <td>&nbsp;<input type="text" value="@Model.ServiceRequest.GST%" id="IGST" size="10" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Tax Amount: GST</td>
+                    <td>&nbsp;<input type="text" value="₹@Model.ServiceRequest.TaxAmount" id="TaxAmount" size="10" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">&nbsp;Total Amount After Tax:</td>
+                    <td>&nbsp;<input type="text" value="₹@Model.ServiceRequest.FinalAmount" id="FinalAmount" size="10" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>&nbsp; Total Invoice Amount in Words:<input type="text" value="@Model.ServiceRequest.AmountInWords" id="amountinwords" size="60" /> </b></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <p>
+                                    <b><font size="4"><u>&nbsp;Bank Details</u></font></b><br /><br />
+                                    <b>Bank Account Number :</b> @Model.BusinessDetails.AccountNumber<br />
+                                    <b> Bank Name :</b> @Model.BusinessDetails.BankName<br />
+                                    <b>Bank Branch IFSC :</b> @Model.BusinessDetails.IFSCCode<br />
+                                    <b>Bank Branch :</b> @Model.BusinessDetails.BankBranch<br />
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-right">
+                                    Certified that the particulars given above are true and correct.<br />
+                                    For Picanol India Pvt. Ltd.<br />
+                                    <img src="~/Content/Images/Signature/@Model.ServiceRequest.UImagepath" width="100" height="100" /><br />
+                                    @Model.ServiceRequest.UserName
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="text-right">
+                            Authorised Signatory
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="text-right">
+                            E. & O.E.
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <b>&nbsp; &nbsp;Customer Authentication </b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6" style="float:left;">
+
+                                    &nbsp;Customer Name : @Model.ServiceRequest.AuthorizedBy <br />
+                                    &nbsp;Customer Email : @Model.ServiceRequest.AuthorizerEmail <br />
+                                    &nbsp;Customer Designation : @Model.ServiceRequest.Designation <br />
+                                    &nbsp;Authorised Date :  @Model.ServiceRequest.AuthorizedOn
+                                    <br />
+                                    <br />
+                                    <br />
+
+                                </div>
+                                <div class="col-lg-6" style="margin-top:10px">
+
+                                    <img src="~/Content/Images/Signature/@Model.ServiceRequest.Imagepath" align="right" width="100" height="100" />
+
+                                </div>
+                            </div>
+
+
+
+
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="5">
+                        <div class="text-right">
+                            Customer Signatory
+                        </div>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <script>
+        //calculate amount in words
+        function convertNumberToWords(amount) {
+            var words = new Array();
+            words[0] = '';
+            words[1] = 'One';
+            words[2] = 'Two';
+            words[3] = 'Three';
+            words[4] = 'Four';
+            words[5] = 'Five';
+            words[6] = 'Six';
+            words[7] = 'Seven';
+            words[8] = 'Eight';
+            words[9] = 'Nine';
+            words[10] = 'Ten';
+            words[11] = 'Eleven';
+            words[12] = 'Twelve';
+            words[13] = 'Thirteen';
+            words[14] = 'Fourteen';
+            words[15] = 'Fifteen';
+            words[16] = 'Sixteen';
+            words[17] = 'Seventeen';
+            words[18] = 'Eighteen';
+            words[19] = 'Nineteen';
+            words[20] = 'Twenty';
+            words[30] = 'Thirty';
+            words[40] = 'Forty';
+            words[50] = 'Fifty';
+            words[60] = 'Sixty';
+            words[70] = 'Seventy';
+            words[80] = 'Eighty';
+            words[90] = 'Ninety';
+            amount = amount.toString();
+            var atemp = amount.split(".");
+            var number = atemp[0].split(",").join("");
+            var n_length = number.length;
+            var words_string = "";
+            if (n_length <= 9) {
+                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+                var received_n_array = new Array();
+                for (var i = 0; i < n_length; i++) {
+                    received_n_array[i] = number.substr(i, 1);
+                }
+                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) {
+                    n_array[i] = received_n_array[j];
+                }
+                for (var i = 0, j = 1; i < 9; i++, j++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        if (n_array[i] == 1) {
+                            n_array[j] = 10 + parseInt(n_array[j]);
+                            n_array[i] = 0;
+                        }
+                    }
+                }
+                value = "";
+                for (var i = 0; i < 9; i++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        value = n_array[i] * 10;
+                    } else {
+                        value = n_array[i];
+                    }
+                    if (value != 0) {
+                        words_string += words[value] + " ";
+                    }
+                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Crores ";
+                    }
+                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Lakhs ";
+                    }
+                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Thousand ";
+                    }
+                    if (i == 6 && value != 0 && (n_array[i + 1] != 0 && n_array[i + 2] != 0)) {
+                        words_string += "Hundred and ";
+                    } else if (i == 6 && value != 0) {
+                        words_string += "Hundred ";
+                    }
+                }
+                words_string = words_string.split("  ").join(" ");
+            }
+            return words_string;
+        }
+
+
+    </script>
+</body>
+</html>

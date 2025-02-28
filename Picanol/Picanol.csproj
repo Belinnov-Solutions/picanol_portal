@@ -1,0 +1,981 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D680473-416E-49C5-A69D-F883AC04C85B}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Picanol</RootNamespace>
+    <AssemblyName>Picanol</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=5.3.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.5.3.1\lib\net45\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.8.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13\lib\itextsharp.xmlworker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.1.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.1.1\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.1.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.1.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.1.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.WebForms.10.0.40219.1\lib\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.5\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RestSharp, Version=103.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.103.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Rotativa.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.Core.2.0.0\lib\net45\Rotativa.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rotativa.MVC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.MVC.2.0.2\lib\net45\Rotativa.MVC.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=18.2.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.18.2.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.5.9.2\lib\net45\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.5.9.2\lib\net45\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Redis.5.9.2\lib\net45\ServiceStack.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.5.9.2\lib\net45\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\netstandard1.1\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\netstandard1.1\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.7\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomerSearchController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\List.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\MobileHomeController.cs" />
+    <Compile Include="Controllers\MobileServiceRequestController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PartsController.cs" />
+    <Compile Include="Controllers\PicanolApiController.cs" />
+    <Compile Include="Controllers\PicanolController.cs" />
+    <Compile Include="Controllers\RedirectingAction.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\ServiceRequestController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\Vendor.cs" />
+    <Compile Include="DataModel\Log.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\PicanolModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PicanolModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\PicanolModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\PicanolModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PicanolModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblAudit.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblBusiness.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblChallan.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblCreditNote.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblCustomer.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblCustomerContact.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblDebitNote.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblDetailedExpens.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblDispatchDetail.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblEInvoice.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblGSTState.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblInvoice.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblOrder.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblOrderPart.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblOrderPayment.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblPart.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblPartHistory.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblPartLoan.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblPartType.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblProformaInvoice.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblProvisionalBill.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblPurchase.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblRole.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblServiceCallType.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblServiceDay.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblServiceRequest.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblSubCustomer.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblTimeSheet.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblTimeSheetDetail.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblUser.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblWorkOrder.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblWorkOrderImage.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\tblZone.cs">
+      <DependentUpon>PicanolModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AccountHelper.cs" />
+    <Compile Include="Helpers\BusinessHelper.cs" />
+    <Compile Include="Helpers\ConstantsHelper.cs" />
+    <Compile Include="Helpers\CustomerHelper.cs" />
+    <Compile Include="Helpers\EInvoiceHelper.cs" />
+    <Compile Include="Helpers\GMailer.cs" />
+    <Compile Include="Helpers\InvoiceHelper.cs" />
+    <Compile Include="Helpers\MaterialHelper.cs" />
+    <Compile Include="Helpers\NumberToWordsConverter.cs" />
+    <Compile Include="Helpers\OrderHelper.cs" />
+    <Compile Include="Helpers\PdfResult.cs" />
+    <Compile Include="Helpers\RoleHelper.cs" />
+    <Compile Include="Helpers\ServiceRequestHelper.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Helpers\UserSession.cs" />
+    <Compile Include="Helpers\TimeSheetHelper.cs" />
+    <Compile Include="Helpers\WorkOrderEmail.cs" />
+    <Compile Include="Helpers\WorkOrderHelper.cs" />
+    <Compile Include="Models\BusinessDto.cs" />
+    <Compile Include="Models\ChallanDto.cs" />
+    <Compile Include="Models\CreditNoteEditDto.cs" />
+    <Compile Include="Models\CreditNoteModel.cs" />
+    <Compile Include="Models\CustomerContactDto.cs" />
+    <Compile Include="Models\CustomerDto.cs" />
+    <Compile Include="Models\DebitNoteModel.cs" />
+    <Compile Include="Models\DetailedExpenseDto.cs" />
+    <Compile Include="Models\DispatchDetailsDto.cs" />
+    <Compile Include="Models\GSTStateDto.cs" />
+    <Compile Include="Models\InvoiceDto.cs" />
+    <Compile Include="Models\InvoiceItemDto.cs" />
+    <Compile Include="Models\LoginDto.cs" />
+    <Compile Include="Models\OrderDto.cs" />
+    <Compile Include="Models\OrderPartDto.cs" />
+    <Compile Include="Models\OrderPaymentDto.cs" />
+    <Compile Include="Models\PartDto.cs" />
+    <Compile Include="Models\PartMovementDto.cs" />
+    <Compile Include="Models\PaymentDetails.cs" />
+    <Compile Include="Models\PCBBoardDto.cs" />
+    <Compile Include="Models\PcbNameSummaryDto.cs" />
+    <Compile Include="Models\ProformaInvoiceDto.cs" />
+    <Compile Include="Models\ProvisionalServiceDto.cs" />
+    <Compile Include="Models\RepairSummaryDto.cs" />
+    <Compile Include="Models\RoleDto.cs" />
+    <Compile Include="Models\ServiceCallTypeDto.cs" />
+    <Compile Include="Models\ServiceDaysDto.cs" />
+    <Compile Include="Models\ServiceRequestDto.cs" />
+    <Compile Include="Models\SubCustomerDto.cs" />
+    <Compile Include="Models\TimeSheetDetailDto.cs" />
+    <Compile Include="Models\TimeSheetDto.cs" />
+    <Compile Include="Models\UserDto.cs" />
+    <Compile Include="Models\WorkOrderDto.cs" />
+    <Compile Include="Models\WorkOrderImageDto.cs" />
+    <Compile Include="Models\ZoneDto.cs" />
+    <Compile Include="PicannolDataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PicannolDataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="ReportSet\DtInwardReport.Designer.cs" />
+    <Compile Include="ReportSet\DtStockReport.Designer.cs" />
+    <Compile Include="ReportSet\InwardReportViewer.aspx.cs">
+      <DependentUpon>InwardReportViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportSet\InwardReportViewer.aspx.designer.cs">
+      <DependentUpon>InwardReportViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintPCBboard.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintPCBboard.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintPCBboardSummary.aspx.cs">
+      <DependentUpon>PrintPCBboardSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportSet\PrintPCBboardSummary.aspx.designer.cs">
+      <DependentUpon>PrintPCBboardSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintPcbName.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintPcbName.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintPcbNameWiseSummary.aspx.cs">
+      <DependentUpon>PrintPcbNameWiseSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportSet\PrintPcbNameWiseSummary.aspx.designer.cs">
+      <DependentUpon>PrintPcbNameWiseSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintRepair.cs">
+      <DependentUpon>PrintRepair.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintRepair.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintRepair.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\PrintRepairSummary.aspx.cs">
+      <DependentUpon>PrintRepairSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportSet\PrintRepairSummary.aspx.designer.cs">
+      <DependentUpon>PrintRepairSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportSet\StockReportViewer.aspx.cs">
+      <DependentUpon>StockReportViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportSet\StockReportViewer.aspx.designer.cs">
+      <DependentUpon>StockReportViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\BusinessService.cs" />
+    <Compile Include="Services\ChallanService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\iBaseService.cs" />
+    <Compile Include="Services\InvoiceService.cs" />
+    <Compile Include="Services\ModelStateWrapper.cs" />
+    <Compile Include="Services\OrderPartService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\PartsService.cs" />
+    <Compile Include="Services\RoleManagerService.cs" />
+    <Compile Include="Services\ServiceRequestService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\WorkOrderService.cs" />
+    <Compile Include="Utils\ApplicationAuthProvider.cs" />
+    <Compile Include="Utils\EncryptionHelper.cs" />
+    <Compile Include="Utils\ExceptionLogging.cs" />
+    <Compile Include="Utils\MyAuthorizeAttribute.cs" />
+    <Compile Include="Utils\OneTimePassword.cs" />
+    <Compile Include="Utils\PdfResult.cs" />
+    <Compile Include="Utils\PicanolUtils.cs" />
+    <Compile Include="Utils\SessionCheck.cs" />
+    <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\AuthModels\AuthData.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\AuthErrorDetail.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\AuthModels\AuthResponse.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\DecriptionDtl.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\InfoDetails.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\AttributeDtls.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\Contract.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\EInvoiceItemList.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\GenerateInvoiceResp.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\ReqPlCancelIRN.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\ReqPlGenIRN.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\RespPlCancelIRN.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\RespPlGenIRN.cs" />
+    <Compile Include="ViewModels\EInvoiceModel\IRNModel\RespPlGenIRNDec.cs" />
+    <Compile Include="ViewModels\InvoiceListViewModel.cs" />
+    <Compile Include="ViewModels\InvoiceViewModel.cs" />
+    <Compile Include="ViewModels\InwardMaterialViewModel.cs" />
+    <Compile Include="ViewModels\JobCardViewModel.cs" />
+    <Compile Include="ViewModels\OrderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrdersViewModel.cs" />
+    <Compile Include="ViewModels\PartsMovementViewModel.cs" />
+    <Compile Include="ViewModels\PartsViewModel.cs" />
+    <Compile Include="ViewModels\ProformaViewModell.cs" />
+    <Compile Include="ViewModels\ProvisionalServiceViewModel.cs" />
+    <Compile Include="ViewModels\ReportsViewModel.cs" />
+    <Compile Include="ViewModels\ServiceRequestViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\TimeSheetViewModel.cs" />
+    <Compile Include="ViewModels\WorkOrderViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrapModal.min.css" />
+    <Content Include="Content\bootstrapModal.min.js" />
+    <Content Include="Content\dist\css\sb-admin-2.css" />
+    <Content Include="Content\dist\css\sb-admin-2.min.css" />
+    <Content Include="Content\dist\datepicker.common.js" />
+    <Content Include="Content\dist\datepicker.css" />
+    <Content Include="Content\dist\datepicker.esm.js" />
+    <Content Include="Content\dist\datepicker.js" />
+    <Content Include="Content\dist\datepicker.min.css" />
+    <Content Include="Content\dist\datepicker.min.js" />
+    <Content Include="Content\dist\js\sb-admin-2.js" />
+    <Content Include="Content\dist\js\sb-admin-2.min.js" />
+    <Content Include="Content\Images\header.png" />
+    <Content Include="Content\Images\InwardChallan\logo_jpg.png" />
+    <Content Include="Content\Images\InwardChallan\logo_png - Copy.png" />
+    <Content Include="Content\Images\L.png" />
+    <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\Logo.PNG" />
+    <Content Include="Content\Images\LP.PNG" />
+    <Content Include="Content\Images\LPO.PNG" />
+    <Content Include="Content\Images\PH.jpg" />
+    <Content Include="Content\Images\qrcodeimg.png" />
+    <Content Include="Content\Images\Signature\signature.png" />
+    <Content Include="Content\jquery\jquery-1.8.2.js" />
+    <Content Include="Content\jquery\jquery-ui-1-10-3-custom-min.js" />
+    <Content Include="Content\jquery\jquery-ui-1.9.1.js" />
+    <Content Include="Content\jquery\jquery.js" />
+    <Content Include="Content\jquery\jquery.min.js" />
+    <Content Include="Content\jquery\jquery.toJSON.js" />
+    <Content Include="Content\jquery\jquery.validate.js" />
+    <Content Include="Content\jquery\jquery.validate.min.js" />
+    <Content Include="Content\jquery\jquery.validate.unobtrusive.js" />
+    <Content Include="Content\Loader.css" />
+    <Content Include="Content\metisMenu\metisMenu.css" />
+    <Content Include="Content\metisMenu\metisMenu.js" />
+    <Content Include="Content\metisMenu\metisMenu.min.css" />
+    <Content Include="Content\metisMenu\metisMenu.min.js" />
+    <Content Include="Content\tile.css" />
+    <Content Include="DataModel\PicanolModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PicanolModel.edmx</DependentUpon>
+      <LastGenOutput>PicanolModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DataModel\PicanolModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PicanolModel.edmx</DependentUpon>
+      <LastGenOutput>PicanolModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="ReportSet\InwardReportViewer.aspx" />
+    <Content Include="ReportSet\PrintPCBboardSummary.aspx" />
+    <Content Include="ReportSet\PrintPcbNameWiseSummary.aspx" />
+    <Content Include="ReportSet\PrintRepairSummary.aspx" />
+    <Content Include="ReportSet\StockReportViewer.aspx" />
+    <Content Include="Resources\paging.js" />
+    <Content Include="Resources\PagingNababr.css" />
+    <Content Include="Content\PDF\3.pdf" />
+    <Content Include="Content\PDF\23.pdf" />
+    <Content Include="Content\3.3.1.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="ReportSet\DtStockReport.xsc">
+      <DependentUpon>DtStockReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="PicannolDataSet1.xsc">
+      <DependentUpon>PicannolDataSet1.xsd</DependentUpon>
+    </Content>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libman.json" />
+    <Content Include="App_Browsers\qt.browser" />
+    <EntityDeploy Include="DataModel\PicanolModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PicanolModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DataModel\PicanolModel.edmx.diagram">
+      <DependentUpon>PicanolModel.edmx</DependentUpon>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="PicannolDataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PicannolDataSet1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="PicannolDataSet1.xss">
+      <DependentUpon>PicannolDataSet1.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\DtInwardReport.xsc">
+      <DependentUpon>DtInwardReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReportSet\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReportSet\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="ReportSet\DtInwardReport.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DtInwardReport1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="ReportSet\DtInwardReport.xss">
+      <DependentUpon>DtInwardReport.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportSet\DtStockReport.xsd" />
+    <Content Include="ReportSet\DtStockReport.xss">
+      <DependentUpon>DtStockReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\StockReport.rdlc" />
+    <Content Include="ReportSet\PrintRepair.xsc">
+      <DependentUpon>PrintRepair.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\PrintPCBboard.xsc">
+      <DependentUpon>PrintPCBboard.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportSet\PrintPCBboard.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PrintPCBboard.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportSet\PrintPCBboard.xss">
+      <DependentUpon>PrintPCBboard.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\PrintPcbName.xsc">
+      <DependentUpon>PrintPcbName.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportSet\PrintPcbName.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PrintPcbName.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportSet\PrintPcbName.xss">
+      <DependentUpon>PrintPcbName.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportSet\PrintRepair.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PrintRepair.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReportSet\PrintRepair.xss">
+      <DependentUpon>PrintRepair.xsd</DependentUpon>
+    </Content>
+    <None Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Material\JobCard.cshtml" />
+    <Content Include="Views\Material\Index.cshtml" />
+    <Content Include="Views\Material\AddNew.cshtml" />
+    <Content Include="Views\Material\_Table.cshtml" />
+    <Content Include="Views\Material\_AddNewTable.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\_Tile.cshtml" />
+    <Content Include="Views\Order\OrdersList.cshtml" />
+    <Content Include="Views\Order\_AllOrders.cshtml" />
+    <Content Include="Views\Order\OrderDetails.cshtml" />
+    <Content Include="Views\Parts\Index.cshtml" />
+    <Content Include="Views\Home\ServiceRequestsList.cshtml" />
+    <Content Include="Views\Customer\AddCustomer.cshtml" />
+    <Content Include="Views\User\AddUser.cshtml" />
+    <Content Include="Views\User\UserList.cshtml" />
+    <Content Include="Views\Customer\CustomerList.cshtml" />
+    <Content Include="Views\Invoice\ListInvoices.cshtml" />
+    <Content Include="Views\Parts\AddNewPart.cshtml" />
+    <Content Include="Views\Parts\PartsMovement.cshtml" />
+    <Content Include="Views\Home\UnderConstruction.cshtml" />
+    <Content Include="Views\Parts\_PartsList.cshtml" />
+    <Content Include="Views\Invoice\ListInvoices - Copy.cshtml" />
+    <Content Include="Views\Invoice\_InvoicesList.cshtml" />
+    <Content Include="Views\Parts\PdfTest.cshtml" />
+    <Content Include="Views\Invoice\Dispatch.cshtml" />
+    <Content Include="Views\Invoice\RecordPayment.cshtml" />
+    <Content Include="Views\Invoice\_ListTableInvoices.cshtml" />
+    <Content Include="Views\Order\_AllOrderParts.cshtml" />
+    <Content Include="Views\Supplier\AddSupplier.cshtml" />
+    <Content Include="Views\Supplier\Demo.cshtml" />
+    <Content Include="Views\Supplier\EditSupplier.cshtml" />
+    <Content Include="Views\Invoice\QuotationPreview.cshtml" />
+    <Content Include="Views\Shared\_InvoiceLayout.cshtml" />
+    <Content Include="Views\Customer\_FilterCustomerList.cshtml" />
+    <Content Include="Views\ServiceRequest\ServiceRequest.cshtml" />
+    <Content Include="Views\ServiceRequest\FilterServiceRequest.cshtml" />
+    <Content Include="Views\ServiceRequest\_ServiceRequestList.cshtml" />
+    <Content Include="Views\ServiceRequest\PreviewServiceRequest.cshtml" />
+    <Content Include="Views\ServiceRequest\ServiceRequestInvoice.cshtml" />
+    <Content Include="Views\ServiceRequest\WorkOrder.cshtml" />
+    <Content Include="Views\Shared\_InvoiceHeaderLayout.cshtml" />
+    <Content Include="Views\ServiceRequest\WorkOrderListFilter.cshtml" />
+    <Content Include="Views\ServiceRequest\_WorkOrderListAfterFilter.cshtml" />
+    <Content Include="Views\Parts\_StockDifference.cshtml" />
+    <Content Include="Views\Parts\UpdatePrice.cshtml" />
+    <Content Include="Views\ServiceRequest\PreviewServiceRequestPDF.cshtml" />
+    <Content Include="Views\Shared\View.cshtml" />
+    <Content Include="Views\Home\Test.cshtml" />
+    <Content Include="Views\Inventory\Index.cshtml" />
+    <Content Include="Views\Home\ChangePassword.cshtml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Views\Invoice\EmailInvoicePDF.cshtml" />
+    <Content Include="Views\Invoice\EmailInvoiceTriplicatePDF.cshtml" />
+    <Content Include="Views\Invoice\FOC.cshtml" />
+    <Content Include="Views\Invoice\FocPDF.cshtml" />
+    <Content Include="Views\Invoice\GenerateInvoice.cshtml" />
+    <Content Include="Views\Invoice\Invoice_W_Header.cshtml" />
+    <Content Include="Views\Invoice\JobSheet.cshtml" />
+    <Content Include="Views\Invoice\JobSheetPDF.cshtml" />
+    <Content Include="Views\Invoice\EmailInvoiceDuplicatePDF.cshtml" />
+    <Content Include="Views\Invoice\Loan.cshtml" />
+    <Content Include="Views\Invoice\LoanPDF.cshtml" />
+    <Content Include="Views\Invoice\PaymentInformation.cshtml" />
+    <Content Include="Views\Invoice\PerformaInvoice.cshtml" />
+    <Content Include="Views\Invoice\PerformaInvoicePDF.cshtml" />
+    <Content Include="Views\Invoice\PreInvoice.cshtml" />
+    <Content Include="Views\Invoice\PreviewInvoice.cshtml" />
+    <Content Include="Views\Invoice\RepairWarranty.cshtml" />
+    <Content Include="Views\Invoice\RepairWarrantyPDF.cshtml" />
+    <Content Include="Views\Invoice\UnrepairedBoards.cshtml" />
+    <Content Include="Views\Invoice\UnrepairedBoardsPDF.cshtml" />
+    <Content Include="Views\Material\InwardMaterialList.cshtml" />
+    <Content Include="Views\Material\_InwardMaterialList.cshtml" />
+    <Content Include="Views\Material\InwardMaterialDetails.cshtml" />
+    <Content Include="Views\Material\_InwardMaterialDetails.cshtml" />
+    <Content Include="Views\Customer\_FilteredCustomerListByName.cshtml" />
+    <Content Include="Views\Material\EditInwardMaterial.cshtml" />
+    <Content Include="Views\Material\_EditInwardMaterial.cshtml" />
+    <Content Include="Views\ServiceRequest\TimeSheet.cshtml" />
+    <Content Include="Views\ServiceRequest\TimeSheetPDF.cshtml" />
+    <Content Include="Views\Parts\AddStock.cshtml" />
+    <Content Include="Views\Parts\_AddStock.cshtml" />
+    <Content Include="Views\Reports\StockReport.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\PartReportByTrackingNo.cshtml" />
+    <Content Include="Views\Invoice\PrintAll.cshtml" />
+    <Content Include="Views\ServiceRequest\WorkOrderPDF.cshtml" />
+    <Content Include="Views\ServiceRequest\ProvisionalBillList.cshtml" />
+    <Content Include="Views\Shared\_WOandTS.cshtml" />
+    <Content Include="Views\Invoice\CreateCreditNotePdf.cshtml" />
+    <Content Include="Views\Customer\AddSubCustomer.cshtml" />
+    <Content Include="Views\Customer\SubCustomerList.cshtml" />
+    <Content Include="Views\Customer\_FilterSubCustomerList.cshtml" />
+    <Content Include="Views\ServiceRequest\EditPreviewServiceRequest.cshtml" />
+    <Content Include="Views\Reports\RepairSummary.cshtml" />
+    <Content Include="Views\Reports\PCBBoardSummary.cshtml" />
+    <Content Include="Views\Reports\InwardReports.cshtml" />
+    <Content Include="Views\Reports\PCBNameWiseReport.cshtml" />
+    <Content Include="Views\Invoice\AllInvoices.cshtml" />
+    <Content Include="Views\Invoice\_AllInvoices.cshtml" />
+    <Content Include="Views\MobileServiceRequest\PreviewServiceRequestPDF.cshtml" />
+    <Content Include="Views\MobileServiceRequest\TimeSheetPDF.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Invoice\_CancelledInvoices.cshtml" />
+    <Content Include="Views\Invoice\CancelledInvoices.cshtml" />
+    <Content Include="Views\ServiceRequest\ServiceCreditNotePDF.cshtml" />
+    <Content Include="Views\Invoice\GetListofPI.cshtml" />
+    <Content Include="Views\Invoice\GetAllProformaLIst.cshtml" />
+    <Content Include="Views\Invoice\CreateDebitNotePdf.cshtml" />
+    <Content Include="Views\ServiceRequest\ServiceDebitNotePDF.cshtml" />
+    <Content Include="Views\ServiceRequest\GetAllPayemntDetails.cshtml" />
+    <Content Include="Views\ServiceRequest\FilterPaymentList.cshtml" />
+    <Content Include="Views\User\UserDeleteAccount.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="bin\" />
+    <Folder Include="Content\Images\TimeSheetSignature\" />
+    <Folder Include="Content\PDF\InvoicesNew\" />
+    <Folder Include="Content\PDF\Invoices\" />
+    <Folder Include="Content\PDF\JobSheet\" />
+    <Folder Include="Content\PDF\PerformaInvoices-old\" />
+    <Folder Include="Content\PDF\PerformaInvoices\" />
+    <Folder Include="Content\PDF\ProvisionalBill\" />
+    <Folder Include="Content\PDF\WorkOrderPdf\" />
+    <Folder Include="Content\TempPBInvoice\" />
+    <Folder Include="Content\Temp\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Rotativa\" />
+    <Folder Include="Views\CustomerSearch\" />
+    <Folder Include="Views\Error\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ReportSet\PrintPCBboardSummary.rdlc" />
+    <EmbeddedResource Include="ReportSet\PrintPcbNameSummary.rdlc" />
+    <Content Include="ReportSet\PrintRepairSummary.rdlc" />
+    <EmbeddedResource Include="ReportSet\Report1.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportSet\Report2.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>11906</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:11907/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:11907/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

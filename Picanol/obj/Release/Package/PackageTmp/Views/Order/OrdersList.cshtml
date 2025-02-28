@@ -1,0 +1,343 @@
+﻿@model Picanol.ViewModels.OrdersViewModel
+@{
+    ViewBag.Title = "OrderList";
+    int count = Model.Customers.Count;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="pull-left">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large pull-left"> <i class="fam-control-rewind-blue"></i> Back</a>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="text-center">
+                <h3 style="text-align:center;"><b>Order List</b></h3>
+                <p style="font-size:large; color:red;"><b>Last Invoice No. : @Model.LastInvoiceNumber</b></p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="pull-right">
+                <a href="@Url.Action("InwardMaterialList", "Material")" class="btn btn-info btn-large pull-right"> Challan List</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="font-family: Calibri; margin-top: 5px">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="CustomerName">Customer Name :</label>
+                <input name="id" class="form-control" type="search" list="CNList" autocomplete="off" id="CustomerId" />
+
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="SelectedStatus">RepairType:</label>
+                @Html.DropDownListFor(p => p.SelectedRepairType, new SelectList(Model.RepairList, "Text", "Value"), "Select Status", new { id = "repairlist", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="SelectedStatus">Select Order Status :</label>
+                @Html.DropDownListFor(p => p.SelectedStatus, new SelectList(Model.StatusList, "Text", "Value"), "Select Status", new { id = "Status", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="TrackingNo">Tracking Number :</label>
+                @Html.TextBoxFor(model => model.TrackingNo, new { @class = "form-control", id = "TrackingNo", @placeholder = "Enter Tracking No" })
+            </div>
+        </div>
+
+
+        <div class="col-sm-2" style="width: 12.499999995%">
+            <div class="form-group">
+                @Html.LabelFor(p => p.FromDate, new { @class = "" })
+                @Html.TextBoxFor(d => d.FromDate, "{0:dd/MM/yyyy}", new { id = "FromDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+            </div>
+        </div>
+
+        <div class="col-sm-1" style="width: 12.499999995%">
+            <div class="form-group">
+                @Html.LabelFor(p => p.ToDate, new { @class = "" })
+                @Html.TextBoxFor(d => d.ToDate, "{0:dd/MM/yyyy}", new { id = "ToDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+            </div>
+        </div>
+
+
+        <div class="col-sm-1">
+            <div class="form-group">
+                <button type="submit" style="margin-top:25px" value="Submit" onclick="submitClick(1)" id="btnSearch" class="btn btn-info">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="divResultdata" class="table-responsive">
+    </div>
+    <br />
+
+
+    @*<div class="signal"></div>*@
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+            $(document).keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+
+                    submitClick();
+                }
+            });
+            //$("#btnSearch").click(function () {
+
+   // function submitClick() {
+    function submitClick(val) {
+        var shownVal = document.getElementById("CustomerId").value;
+        var FromDate = $("#FromDate").val();
+        var ToDate = $("#ToDate").val();
+        var TrackingNo = $("#TrackingNo").val();
+        var SelectedStatus = $("#Status").val();
+        var SelectedRepairTypes = $("#repairlist").val();
+        var PageSize = 10;
+        var PageNo = val;
+
+        if (shownVal == '' && FromDate == '' && ToDate == '' && TrackingNo == '' && SelectedStatus == '' && SelectedRepairTypes == '') {
+            alert('Please choose any one filter either date or tracking number!');
+            return false;
+        }
+        if (shownVal == '' && FromDate == '' && ToDate == '' && TrackingNo == '' && SelectedStatus == '' && SelectedRepairTypes == '') {
+            alert('Please Fill any One Filter!');
+            return false;
+        }
+
+        if (shownVal != '') {
+            var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+        }
+        
+        var FromDate = $("#FromDate").val();
+        if (FromDate != '' && ToDate == '') {
+            alert('Please Select To Date!');
+            return false;
+        }
+        var ToDate = $("#ToDate").val();
+        if (ToDate != '' && FromDate == '') {
+                    alert('Please Select From Date!');
+                    return false;
+                }
+
+                var ToDate = $("#ToDate").val();
+                var TrackingNo = $("#TrackingNo").val();
+                var OrdersViewModel = {
+                    SelecetCustomerId: CustomerId,
+                    ToDate: ToDate,
+                    FromDate: FromDate,
+                    TrackingNo: TrackingNo,
+                    SelectedStatus: SelectedStatus,
+                    SelectedRepairType: SelectedRepairTypes,
+                    PageSize: PageSize,
+                    PageNo: PageNo,
+                };
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                   // url: '@Url.Action("GetFilteredOrdersList", "Order")', // name of PHP script
+                    url:'@Url.Action("GetFilteredOrdersListVersion1", "Order")',
+                    data: OrdersViewModel, // parameter name and value
+                    success: function (data) {
+                        /*$('.signal').hide();*/
+                        $('.spinner-wrapper').hide();
+                        $("#divResultdata").html(data);
+                    },
+                });
+    }
+
+    </script>
+
+    <script type="text/javascript">
+        $("#FromDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+    <datalist id="CNList">
+        @foreach (var item in Model.Customers)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+
+    </datalist>
+    <script>
+        $("#TrackingNo").on("click", function () {
+            if ($(this).val() != "")
+                $(this).val("")
+        });
+    </script>
+
+    <script>
+    function SendChanges()
+    {
+        var TrackingNumber = $("#Display").val();
+        var PartName = $("#bookId1").val();
+        var PartNo = $("#bookId2").val();
+        var SerialNo = $("#bookId3").val();
+        var RepairType = $("#bookId4").val();
+        var RepairTypeDropDown = $('#bookId5 option:selected').val();
+
+        if (RepairTypeDropDown != "") {
+            RepairType = RepairTypeDropDown
+        }
+
+        var OrderDto = {
+            TrackingNumber: TrackingNumber,
+            PartName: PartName,
+            PartNo: PartNo,
+            SerialNo: SerialNo,
+            RepairType: RepairType
+
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("EditOrder", "Order")', // name of PHP script
+            data: OrderDto, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                $('#myModal').modal('hide');
+            },
+
+        });
+    }
+    </script>
+
+
+    <script>
+    function SendEmail()
+    {
+        var TrackingNumber = $("#Show").val();
+        var Email = $("#text1").val();
+        var SelecetCustomerId = $("#text2").val();
+        var SelectedOrderId = $("#text3").val();
+        var SelectedValue = $("#text4").val();
+
+        var OrdersViewModel = {
+            TrackingNo: TrackingNumber,
+            SelectedAction: SelectedValue,
+            SelecetCustomerId: SelecetCustomerId,
+            SelectedOrderId: SelectedOrderId,
+            Email: Email,
+
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SendOrderEmail", "Order")', // name of PHP script
+            data: OrdersViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success")
+                {
+                    $('#myModalEmail').modal('hide');
+                    alert("Email has been Sent!");
+                }
+                else
+                {
+                    $('#myModalEmail').modal('hide');
+                    alert(response)
+                }
+
+            },
+
+        });
+    }
+    </script>
+
+    <script>
+
+    function SendDispatchDetails() {
+        var TrackingNumber = $("#TrackingNumberDis").val();
+        var DocketNumber = $("#DocketNumber").val();
+        var DispatchDate = $("#DispatchDate").val();
+        var DispatchDetails = $("#DispatchDetails").val();
+
+        var OrderGUID = $("#OrderGUIDDis").val();
+
+        var DispatchDetailsDto = {
+            DocketNumber: DocketNumber,
+            DispatchDate: DispatchDate,
+            TrackingNumber: TrackingNumber,
+            DispatchDetails: DispatchDetails,
+            OrderGUID: OrderGUID,
+
+        }
+        var OrdersViewModel = {
+            DispatchDetails: DispatchDetailsDto
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SaveDispatchDetails", "Order")', // name of PHP script
+            data: OrdersViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success") {
+                    alert("Details Saved Successfully!")
+                    $('#myModal1').modal('hide');
+                }
+                else {
+                    alert("Please Try Again!")
+                    $('#myModal1').modal('hide');
+                }
+            },
+
+        });
+
+
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+﻿@model Picanol.ViewModels.ServiceRequestViewModel
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int provisionalCount = Model.CustomersList.Count;
+    int noOfPages = provisionalCount / 10;
+    int TotalNumberCounts = Model.TotalNumberCounts;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="js/jquery.multi-select.js"></script>
+    
+
+
+</head>
+<body>
+    
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large pull-left" onclick="GetBacKUrl()"> Back</a>
+
+        <div class="btn-group pull-right" role="group" aria-label="Basic mixed styles example">
+            <button type="button" class="btn btn-danger" value="Submit" id="btnSearch" onclick="GetExcelResult()">Download P.I.</button>
+            <a href="@Url.Action("GetAllPayemntDetails", "ServiceRequest")" class="btn btn-secondary btn-large" style="width:148px;color:white;background-color:darkseagreen">Payment Transaction</a>
+            <button type="button" class="btn btn-info" onclick="RefreshPage()">Refresh</button>
+        </div>
+
+        <h3 class="text-center"><b>Search Proforma Invoice</b></h3>
+        <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+        <div class="row" style="font-family:Calibri">
+            <div class="col-sm-1" style="width: 15.5%;margin-left:-2rem">
+                <label for="CustomerName">Zone</label>
+                <div id="list1" class="dropdown-check-list" tabindex="100">
+                    <span class="anchor" id="Zoneselected">Select Zone</span>
+                    <ul class="items">
+                        @foreach (var item in Model.Zone)
+                        {
+                            <li><input type="checkbox" value="@item.Text" />@item.Text </li>
+
+                        }
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="col-sm-1" style="width: 15.5%">
+                <div class="form-group">
+                    <label for="CustomerName">Customer Name</label>
+                    <input name="id" class="form-control" type="search" list="CNList" autocomplete="on" placeholder="Customer Name" id="CustomerId" />
+                    <input type="hidden" id="custId" value=@userInfo.UserId>
+                </div>
+            </div>
+            <div class="col-sm-1" style="width: 15.5%">
+                <div class="form-group">
+                    <label for="CustomerName">User Name</label>
+                    @Html.DropDownListFor(model => model.SelectedUserId, new SelectList(Model.Username, "UserId", "UserName"), new { id = "Username", @class = "form-control" })
+                </div>
+
+            </div>
+            <div class="col-sm-1" style="width: 15.5%">
+                <div class="form-group">
+                    <label for="StartDate">From Date</label>
+                    @Html.TextBoxFor(d => d.ServiceRequest.FDate, "{0:dd/MM/yyyy}", new { id = "StartDate", @class = "form-control", maxlength = "500", autocomplete = "off", @placeholder = "Enter From Date" })
+                </div>
+            </div>
+
+            <div class="col-sm-1" style="width: 15.5%">
+                <div class="form-group">
+                    <label for="EndDate">To Date</label>
+                    @Html.TextBoxFor(d => d.ServiceRequest.TDate, "{0:dd/MM/yyyy}", new { id = "EndDate", @class = "form-control", maxlength = "500", autocomplete = "off", @placeholder = "Enter TO Date" })
+                </div>
+            </div>
+            @if (userInfo.RoleId == 6)
+            {
+                <div class="col-sm-1" style="width: 15.5%">
+                    <div class="form-group">
+                        <label for="CustomerName">P.I./Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice/Invoice No" id="provionalbillid" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-1" style="width: 15.5%">
+                    <div class="form-group">
+                        <label for="CustomerName">Proforma Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice No" id="provionalbillid" />
+                    </div>
+                </div>
+            }
+
+            <div class="col-sm-1" style="width: 15.5%;margin-right: -13rem;">
+                <div class="form-group">
+                    <button type="submit" style="margin-top:25px" value="Submit" id="btnSearch" onclick="submitResult(1)" class="btn btn-info">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="divResultdata" class="table-responsive">
+            @Html.Partial("_ServiceRequestList")
+        </div>
+        <!--new pagination for provisional bill-->
+        @*<div>@TotalNumberCounts Record Found</div>*@
+
+
+        <!--End Here-->
+        <div id="pagingDiv"></div>
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+
+    
+    <script>
+        $(document).ready(function () {
+            var dropdown = $("#list1");
+
+            // Attach a click event handler to the document
+            $(document).on("click", function (event) {
+                // Check if the clicked element is outside the dropdown
+                if (!dropdown.is(event.target) && dropdown.has(event.target).length === 0) {
+                    // If outside, close or remove the dropdown (you can customize this part)
+                    dropdown.find(".items").hide();
+                }
+            });
+
+            // Toggle the dropdown when clicking on the anchor
+            $("#Zoneselected").on("click", function () {
+                dropdown.find(".items").toggle();
+            });
+        });
+        function GetBacKUrl()
+        {var url = '@Url.Action("Index", "Home")';
+            localStorage.removeItem("ServiceRequestViewModel");
+            window.location.href = url;
+        }
+    </script>
+
+    <script>
+
+            $("#StartDate").datepicker({
+
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+            });
+
+            $("#EndDate").datepicker({
+
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+            });
+
+        var checkList = document.getElementById('list1');
+        checkList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+            debugger;
+            if (checkList.classList.contains('visible'))
+                checkList.classList.remove('visible');
+            else
+                checkList.classList.add('visible');
+        }
+
+
+            @*function changepage(pageno) {
+                location.href = "@Url.Action("FilterServiceRequest", "ServiceRequest")/?PageSize=10&PageNo= " + pageno;
+            }*@
+    </script>
+
+    <script>
+        var selectedValues = [];
+        document.getElementById("list1").addEventListener("change", function (event) {
+            debugger;
+            var checkbox = event.target;
+
+            if (checkbox.type === 'checkbox') {
+                if (checkbox.checked) {
+                    selectedValues.push(checkbox.value);
+                    if (selectedValues.length > 1) {
+                        var overleanth = selectedValues.length;
+                        overleanth = overleanth-1
+                        var test = $("#Zoneselected").text();
+                        var indexOfPlus = test.indexOf("+");
+                        if (indexOfPlus !== -1) {
+                            var resultString = test.substring(0, indexOfPlus);
+
+                            test = resultString + "+" + overleanth;
+                            $("#Zoneselected").text(test);
+                        } else {
+                            test = test + "+" + overleanth;
+                            $("#Zoneselected").text(test);
+                        }
+                        
+
+                    } else {
+                        $("#Zoneselected").text(selectedValues.join(','));
+                    }
+
+                }
+                else {
+                    var index = selectedValues.indexOf(checkbox.value);
+                    if (index !== -1) {
+                        selectedValues.splice(index, 1);
+                       /* $("#Zoneselected").text(selectedValues.join(','));*/
+                        if (selectedValues.length >= 1) {
+                            var test = $("#Zoneselected").text();
+                            var overleanth = selectedValues.length;
+                            overleanth = overleanth - 1
+                            var indexOfPlus = test.indexOf("+");
+                            if (indexOfPlus !== -1) {
+                                var resultString = test.substring(0, indexOfPlus);
+                                for (var i = 0; i < selectedValues.length; i++) {
+                                    if (resultString.includes(selectedValues[i])) {
+
+                                    } else {
+                                        resultString = selectedValues[0];
+                                    }
+                                }
+                                test = resultString + "+" + overleanth;
+                                $("#Zoneselected").text(test);
+                                if (selectedValues.length == 1) {
+                                    $("#Zoneselected").text(selectedValues.join(','));
+                                }
+                            } else {
+                                test = test + "+" + overleanth;
+                                $("#Zoneselected").text(test);
+                                if (selectedValues.length == 1) {
+                                    $("#Zoneselected").text(selectedValues.join(','));
+                                }
+                            }
+                        }
+                        if (selectedValues.length == 0) {
+                            $("#Zoneselected").text("Select Zone");
+
+                        }
+
+                    }
+                }
+
+            }
+        });
+
+        function RefreshPage() {
+        localStorage.removeItem("ServiceRequestViewModel");
+        window.location.reload(true);
+
+    }
+        function submitResult(val) {
+            debugger;
+            localStorage.removeItem("ServiceRequestViewModel");
+       // $("#btnSearch").click(function () {
+            var shownVal = document.getElementById("CustomerId").value;
+            var UserId = $("#custId").val();
+            var enterDate = $("#StartDate").val();
+            if (enterDate != "") {
+                var split = enterDate.split("/");
+                var StartDate = split[1] + "/" + split[0] + "/" + split[2];
+            }
+            else {
+                var StartDate = "";
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != "") {
+                var split1 = lastDate.split("/");
+                var EndDate = split1[1] + "/" + split1[0] + "/" + split1[2];
+            }
+            else {
+                var EndDate = "";
+            }
+            var SelectedUser = $("#Username").val();
+            var ProvionalNo = $("#provionalbillid").val();
+            var PageSize = 10;
+            var PageNo = val;
+            if (shownVal != "") {
+                var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            }
+
+            var enterDate = $("#StartDate").val();
+            if (enterDate != '' && lastDate == '') {
+                   alert("Please select To date !");
+               return false;
+
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != '' && enterDate == '') {
+                alert("Please select From Date !.");
+                return false;
+            }
+            var ProvionalNo = $("#provionalbillid").val();
+
+            var ServiceRequestViewModel =
+                {
+                CustomerId: CustomerId,
+                UserId: UserId,
+                FDate: StartDate,
+                CustomerName: shownVal,
+                TDate: EndDate,
+                ProvisionalNo: ProvionalNo,
+                SelectedUserId: SelectedUser,
+                PageSize: PageSize,
+                PageNo: PageNo,
+                MultipleZone: selectedValues,
+        }
+        debugger;
+        /*localStorage.setItem("ServiceRequestViewModel", ServiceRequestViewModel);*/
+        localStorage.setItem("ServiceRequestViewModel", JSON.stringify(ServiceRequestViewModel));
+        var retrievedData = localStorage.getItem("ServiceRequestViewModel");
+            var retrievedObject = JSON.parse(retrievedData);
+            debugger;
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("ServiceRequestsList", "ServiceRequest")', // name of PHP script
+                data: ServiceRequestViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#divResultdata").html(data);
+                },
+
+                error: function (xhr, status, error) {
+                    $('.spinner-wrapper').hide();
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+
+            });
+        }//);
+    </script>
+
+    <script>
+    function GetExcelResult() {
+       // $("#btnSearch").click(function () {
+            var shownVal = document.getElementById("CustomerId").value;
+            var UserId = $("#custId").val();
+            var enterDate = $("#StartDate").val();
+            if (enterDate != "") {
+                var split = enterDate.split("/");
+                var StartDate = split[1] + "/" + split[0] + "/" + split[2];
+            }
+            else {
+                var StartDate = "";
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != "") {
+                var split1 = lastDate.split("/");
+                var EndDate = split1[1] + "/" + split1[0] + "/" + split1[2];
+            }
+            else {
+                var EndDate = "";
+            }
+            var SelectedUser = $("#Username").val();
+            var ProvionalNo = $("#provionalbillid").val();
+            if (shownVal != "") {
+                var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            }
+
+            var enterDate = $("#StartDate").val();
+            if (enterDate != '' && lastDate == '') {
+                   alert("Please select To date !");
+               return false;
+
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != '' && enterDate == '') {
+                alert("Please select From Date !.");
+                return false;
+            }
+            var ProvionalNo = $("#provionalbillid").val();
+
+            var ServiceRequestViewModel =
+                {
+                CustomerId: CustomerId,
+                UserId: UserId,
+                StartDate: StartDate,
+                EndDate: EndDate,
+                ProvisionalNo: ProvionalNo,
+                SelectedUserId: SelectedUser,
+                PageSize: 15,
+                PageNo: 1,
+                }
+
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetExcelDownloadParameter", "ServiceRequest")', // name of PHP script
+                data: ServiceRequestViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                     location.href = "@Url.Action("GetServiceRequestsListForExcel", "ServiceRequest")"
+                },
+
+                error: function (xhr, status, error) {
+                    $('.spinner-wrapper').hide();
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert("Something went wrong! while creating excel");
+                }
+
+            });
+        }//);
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            var total = parseInt($('#hdnTotal').val());
+            var PageSize = 15;
+            BindList(1, PageSize);
+            var result = Paging(1, PageSize, total, "myClass", "myDisableClass");
+            $("#pagingDiv").html(result)
+
+           
+            //$("#pagingButton").click(function (e) {
+
+            //});
+
+            $("#pagingDiv").on("click", "a", function () {
+                var result = Paging($(this).attr("pn"), PageSize, total, "myClass", "myDisableClass")
+                $("#pagingDiv").html(result);
+                var pagenumber = $(this).attr("pn");
+                BindList(pagenumber, PageSize)
+
+            });
+
+
+            function Paging(PageNumber, PageSize, TotalRecords, ClassName, DisableClassName) {
+                var ReturnValue = "";
+
+                var TotalPages = Math.ceil(TotalRecords / PageSize);
+                if (+PageNumber > 1) {
+                    if (+PageNumber == 2)
+                        ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='" + (+PageNumber - 1) + "' class='" + ClassName + "'>Previous</a>   ";
+                    else {
+                        ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                        ReturnValue = ReturnValue + (+PageNumber - 1) + "' class='" + ClassName + "'>Previous</a>   ";
+                    }
+                }
+                else
+                    ReturnValue = ReturnValue + "<span class='" + DisableClassName + "'>Previous</span>   ";
+                if ((+PageNumber - 3) > 1)
+                    ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='1' class='" + ClassName + "'>1</a> ..... | ";
+                for (var i = +PageNumber - 3; i <= +PageNumber; i++)
+                    if (i >= 1) {
+                        if (+PageNumber != i) {
+                            ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                            ReturnValue = ReturnValue + i + "' class='" + ClassName + "'>" + i + "</a> | ";
+                        }
+                        else {
+                            ReturnValue = ReturnValue + "<span style='font-weight:bold;'>" + i + "</span> | ";
+                        }
+                    }
+                for (var i = +PageNumber + 1; i <= +PageNumber + 3; i++)
+                    if (i <= TotalPages) {
+                        if (+PageNumber != i) {
+                            ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                            ReturnValue = ReturnValue + i + "' class='" + ClassName + "'>" + i + "</a> | ";
+                        }
+                        else {
+                            ReturnValue = ReturnValue + "<span style='font-weight:bold;'>" + i + "</span> | ";
+                        }
+                    }
+                if ((+PageNumber + 3) < TotalPages) {
+                    ReturnValue = ReturnValue + "..... <a style='cursor:pointer;' pn='";
+                    ReturnValue = ReturnValue + TotalPages + "' class='" + ClassName + "'>" + TotalPages + "</a>";
+                }
+                if (+PageNumber < TotalPages) {
+                    ReturnValue = ReturnValue + "   <a style='cursor:pointer;' pn='";
+                    ReturnValue = ReturnValue + (+PageNumber + 1) + "' class='" + ClassName + "'>Next</a>";
+                }
+                else
+                    ReturnValue = ReturnValue + "   <span class='" + DisableClassName + "'>Next</span>";
+
+                return (ReturnValue);
+            }
+
+        });
+    </script>
+
+    <!--new style for pagination-->
+    <style>
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+
+        dropdown-check-list {
+            display: inline-block;
+        }
+
+        .dropdown-check-list .anchor {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            padding: 6px 28px 6px 13px;
+            border: 1px solid #c3bbbb;
+            color: slategray;
+            width: 150px;
+        }
+
+            .dropdown-check-list .anchor:after {
+                position: absolute;
+                content: "";
+                border-left: 2px solid black;
+                border-top: 2px solid black;
+                padding: 3px;
+                right: 11px;
+                top: 32%;
+                -moz-transform: rotate(-135deg);
+                -ms-transform: rotate(-135deg);
+                -o-transform: rotate(-135deg);
+                -webkit-transform: rotate(-135deg);
+                transform: rotate(-135deg);
+            }
+
+            .dropdown-check-list .anchor:active:after {
+                right: 8px;
+                top: 21%;
+            }
+
+        .dropdown-check-list ul.items {
+            padding: 2px;
+            display: none;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+            .dropdown-check-list ul.items li {
+                list-style: none;
+            }
+
+        /*.dropdown-check-list.visible .anchor {
+            color: #0094ff;
+        }*/
+
+        .dropdown-check-list.visible .items {
+            display: block;
+        }
+
+        span.anchor {
+            border-radius: 5px;
+        }
+
+        div#list1 {
+            margin-top: 7px;
+        }
+
+        input[type="checkbox"] {
+            margin: 5px 11px;
+            line-height: revert;
+        }
+    </style>
+
+    <!--End Here-->
+
+    <datalist id="CNList">
+        @foreach (var item in Model.Customers)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+
+    </datalist>
+    <datalist id="ZoneList" class="dropdown-check-list">
+        @foreach (var item in Model.Zone)
+        {
+            @*<option id="@item.Value" data-value="@item.Value" value="@item.Text"><input type="checkbox"></option>*@
+
+            @*<div id="list1" class="dropdown-check-list" tabindex="100">*@
+            <ul class="items">
+                <li><input type="checkbox" />@item.Text</li>
+
+            </ul>
+            @*</div>*@
+        }
+
+
+    </datalist>
+</body>
+</html>

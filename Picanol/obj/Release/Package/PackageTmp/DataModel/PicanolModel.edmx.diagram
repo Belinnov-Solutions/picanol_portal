@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e8de19e0a0d24c5eb916d9c767d4b91c" Name="Diagram1">
+        <EntityTypeShape EntityType="PicanolModel.Log" Width="1.5" PointX="5.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblAudit" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblBusiness" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblChallan" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblCreditNote" Width="1.5" PointX="5.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblCustomer" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblDebitNote" Width="1.5" PointX="7.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblDetailedExpens" Width="1.5" PointX="12.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblDispatchDetail" Width="1.5" PointX="13.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblEInvoice" Width="1.5" PointX="14.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblInvoice" Width="1.5" PointX="15.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblOrder" Width="1.5" PointX="6" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblOrderPart" Width="1.5" PointX="8.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblOrderPayment" Width="1.5" PointX="16.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblPart" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblPartHistory" Width="1.5" PointX="9.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblPartLoan" Width="1.5" PointX="11.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblPartType" Width="1.5" PointX="1.5" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblProformaInvoice" Width="1.5" PointX="16.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblProvisionalBill" Width="1.5" PointX="13.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblPurchase" Width="1.5" PointX="17.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblRole" Width="1.5" PointX="10.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblServiceDay" Width="1.5" PointX="2.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblServiceRequest" Width="1.5" PointX="18.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblSubCustomer" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblTimeSheet" Width="1.5" PointX="18.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblTimeSheetDetail" Width="1.5" PointX="19.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblUser" Width="1.5" PointX="13" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblWorkOrderImage" Width="1.5" PointX="11" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblWorkOrder" Width="1.5" PointX="8.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblZone" Width="1.5" PointX="15.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblCustomerContact" Width="1.5" PointX="17.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblGSTState" Width="1.5" PointX="19.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PicanolModel.tblServiceCallType" Width="1.5" PointX="0.75" PointY="21.75" IsExpanded="true" />
+        <AssociationConnector Association="PicanolModel.FK_tblChallan_tblCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK__tblSubCus__Custo__29221CFB" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK_tblOrder_tblCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK_tblOrder_tblPart" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK_tblOrderPart_tblOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK_tblPart_tblPartType" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK_tblUser_tblRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK__tblWorkOr__WorkO__2B0A656D" ManuallyRouted="false" />
+        <AssociationConnector Association="PicanolModel.FK__tblProvis__SubCu__75A278F5" />
+        <AssociationConnector Association="PicanolModel.FK__tblServic__Provi__76969D2E" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,454 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@using Picanol.Helpers
+@{
+    ViewBag.Title = "TestDebitnote";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+
+
+<style>
+    .seperator {
+        height: 100%;
+        width: 1px;
+        background: black;
+        margin: 0 auto;
+        top: 0;
+        bottom: 0;
+        position: absolute;
+        right: 30%;
+    }
+
+    .line {
+        border-top: 1px solid grey;
+        flex-grow: 1;
+    }
+
+    .invoice-title h2, .invoice-title h3 {
+        display: inline-block;
+    }
+
+    .table > tbody > tr > .no-line {
+        border-top: none;
+    }
+
+    .table > thead > tr > .no-line {
+        border-bottom: none;
+    }
+
+    td, th {
+        text-align: center;
+    }
+
+    .table > tbody > tr > .thick-line {
+        border-top: 2px solid black;
+    }
+
+    .vl {
+        border-left: 1px solid black;
+        height: 385px;
+        position: absolute;
+        left: 50%;
+        margin-left: -3px;
+        margin-top: 0px;
+        top: 0;
+    }
+
+    .v2 {
+        border-left: 1px solid black;
+        height: 382px;
+        position: absolute;
+        left: 50%;
+        margin-left: -3px;
+        margin-top: 2px;
+        top: 0;
+    }
+
+    .v3 {
+        border-left: 1px solid black;
+        height: 23px;
+    }
+
+    .v6 {
+        border-left: 1px solid black;
+        height: 23px;
+        margin-top: -23px;
+    }
+
+    .v4 {
+        border-left: 1px solid black;
+        height: 100px;
+    }
+
+    .v5 {
+        border-right: 1px solid black;
+        height: 100px;
+        margin-top: -100px;
+    }
+
+    .v7 {
+        border-left: 1px solid black;
+        height: 80px;
+        margin-top: -23px;
+    }
+
+    .v8 {
+        border-right: 1px solid black;
+        height: 80px;
+        margin-top: -80px;
+    }
+
+    .pagebreak {
+        page-break-before: always;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-4">
+                    @*<img src="~/Content/Images/L.png">*@
+                </div>
+                <div class="col-xs-8">
+                    <div class="text-right">
+                        <font size="4"><b>GSTIN :@Model.BusinessDetails.GSTIN</b></font><br />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="border: 1px solid black ; border-bottom-style:none">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-8">
+                            <div class="invoice-title">
+                                <p><center><b>DEBIT NOTE</b></center></p>
+                            </div>
+                        </div>
+                        <div class="seperator">
+                        </div>
+                        <div class="col-xs-4">
+                            <div>
+                                <p><center><b>ORIGINAL FOR RECIPIENT</b></center></p>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="border: 1px solid black ; border-bottom-style:none">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        @if (@Model.InvoiceDetails.IRN != null)
+                        {
+                            <b style="font-size:medium">&nbsp;&nbsp;IRN : @Model.InvoiceDetails.IRN</b><br />
+                            <div class="line"></div>
+                        }
+
+                        &nbsp;&nbsp;Reverse Charge :No <b style="font-size:x-large"></b><br />
+                        <div class="line"></div>
+                        <b style="font-size:large">&nbsp;Debit Note No.</b>  : <b style="font-size:x-large">@Model.InvoiceDetails.DebitNoteNo</b><br />
+                        <div class="line"></div>
+
+                        &nbsp;&nbsp;Debit Note Date   : <b>@Model.InvoiceDetails.DebitNoteDate</b><br />
+                        <div class="line"></div>
+
+                        &nbsp;&nbsp;State          : @Model.BusinessDetails.State<b></b><br />
+                        <div class="line"></div>
+
+                        &nbsp;&nbsp;State Code     : <b>07</b><br />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="border: 1px solid black ; border-bottom-style:none">
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <address>
+                    <strong>&nbsp;&nbsp;<center>Details of Receiver / Consignee:</center></strong>
+                    <div class="line"></div>
+                    &nbsp;&nbsp;Name :<b>@Model.CustomerDetails.CustomerName</b><br />
+                    &nbsp;&nbsp;Address :<b>
+    @if (Model.BillingAddresss == null)
+    {
+        @Model.CustomerDetails.AddressLine1 @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN
+    }
+    else
+    {
+        @Model.BillingAddresss
+
+    }
+                </b><br />
+                    &nbsp;&nbsp;GSTIN :<b>@Model.CustomerDetails.GSTIN</b> <br />
+                    &nbsp;&nbsp;Place of Supply :<b></b><br>
+                    &nbsp;&nbsp;State : <b>@Model.CustomerDetails.State</b> <br />
+                    &nbsp;&nbsp;State Code : <b>
+    @if (Model.BillingStateCode == null)
+    {
+        @Model.CustomerDetails.StateCode
+    }
+    else
+    {
+        @Model.BillingStateCode
+
+    }
+                </b> <br />
+                </address>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <div class="table-responsive">
+                <table rules="all" border="1" style="font-size:small ; width:100% " id="review-products">
+                    <thead>
+                        <tr>
+                            <th>Serial No.</th>
+                            <th>Description Of Product/Service</th>
+                            <th>HSN</th>
+                            <th>Taxable Value</th>
+                            <th>Quantity</th>
+                            <th>Unit Of Measurement</th>
+
+                            <th colspan="2">CGST</th>
+                            <th colspan="2">SGST</th>
+                            <th colspan="2">IGST</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.InvoiceDetails.InvoiceItems)
+                        {
+                            <tr class="txtMult" style="font-weight:bold">
+                                <td>1</td>
+                                <td>@item.Name</td>
+
+                                <td>@item.HSNCode</td>
+                                <td style="text-align:right">@item.Amount</td>
+                                @*//taxable*@
+                                <td>@item.Qty</td>
+                                <td>@item.UnitOfMeasurement</td>
+
+                                @if (Model.CustomerDetails.StateCode == "07")
+                                {
+                                    <td>(@item.GSTRate/2)%</td>
+                                    <td>@item.GSTAmount/2</td>
+                                    <td>(@item.GSTRate/2)%</td>
+                                    <td>@item.GSTAmount/2</td>
+                                    <td>0%</td>
+                                    <td>0</td>
+                                }
+                                else
+                                {
+
+                                    <td>0%</td>
+                                    <td>0</td>
+                                    <td>0%</td>
+                                    <td>0</td>
+                                    <td ID="lblRate" class="IGSTRate">@item.GSTRate%</td>
+                                    <td ID="lblAmount" class="IGSTAmount">@item.GSTAmount</td>
+                                }
+                                <td ID="lblTotalAmount" class="TotalAmount">@item.Total</td>
+                            </tr>
+                        }
+                        <tr>
+
+                            <th colspan="3" style="text-align:right"><b>Total</b></th>
+                            <td colspan="1" style="text-align:right"><b>@Model.InvoiceDetails.AmountBTax</b></td>
+                            <th colspan="9" style="text-align:right"><b>@Model.InvoiceDetails.Amount</b></th>
+                        </tr>
+
+
+
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="v7"></div>
+    <div class="v8"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+
+            <div style="border: 1px solid black ; border-bottom-style: none">
+                <div class="vl"></div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div style="margin-left:10px">
+
+                            Total Invoice Amount in Words : <br />
+                            <b>@Model.InvoiceDetails.AmountWords</b><br />
+                        </div>
+                    </div>
+                    @if (Model.CustomerDetails.StateCode == "07")
+                    {
+                        <div class="col-xs-6 text-left">
+                            Total Amount Before Tax  :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.AmountBTax</b><br />
+                            Add CGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.TotalTax/2</b><br />
+                            Add SGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.TotalTax/2</b><br />
+                            Add IGST : <b class="pull-right" style="margin-right:5px">₹0</b><br />
+                            Tax Amount GST: <b class="pull-right" style="margin-right:5px">@*₹@Model.InvoiceDetails.TotalTax*@</b><br />
+                            <div style="font-size:medium">
+                                Total Amount After Tax :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.Amount</b>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+
+                        <div class="col-xs-6 text-left">
+                            Total Amount Before Tax  :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.AmountBTax</b><br />
+                            Add CGST : <b class="pull-right" style="margin-right:5px">₹0</b><br />
+                            Add SGST : <b class="pull-right" style="margin-right:5px">₹0</b><br />
+                            Add IGST : <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.TotalTax</b><br />
+                            Tax Amount GST: <b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.TotalTax</b><br />
+                            <div style="font-size:medium">
+                                Total Amount After Tax :<b class="pull-right" style="margin-right:5px">₹@Model.InvoiceDetails.Amount</b>
+                            </div>
+                        </div>
+
+
+                    }
+                </div>
+            </div>
+            <div style="border: 1px solid black; border-bottom-style:none; height:160px;">
+                <div class="row">
+
+                    <div class="col-xs-12">
+                        <b><font size="4">&nbsp;&nbsp;<u>Bank Details</u></font> </b>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <b style="font:large">&nbsp;&nbsp;Bank Account Number : &nbsp;&nbsp;</b>
+                    </div>
+                    <div class="col-xs-3">
+                        <b style="font:large"> @Model.BusinessDetails.AccountNumber</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <b style="font:large">&nbsp;&nbsp;Bank Name :</b>
+
+                    </div>
+                    <div class="col-xs-3">
+                        <b style="font:large">@Model.BusinessDetails.BankName</b>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <b style="font:large">&nbsp;&nbsp;Bank Branch IFSC :</b>
+
+                    </div>
+                    <div class="col-xs-3">
+                        <b style="font:large">@Model.BusinessDetails.IFSCCode</b>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <b style="font:large">&nbsp;&nbsp;Bank Branch  :</b>
+
+                    </div>
+                    <div class="col-xs-3">
+                        <b style="font:large">@Model.BusinessDetails.BankBranch</b>
+
+                    </div>
+                </div>
+            </div>
+
+            @if (@Model.InvoiceDetails.EInVoiceQrCode != null)
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <b class="pull-right" style="margin-top:-150px; margin-right: 250px;">
+                            <img src="~/Content/Images/QrCodeImages/@Model.InvoiceDetails.EInVoiceQrCode" width="140" height="130" />
+                        </b>
+                    </div>
+
+                </div>
+            }
+
+
+
+            <div style="border: 1px solid black">
+                <div class="row">
+                    <div class="col-xs-6">
+
+                        <b>&nbsp;&nbsp;DECLARATION :</b>
+                    </div>
+                    <div class="col-xs-6 text-left">
+                        Certified that the particulars given above are true and correct
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+
+                        &nbsp;&nbsp;This Debit note is issued agst adjustment of orginal invoice no @Model.InvoiceDetails.InvoiceNo dated @Model.InvoiceDetails.InvoiceDate
+                        beause further repair of this parts is not possible.
+                    </div>
+                    <div class="col-xs-6 text-left">
+                        <br />
+                        <br />
+                        <br />
+                        <center>Authorised Signatory</center>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+

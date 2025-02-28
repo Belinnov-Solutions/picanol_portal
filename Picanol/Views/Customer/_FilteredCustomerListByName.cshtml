@@ -1,0 +1,42 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+
+<style>
+    .datepicker {
+        z-index: 1151 !important;
+    }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+
+<table id="myTable">
+    <tr>
+        <th>Customer Name</th>
+        <th>Address</th>
+        <th>GST</th>
+        
+    </tr>
+    @foreach (var item in Model.CustomersList)
+            {
+        <tr>
+            <td>@item.CustomerName</td>
+            <td>@item.AddressLine1</td>
+            <td>@item.GSTIN</td>
+            
+        </tr>
+    }
+</table>

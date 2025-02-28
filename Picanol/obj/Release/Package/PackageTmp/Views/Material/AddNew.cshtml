@@ -1,0 +1,673 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+
+@{
+    ViewBag.Title = "AddNew";
+}
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large pull-left"> Back</a>
+
+        <div class="row">
+            <div class="text-right" style="margin-top: -10px; margin-right: 12px; color: red">Last Tracking No. : @Model.LastTrackingNumber</div>
+        </div>
+        <div class="row">
+            <div class="text-right" style="margin-top: -17px; color: red">Last Invoice No. : @Model.LastInvoiceNumber</div>
+        </div>
+
+        <div class="text-center" style="color: black; margin-top: -60px;"><h3 style="text-align:center"><b>Inward Material</b></h3></div>
+
+
+        @if (userInfo.RoleName != "Service Engineer")
+        {
+            <a href="@Url.Action("AddCustomer", "Customer")" class="btn btn-info btn-large pull-right" style="margin-top:30px;"> Add Customer</a>
+        }
+        <div class="container margin-top-lg">
+            @using (Html.BeginForm("AddNew", "Material", FormMethod.Post, new { @onsubmit = "return validateForm()" }))
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="DateCreated">Date</label>
+                                @Html.TextBoxFor(d => d.DateCreated, "{0:dd/MM/yyyy}", new { id = "DateCreated", @class = "form-control", maxlength = "500", @required = "required", autocomplete = "off" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="CustomerName">Customer Name</label>
+                                @*@Html.EditorFor(model => model.CustomerRef, new { id = "CustomerName", htmlAttributes = new { @class = "form-control" } })*@
+                                @*@Html.DropDownListFor(p => p.Customers, new SelectList(Model.Customers, "CustomerId", "CustomerName"), "Select Name", new { id = "CustomerId", @class = "form-control" })*@
+                                <input name="id" class="form-control" type="search" list="CNList" autocomplete="off" id="CustomerId" required />
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="CustomerRef">Customer Ref.</label>
+                                @Html.TextBoxFor(d => d.CustomerRef, new { id = "CustomerRef", @class = "form-control", maxlength = "2000", @required = "required" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="CustomerRef">Challan Date</label>
+                                @Html.TextBoxFor(d => d.ChallanDate, "{0:dd/MM/yyyy}", new { id = "ChallanDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+
+                        <div class="field" align="left">
+                            <label for="ChallanImage">Challan Image</label>
+                            <input type="file" id="imageUploadForm" name="images" multiple="multiple" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                @*<input type="button" value="Add Row" onclick="addRow('dataTable')" />*@
+
+                <br />
+
+                <a href="@Url.Action("AddNewPart", "Parts")" class="btn btn-info btn-large pull-right" style="margin-right: 12px;"> Add New Part</a>
+                <div class="col-md-12">
+                    <div id="updateData" class="table-responsive">
+                        @Html.Partial("_AddNewTable")
+                    </div>
+                </div>
+                <br>
+
+
+
+                @*<div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="Comments">Comments</label>
+                        @Html.TextAreaFor(d => d.Comments, new { id = "Comments", @class = "form-control", maxlength = "2000" })
+                    </div>
+                </div>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large"> Cancel</a>
+                <button type="submit" class="btn btn-success"> Submit </button>*@
+
+
+            }
+        </div>
+
+        <br />
+
+
+        <button type="submit" id="id" onclick="Submitbtn()" class="btn btn-info pull-right"> Submit </button>
+        <br />
+        <br />
+        <br />
+
+        @*<datalist id="languages">
+            @foreach (var item in Model.Parts)
+            {
+                <option id="@item.PartId" value="@item.PartName"></option>
+
+            }
+
+        </datalist>*@
+
+
+
+        @*<div class="signal"></div>*@
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        $("#DateCreated").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+
+
+        });
+
+
+        $("#ChallanDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+
+
+
+        });
+    </script>
+
+
+
+
+
+
+    <script type="text/javascript">
+
+
+
+    var InwardMaterialArray = [];
+    function add_row() {
+        var Part_Name = document.getElementById("Part_Name").value;
+        var Part_No = document.getElementById("Part_No").value;
+        var Serial_No = document.getElementById("Serial_No").value;
+        var DateCreated = $("#DateCreated").val();
+        var CustomerId = $("#CustomerId").val();
+        var CustomerRef = $("#CustomerRef").val();
+        var ChallanDate = $("#ChallanDate").val();
+        var ChallanId = 0;
+        var Repair_Type = document.getElementById("Repair_Type").value;
+        if (Part_Name == "") {
+            alert("Part Name is Required ");
+            return false;
+        }
+
+
+        if (Repair_Type == "") {
+            alert("Repair Type is Required ");
+            return false;
+        }
+
+        var Quantity = document.getElementById("Quantity").value;
+
+        var User = document.getElementById("User").value;
+        var Remarks = document.getElementById("Remarks").value;
+        var OrderDto = {
+            ChallanId: ChallanId,
+            PartName: Part_Name,
+            PartNo: Part_No,
+            SerialNo: Serial_No,
+            Qty: Quantity,
+            RepairType: Repair_Type,
+            AssignedUserId: User,
+            Remarks: Remarks,
+
+        };
+        var CurrentOrder = OrderDto;
+        //for (var i = InwardMaterialArray.length; i--;) {
+        //    if (InwardMaterialArray[i].SerialNo == Serial_No && InwardMaterialArray[i].PartName == Part_Name && InwardMaterialArray[i].PartNo == Part_No) {
+        //        InwardMaterialArray.splice(i, 1);
+        //    }
+        //}
+        InwardMaterialArray.push(OrderDto);
+        var InwardMaterialViewModel = {
+            Orders: InwardMaterialArray,
+            NewOrder: CurrentOrder
+        };
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: 'POST',
+            url: '@Url.Action("AddRow", "Material")',
+            data: InwardMaterialViewModel,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $("#id").removeAttr("disabled")
+                if (data == "failure") {
+                    for (var i = InwardMaterialArray.length; i--;) {
+                        if (InwardMaterialArray[i].SerialNo == Serial_No && InwardMaterialArray[i].PartName == Part_Name && InwardMaterialArray[i].PartNo == Part_No) {
+                            InwardMaterialArray.splice(i, 1);
+                        }
+                    }
+                    alert("Return Loan First!")
+                }
+                else {
+                    $("#id").removeAttr("disabled")
+                    $('.spinner-wrapper').hide();
+                    $('#updateData').html(data);
+                }
+            },
+            error: function (response) {
+
+            }
+        });
+    }
+
+    function Submitbtn() {
+        $('#id').attr('disabled', 'disabled');
+        var DateCreated = $("#DateCreated").val();
+        var CustomerId = $("#CustomerId").val();
+        var CustomerRef = $("#CustomerRef").val();
+        var ChallanDate = $("#ChallanDate").val();
+        var ChallanId = 0;
+        var shownVal = document.getElementById("CustomerId").value;
+        if (shownVal == "") {
+            alert("Please Fill Customer Name");
+            return false;
+        }
+        if (DateCreated == "") {
+            alert("Date Is Required");
+            return false;
+        }
+
+
+        //if (CustomerRef == "") {
+        //    alert("Customer Reference No. is Required ");
+        //    return false;
+        //}
+
+        //if (ChallanDate == "") {
+        //    alert("Challan Date is Required ");
+        //    return false;
+        //}
+        //if (ChallanDate >= DateCreated) {
+        //    alert("Challan Date shouldn't be greater than Date");
+        //    return false;
+        //}
+        var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+        var formData = new FormData();
+        var totalFiles = document.getElementById("imageUploadForm").files.length;
+        for (var i = 0; i < totalFiles; i++) {
+            var file = document.getElementById("imageUploadForm").files[i];
+            formData.append("imageUploadForm", file);
+        }
+
+
+        var InwardMaterialViewModel = {
+            DateCreated: DateCreated,
+            ChallanDate: ChallanDate,
+            CustomerId: CustomerId,
+            CustomerRef: CustomerRef,
+            Orders: InwardMaterialArray,
+        };
+        var json = JSON.stringify(InwardMaterialArray);
+        formData.append("InvoiceViewModel", json);
+        formData.append("CustomerId", CustomerId);
+        formData.append("CustomerRef", document.getElementById("CustomerRef").value);
+        formData.append("DateCreated", $("#DateCreated").val());
+        formData.append("ChallanDate", $("#ChallanDate").val());
+        formData.append("ChallanId", ChallanId);
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            url: '@Url.Action("SubmitData", "Material")',
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+                //$('#id').removeAttr('disabled');
+                $('.spinner-wrapper').hide();
+                alert("Saved succesfully");
+                location.reload(true);
+            },
+            error: function (er) {
+                $('.spinner-wrapper').hide();
+                alert(er);
+            }
+
+        });
+
+
+    }
+    </script>
+
+    <script>
+
+    function Delete(partNo, serialNo) {
+
+            var InwardMaterialViewModel = {
+                Orders: InwardMaterialArray,
+                DelSerialNo: serialNo,
+                DelPartNo:partNo,
+            }
+            for (var i = InwardMaterialArray.length; i--;) {
+                if (InwardMaterialArray[i].SerialNo == serialNo && InwardMaterialArray[i].PartNo == partNo) {
+                    InwardMaterialArray.splice(i, 1);
+                    //delete InwardMaterialArray[i];
+                }
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("DeletePart", "Material")', // name of PHP script
+                data: InwardMaterialViewModel, // parameter name and value
+                 success: function (data) {
+                $('.signal').hide();
+                $("#id").removeAttr("disabled")
+                if (data.result == false) {
+                    alert(data.msg);
+                }
+                else {
+                    $('.signal').hide();
+                    $('#updateData').html(data);
+                }
+            },
+
+            });
+
+        @*else {
+            var OrderGUID = $("#GUID").val();
+            var newUrl = '@Url.Action("DeletePart","Order")';
+            var OrderDetailsViewModel = {
+                PartId: partId,
+                SelectedOrderGuid: OrderGUID
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("DeletePart", "Order")', // name of PHP script
+                data: OrderDetailsViewModel, // parameter name and value
+                success: function (data) {
+                    $('.signal').hide();
+                    window.location.href = '@Url.Action("OrderDetails", "Order")' + '?id=' + data;
+                },
+
+            });
+        }*@
+    }
+    // $(function () {
+    //$('#Part_Name').on('change', function () { getPartNumber() });
+    //$(document).on("change", "Part_Name", getPartNumber);
+    function getPartNumber() {
+        var e = document.getElementById("Part_Name").value;
+        var res = e.split(';');
+        var name = res[0];
+        var partno = res[1];
+
+        document.getElementById("Part_Name").value = name
+        document.getElementById("Part_No").value = partno
+
+
+
+
+    }
+        //var e = document.getElementById("Part_Name").value;
+        //var val = e.options[e.selectedIndex].value;
+        //var mainselection = e; // get the selection value
+        //var data = {
+        //    mainselection: mainselection
+        //};
+        @*$.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GetPartNo", "Material")', // name of PHP script
+            data: data, // parameter name and value
+            success: function (data) {
+                $("#Part_No").val(data); // insert in div above
+            },
+
+        });
+    }*@
+    // });
+
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#id").attr("disabled", "disabled")
+
+
+            //$("#CustomerName").autocomplete({
+            //	source: function (request, response) {
+            //		$.ajax({
+            //			url: "/Material/GetCustomersList",
+            //			type: "POST",
+            //			dataType: "json",
+            //			data: { Prefix: request.term },
+            //			success: function (data) {
+            //				response($.map(data, function (item) {
+            //					return { label: item.CustomerName, value: item.CutomerId };
+            //				}))
+
+            //			}
+            //		})
+            //	},
+            //	messages: {
+            //		noResults: "", results: ""
+            //	}
+            //});
+        })
+    </script>
+    <datalist id="CNList">
+        @foreach (var item in Model.Customers)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+        }
+    </datalist>
+
+    <script>
+        $(document).ready(function () {
+            if (window.File && window.FileList && window.FileReader) {
+                $("#files").on("change", function (e) {
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function (e) {
+                            var file = e.target;
+                            $("<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                                "<br/><span class=\"remove\">Remove image</span>" +
+                                "</span>").insertAfter("#files");
+                            $(".remove").click(function () {
+                                $(this).parent(".pip").remove();
+                                $('#files').val("");
+                            });
+
+                            // Old code here
+                            /*$("<img></img>", {
+                              class: "imageThumb",
+                              src: e.target.result,
+                              title: file.name + " | Click to remove"
+                            }).insertAfter("#files").click(function(){$(this).remove();});*/
+
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
+    </script>
+
+    <script>
+    function SendImage() {
+        alert("Event 1");
+
+
+        $.ajax({
+
+            url: "@Url.Action("submitData", "Material")",
+            type: "POST",
+            data: function () {
+                var files = new FormData();
+
+                files.append("files", jQuery("#files").get(0).files[0]);
+                return files;
+            }(),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+            },
+            error: function (jqXHR, textStatus, errorMessage) {
+                $('.signal').hide();
+                console.log(errorMessage);
+            }
+        });
+    }
+    </script>
+    <script>
+
+
+
+        function validateForm() {
+
+
+
+            var DateCreated = $("#DateCreated").val();
+            var CustomerId = $("#CustomerId").val();
+            var CustomerRef = $("#CustomerRef").val();
+            var ChallanDate = $("#ChallanDate").val();
+            if (DateCreated == "") {
+                alert("Date Is Required");
+                return false;
+            }
+            if (CustomerId == "") {
+                alert("Please Fill Customer Name");
+                return false;
+            }
+
+            if (CustomerRef == "") {
+                alert("Customer Reference No. is Required ");
+                return false;
+            }
+
+            if (ChallanDate == "") {
+                alert("Challan Date is Required ");
+                return false;
+            }
+            if (ChallanDate >= DateCreated) {
+                alert("Challan Date shouldn't be greater than Date");
+                return false;
+            }
+
+            //document.getElementById('CustomerId').readOnly = true;
+            //document.getElementById('CustomerRef').readOnly = true;
+            //document.getElementById('DateCreated').readOnly = true;
+            //document.getElementById('ChallanDate').readOnly = true;
+
+
+
+
+
+
+        }
+
+
+    </script>
+    <!--New ajax for customer Filter-->
+    @*<script>
+            $(document).ready(function () {
+                $('#CustomerId').keyup(function () {
+                    $.ajax({
+                        url: '@Url.Action("ProvisionalCustomerSearch", "CustomerSearch")',
+                        type: "Post",
+                        async:false,
+                        cache: false,
+                        data: { 'CustomerName': $('#CustomerId').val() },
+                        success: function (data) {
+
+                            var option="";
+                            $('#CNList').empty();
+                            option += "";
+
+                            for (var i = 0; i < data.Customers.length; i++) {
+
+                                option +="<option id=" + data.Customers[i].CustomerId + " data-value=" + data.Customers[i].CustomerId +" value=\"" + data.Customers[i].CustomerName +"\"></option>"
+                                //"<option id=" + data.Customers[i].CustomerId + " + data.Customers[i].CustomerId + data.Customers[i].CustomerName +" </option >"
+                                //option += "<option value=" + data.Customers[i].CustomerId + ">" + data.Customers[i].CustomerName + "</option>"
+                            }
+                            $("#CNList").append(option);
+
+                },
+                    error: function (xhr, status, error) {
+                        var errorMessage = xhr.status + ': ' + xhr.statusText
+                        alert('Error - ' + errorMessage);
+                    }
+
+                    });
+                });
+            });
+        </script>*@
+
+    <!--End Here-->
+</body>
+</html>

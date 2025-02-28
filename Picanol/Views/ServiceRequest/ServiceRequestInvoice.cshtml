@@ -1,0 +1,402 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@{
+    ViewBag.Title = "ServiceRequestInvoice";
+    Layout = "../Shared/View.cshtml";
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+    .cancelledImg {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: -1;
+        opacity: 0.15;
+    }
+
+    .rotate_image {
+        @* -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        *@ -webkit-transform: rotate(-20deg);
+        -moz-transform: rotate(-20deg);
+        -ms-transform: rotate(-20deg);
+        -o-transform: rotate(-20deg);
+        transform: rotate(-20deg);
+    }
+</style>
+<div class="container">
+    @if (Model.InvoiceDetails.Cancelled == true)
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="text-right">
+                        <img class="cancelledImg rotate_image" src="~/Content/Images/cancelledImg.jpg" style="height:840px; width: 100%; margin-top:100px; margin-right:80px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="text-right"><b>GSTIN : 07AAECP4023H1ZO &nbsp; &nbsp;&nbsp;</b></div>
+    <div class="col-xs-12">
+        <table rules="all" border="1" style="width:100%">
+            <tr>
+                <td colspan="16">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="invoice-title">
+                                        <center>
+                                            <h2 style="display:inline-block">TAX INVOICE</h2>
+                                        </center>
+                                        @*<center>  @if (@Model.InvoiceDetails.IRN != null )
+                                            {<h2 style="display:inline-block">TAX INVOICE</h2><br />
+                                               }
+                                            else {  <h2 style="display:inline-block">PREVIEW INVOICE</h2><br />
+                                              <p style="color: red;font-size: 27px;"> *This is not an actual Invoice</p>}</center>*@
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    ✔&nbsp;  Original for Recipient<br />
+                                    &nbsp; &nbsp;&nbsp;      Duplicate for Supplier/Transporter <br />
+                                    &nbsp; &nbsp;&nbsp;      Triplicate for Supplier<br />
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            @if (@Model.InvoiceDetails.IRN != null)
+            {
+                <tr>
+                    <td colspan="16">
+                        @*add by Sunit*@
+                        &nbsp;&nbsp;IRN   :
+                        @if (@Model.InvoiceDetails.IRN != null)
+                        {
+                            <b>@Model.InvoiceDetails.IRN</b><br />
+                        }
+                        @*end*@
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="8">
+                    &nbsp;&nbsp;Reverse Charge:  <br />
+                    @if (Model.InvoiceDetails.InvoiceNo == null && Model.InvoiceDetails.InvoiceNo == "")
+                    {
+                        <b style="font-size:medium">&nbsp;&nbsp;Invoice No. : </b><br />
+
+                    }
+                    else
+                    {
+                        <b style="font-size:medium">&nbsp;&nbsp;Invoice No. : @Model.InvoiceDetails.InvoiceNo</b><br />
+
+                    }
+                    &nbsp;&nbsp;Invoice Date : @Model.InvoiceDetails.InvoiceDate.Value.ToShortDateString()<br />
+                    &nbsp;&nbsp;State :<b>Delhi</b> <br />
+                    &nbsp;&nbsp;State Code :<b>07</b> <br />
+
+                </td>
+
+                @if (Model.CustomerDetails.ShippingState != null && Model.CustomerDetails.StateCode != null)
+                {
+                    <td colspan="8">
+                        Transportation Mode :Courier<br />
+                        Vehicle Number :<br />
+                        Date of Supply :<br />
+                        Place of Supply :@Model.CustomerDetails.ShippingState @Model.CustomerDetails.StateCode  <br />
+                    </td>
+                }
+                else
+                {
+                    <td colspan="8">
+                        Transportation Mode :<br />
+                        Vehicle Number :<br />
+                        Date of Supply :<br />
+                        Place of Supply :<br />
+                    </td>
+                }
+
+
+            </tr>
+            <tr>
+                <td colspan="8"><br /></td>
+                <td colspan="8"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="8" align="center"><b>Details of Receiver / Billed to</b></td>
+                <td colspan="8" align="center"><b>Details of Consignee / Shipped to</b></td>
+            </tr>
+            @if (Model.InvoiceDetails.InvoiceNo != null && Model.InvoiceDetails.InvoiceNo != "")
+            {
+                <tr>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.BillingAddresss <br />
+
+                        </div>&nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.BillingStateCode<br />
+
+                    </td>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.ShippingAddress <br />
+                        </div>
+                        &nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.ShippingStateCode<br />
+
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.CustomerDetails.AddressLine1  @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN <br />
+
+                        </div>&nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.BillingStateCode<br />
+
+                    </td>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.CustomerDetails.AddressLine1  @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN <br />
+
+                        </div>
+                        &nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.ShippingStateCode<br />
+
+                    </td>
+                </tr>
+            }
+            @*<tr>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.CustomerDetails.AddressLine1  @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN <br />
+
+                        </div>&nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.CustomerDetails.StateCode<br />
+
+                    </td>
+                    <td colspan="8">
+                        &nbsp;&nbsp;Name : @Model.CustomerDetails.CustomerName<br />
+                        <div style="margin-left:10px">
+                            Address : @Model.CustomerDetails.AddressLine1  @Model.CustomerDetails.AddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN <br />
+                        </div>
+                        &nbsp;&nbsp;Contact : @Model.CustomerDetails.Mobile<br />
+                        &nbsp;&nbsp;GSTIN : @Model.CustomerDetails.GSTIN<br />
+                        &nbsp;&nbsp;State : @Model.CustomerDetails.State<br />
+                        &nbsp;&nbsp;State Code : @Model.CustomerDetails.StateCode<br />
+
+                    </td>
+                </tr>*@
+
+            <tr>
+                <td colspan="8"><b>&nbsp;&nbsp;AGAINST PROVISINAL SERVICE BILL : @Model.InvoiceDetails.ProvisionalBillNo</b></td>
+                <td colspan="8"><b>&nbsp;&nbsp;ATTENDED FROM : @Model.InvoiceDetails.AttendedFrom</b></td>
+            </tr>
+
+            <tr>
+                <td colspan="4"><b>&nbsp;&nbsp;SERVICE ENGINEER NAME : </b></td>
+                <td colspan="4"><b>@Model.InvoiceDetails.EngineerName</b></td>
+                <td colspan="8"><b>&nbsp;&nbsp;ATTENDED TO :@Model.InvoiceDetails.AttendedTo</b></td>
+            </tr>
+
+
+            <tr style="font-size:small">
+                <th>Sr. No.</th>
+                <th colspan="2">Name of Product / Service</th>
+                <th>SAC CODE</th>
+                <th>Unit of Measurement</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Taxable Value</th>
+                <th colspan="2">CGST</th>
+                <th colspan="2">SGST</th>
+                <th colspan="2">IGST</th>
+                <th>TOTAL</th>
+            </tr>
+            <tr style="font-size:small">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model.InvoiceDetails.InvoiceItems)
+            {
+                <tr>
+                    <td>&nbsp;@item.InvoiceItemID</td>
+                    <td colspan="2"><div style="margin-left:10px">@item.Name</div></td>
+                    <td>&nbsp;@item.HSNCode</td>
+                    <td align="center">&nbsp;@item.UnitOfMeasurement</td>
+                    <td>&nbsp;@item.Qty</td>
+                    <td>&nbsp;@item.Rate</td>
+                    <td>&nbsp;@item.Amount</td>
+                    <td>&nbsp;@item.Amount</td>
+                    <td>&nbsp;@item.CGSTRate%</td>
+                    <td>&nbsp;@item.CGSTAmount</td>
+                    <td>&nbsp;@item.SGSTRate%</td>
+                    <td>&nbsp;@item.SGSTAmount</td>
+                    <td>&nbsp;@item.IGSTRate%</td>
+                    <td>&nbsp;@item.IGSTAmount</td>
+                    <td align="right">@item.Total</td>
+
+                </tr>
+            }
+            <tr>
+                <td colspan="5" align="right">Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td align="right">@Model.InvoiceDetails.AmountBTax</td>
+                <td></td>
+                <td align="right">@Model.InvoiceDetails.CGSTTax</td>
+                <td></td>
+                <td align="right">@Model.InvoiceDetails.SGSTTax</td>
+                <td></td>
+                <td align="right">@Model.InvoiceDetails.IGSTTax</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="16"><br /></td>
+            </tr>
+            <tr>
+                <td rowspan="5" colspan="8" align="center">
+                    <b>Total Invoice Amount in Words: @Model.InvoiceDetails.AmountWords</b>
+                </td>
+                <td colspan="4"><b>&nbsp;Total Amount Before Tax :</b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.AmountBTax</b></td>
+            <tr>
+                <td colspan="4"><b>&nbsp;Add CGST :</b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.CGSTTax</b></td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>&nbsp;Add SGST :</b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.SGSTTax</b></td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>&nbsp;Add IGST: 18%</b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.IGSTTax</b></td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>&nbsp;Tax Amount GST : </b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.TotalTax</b></td>
+            </tr>
+            </tr>
+            <tr>
+                @*<td rowspan="4" colspan="8" align="center">
+                        <b><u>Bank Details :</u> </b><br />
+                        <div style="text-align:left;">
+                            <b>   Bank Account Number: 008705006161</b>
+                            <span style="margin-left:170px;">
+                                <b> Bank Name : ICICI BANK </b><br />
+                            </span>
+                        </div>
+
+                        <div style="text-align:left;">
+                            <b>   Bank Branch IFSC: ICIC0000087</b>
+                            <span style="margin-left:210px;">
+                                <b> Bank Branch : 54, B-Block, Community </b><br />
+                                <b style="margin-left:425px">Centre, Janakpuri, New Delhi-110058</b>
+                            </span>
+                        </div>
+                    </td>*@
+
+
+                <td rowspan="4" colspan="8">
+                    <b>&nbsp;&nbsp;<u>Bank Details :</u> </b><br />
+
+                    <b>&nbsp;&nbsp;Bank Account Number: 008705006161</b><br />
+                    <b>&nbsp;&nbsp;Bank Name : ICICI BANK </b><br />
+                    <b>&nbsp;&nbsp;Bank Branch IFSC: ICIC0000087</b><br />
+                    <b>&nbsp;&nbsp;Bank Branch : 54, B-Block, Community </b><br />
+                    <b>&nbsp;&nbsp;Centre, Janakpuri, New Delhi-110058</b>
+
+
+                </td>
+
+                <td colspan="4"><b>&nbsp;&nbsp;Total Amount After Tax :</b></td>
+                <td colspan="4" align="right"><b>₹@Model.InvoiceDetails.Amount</b></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="8"><br /></td>
+            </tr>
+            @if (Model.InvoiceDetails.IRN == null)
+            {
+                <td colspan="8"><br /></td>
+            }
+            @if (Model.InvoiceDetails.IRN != null)
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center"><img src="~/Content/Images/QrCodeImages/@Model.InvoiceDetails.EInVoiceQrCode" width="140" height="110" /></td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="8"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="8" align="left" valign="top">
+                    <b>&nbsp;&nbsp;<u>Terms and Conditions :-</u></b><br />
+                    &nbsp;&nbsp;GST Payable on Reverse Charges : No
+                </td>
+                <td colspan="8" align="center">
+                    Certified that the particulars given above are true and correct.<br />
+                    <b style="font-size:large"> For, PICANOL INDIA PVT. LTD.</b><br />
+                    <br />
+
+                    Authorised Signatory
+
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="16" align="right">E. & O.E.</td>
+            </tr>
+
+        </table>
+    </div>
+</div>

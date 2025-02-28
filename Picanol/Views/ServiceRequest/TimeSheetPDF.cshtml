@@ -1,0 +1,219 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+
+@{
+
+    Layout = "../Shared/_WOandTS.cshtml";
+}
+
+@*<center>
+    <h3>
+        Picanol India Private Limited
+    </h3>
+</center>
+<center>
+    DSM 621 & 622, DLF Towers,
+    Block-IV,15 Shivaji Marg,Near moti nagar,
+    New-Delhi - 110015<br />
+</center>
+<center>
+    Tel.: +91-11-42464024,
+    Fax : +91-11-42461202,
+    Email : kbhl@picanol.be<br />
+</center>*@
+
+<div class="container">
+
+    <div class="col-lg-12">
+        <div class="text-left">
+            State Code :07
+        </div>
+        <div class="text-right" style="margin-top:-20px">
+            GSTIN - 07AAECP4023H1ZO
+        </div>
+    </div>
+    @*<table style="width:100% ; font-size:medium ; font-weight:bold">
+
+        <tr>
+            <td>Time Sheet No. : @Model.WorkOrder.TimeSheetNo</td>
+            <td>Date : @DateTime.Now.Date</td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td>Customer Name : @Model.WorkOrder.CustomerName</td>
+            <td>Customer Address :@Model.WorkOrder.CustomerAddress</td>
+
+        </tr>
+        <tr>
+            <td>StartDate : @Model.WorkOrder.StartDate</td>
+            <td>EndDate : @Model.WorkOrder.EndDate</td>
+        </tr>
+    </table>*@
+    @*<b> Customer : @Model.WorkOrder.CustomerName</b>
+        <b style="margin-left:100px">Customer Address : @Model.WorkOrder.CustomerAddress</b>
+        <b style="margin-left:200px">Date : @DateTime.Now.Date</b><br />
+        <b> Work Order No. : @Model.WorkOrder.WorkOrderNo</b>
+        <b style="margin-left:100px">StartDate : @Model.WorkOrder.StartDate </b>
+        <b style="margin-left:200px">EndDate : @Model.WorkOrder.EndDate</b>*@
+
+    @*<div class="col-sm-12">
+            <div class="row">
+                <div class="text-left">
+                    <h4 id="Customers">  Customer : @Model.WorkOrder.CustomerName </h4>
+                </div>
+                <div class="text-center" style="margin-top:-30px">
+                    <h4 id="Customers">  Customer Address : @Model.WorkOrder.CustomerAddress </h4>
+                </div>
+                <div class="text-right" style="margin-top:-30px">
+                    <h4 id="StartDate"> Date : @DateTime.Now.Date </h4>
+                </div>
+                <br />
+                <div class="text-left">
+                    <h4 id="WorkOrderNo"> Work Order No. : @Model.WorkOrder.WorkOrderNo </h4>
+                </div>
+                <div class="text-center" style="margin-top:-30px">
+                    <h4 id="StartDate"> StartDate : @Model.WorkOrder.StartDate </h4>
+                </div>
+                <div class="text-right" style="margin-top:-30px">
+                    <h4 id="EndDate"> EndDate : @Model.WorkOrder.EndDate </h4>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="col-xl-12">
+        <table rules="all" border="1" style="width:100%">
+
+            <tr>
+                <td align="center" colspan="3" style="font-size:large"><b>TIME SHEET</b></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="text-left">&nbsp;&nbsp;Time Sheet No. : @Model.TimeSheet.TimeSheetNo</div>
+                    <div class="text-right" style="margin-top: -20px">Date : @DateTime.Now.Date.ToShortDateString()</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+
+                    <b> &nbsp;&nbsp;Customer : @Model.TimeSheet.CustomerName <br />
+                        &nbsp;&nbsp;Customer Address : @Model.WorkOrder.CustomerAddress<br />
+                        &nbsp;&nbsp;Start Date : @Model.TimeSheet.FromDate.ToShortDateString() <br />
+                        &nbsp;&nbsp;End Date : @Model.TimeSheet.ToDate.ToShortDateString() <br />
+                        &nbsp;&nbsp;Work Order No. : @Model.WorkOrder.WorkOrderNo
+                    </b>
+
+                </td>
+            </tr>
+            <tr>
+                <th>&nbsp;&nbsp;Date</th>
+                <th>&nbsp;&nbsp;Time (Hrs)</th>
+                <th>&nbsp;&nbsp;Description</th>
+            </tr>
+            @foreach (var item in Model.WeekDates.Keys)
+            {
+                <tr>
+                    <td colspan="3">&nbsp;&nbsp;Week : @item</td>
+                </tr>
+
+                foreach (var item1 in Model.WeekDates[item])
+
+                {
+                    <tr>
+                        <td>&nbsp;&nbsp;@item1.WorkDate</td>
+                        <td>&nbsp;&nbsp;@item1.TotalHours</td>
+                        <td>&nbsp;&nbsp;@item1.Description</td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td colspan="3">
+                    &nbsp;&nbsp;<b>Remarks :</b><br />
+                    <div style="margin-left:10px">@Model.TimeSheet.Remarks</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="text-right">
+                        Certified that the particulars given above are true and correct. <br />
+                    </div>
+                    
+                    <div class="text-right">
+                       
+
+                        For Picanol India Pvt. Ltd.<br />
+                        <img src="~/Content/Images/TimeSheetSignature/@Model.TimeSheet.UImagePath" width="100" height="100" /><br />
+                        @Model.TimeSheet.UserName
+                        <br />
+                    </div>
+                    @*<div ></div> IMAGE*@
+
+                </td>
+           </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="text-right">
+                        Authorised Signatory
+                    </div>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <div class="text-right">
+                        E. & O.E.
+                    </div>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <b>&nbsp; &nbsp;Customer Authentication </b>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="3">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6" style="float:left;">
+
+                                @*&nbsp;Customer Name : @Model.WorkOrder.CustomerName <br />
+                                &nbsp;Customer Address : @Model.WorkOrder.CustomerAddress <br />*@
+                                &nbsp;Customer Name : @Model.TimeSheet.AuthorizedBy <br />
+                                &nbsp;Customer Email : @Model.TimeSheet.AuthorizerEmail  <br />
+                                &nbsp; Designation : @Model.TimeSheet.Designation
+                                
+                                <br />
+                                <br />
+                                <br />
+
+                            </div>
+                            <div class="col-lg-6" style="float:right; margin-top:10px">
+
+                                <img src="~/Content/Images/TimeSheetSignature/@Model.TimeSheet.CImagePath" width="100" height="100" />
+
+                            </div>
+                        </div>
+                        <br />
+
+
+
+                    </div>
+                </td>
+            </tr>
+
+
+
+
+
+        </table>
+   
+</div>

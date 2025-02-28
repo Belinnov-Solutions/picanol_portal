@@ -1,0 +1,119 @@
+﻿@model Picanol.ViewModels.PartsMovementViewModel
+@{
+	ViewBag.Title = "PartsMovement";
+}
+
+<h2>Parts Movement</h2>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+    @*<a href="@Url.Action("AddStock", "Parts")" class="btn btn-primary btn-large pull-right"> Back</a>*@
+
+</head>
+<body>
+	<div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="PartNumber">Part Number : </label>
+                    @Html.DisplayFor(d => d.PartNumber, new { id = "PartNumber", @class = "form-control" })
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="PartName">Part Name : </label>
+                    @Html.DisplayFor(d => d.PartName, new { id = "PartName", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="OpeningStock">Opening Stock : </label>
+                    @Html.DisplayFor(d => d.OpeningStock, new { id = "OpeningStock", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="PartStock">Stock : </label>
+                    @Html.DisplayFor(d => d.PartStock, new { id = "PartStock", @class = "form-control" })
+
+                </div>
+            </div>
+
+
+            @*<div class="col-sm-6">
+            <div class="form-group">
+                <label for="Stock">Stock</label>
+                @Html.TextBoxFor(d => d.Stock, new { id = "Stock", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="SerialNumber">Serial Number</label>
+                @Html.TextBoxFor(d => d.SerialNumber, new { id = "SerialNumber", @class = "form-control" })
+
+
+            </div>
+        </div>*@
+
+        </div>
+	</div>
+	<table>
+        <tr>
+
+            <th>Date</th>
+            <th>Particulars</th>
+            <th>IN Quantity</th>
+            <th>OUT Quantity</th>
+        </tr>
+		
+		
+		@foreach(var item in Model.movementList.OrderByDescending(x=>x.Date))
+		{
+        <tr>
+
+            @if (item.Date != null)
+            {
+                <td>@item.Date.Value.ToShortDateString()</td>
+            }
+            else
+            {
+                <td>@item.Date</td>
+            }
+
+            <td>@item.Particulars</td>
+            <td>@item.InQuantity</td>
+            <td>@item.Quantity</td>
+        </tr>
+		}
+	</table>
+
+
+	<br />
+    <a href="@Url.Action("Index", "Parts")" class="btn btn-primary btn-large pull-right"> Back</a>
+	@*<button type="submit" class="btn btn-success btn-large pull-left" id="btndone" value="Save">Done</button>*@
+	<br /><br /><br />
+</body>
+
+
+
+

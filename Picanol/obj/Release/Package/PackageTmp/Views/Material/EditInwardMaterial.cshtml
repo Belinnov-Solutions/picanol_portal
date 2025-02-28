@@ -1,0 +1,299 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+
+@{
+    ViewBag.Title = "EditOrder";
+}
+<div class="row" style="margin-top: -20px;">
+ <a href="@Url.Action("OrdersList", "Order")" class="btn btn-primary btn-large pull-left"style="
+    margin-left: 29px;
+    width: 68px;
+    margin-top: 8px;"> Back</a>
+    <h3 style="text-align:center"><b>Edit</b></h3>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="text-left" style="margin-left:30px;font-size:large"><b>Tracking No. : @Model.NewOrder.TrackingNumber</b></div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+
+
+
+<style>
+    input[type="file"] {
+        display: block;
+    }
+
+    .imageThumb {
+        max-height: 75px;
+        border: 2px solid;
+        padding: 1px;
+        cursor: pointer;
+    }
+
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .remove:hover {
+            background: white;
+            color: black;
+        }
+</style>
+
+
+
+
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+<a href="@Url.Action("AddCustomer", "Customer")" class="btn btn-success btn-large pull-right"> Add Customer</a>
+<div class="container margin-top-lg">
+    @using (Html.BeginForm("AddNew", "Material", FormMethod.Post, new { @onsubmit = "return validateForm()" }))
+    {
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="DateCreated">Date :</label>
+                        @Html.TextBoxFor(d => d.DateCreated, "{0:dd/MM/yyyy}", new { id = "DateCreated", @class = "form-control", maxlength = "500", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CustomerName">Customer Name :</label>
+                        <input name="id" class="form-control" type="search" list="CNList" autocomplete="on" id="CustomerId" required />
+                        <input type="hidden" value=@Model.NewOrder.OrderGUID id='OrderId'>
+                        @*<input type="checkbox" class="Checkbox" id="chkComponentExempt" value=@Model.NewOrder.ExemptComponentCost name="chkComponentExempt" onchange="cTrig('chkComponentExempt')" style="display:none;" @Model.NewOrder.ExemptComponentCost/>*@
+                        @if (@Model.NewOrder.ExemptComponentCost)
+                        {
+                            <input type="checkbox" class="Checkbox" id="chkComponentExempt" value="1" name="chkComponentExempt" onchange="cTrig('chkComponentExempt')" style="display:none;" checked />
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="Checkbox" id="chkComponentExempt" value="0" name="chkComponentExempt" onchange="cTrig('chkComponentExempt')" style="display:none;" />
+                        }
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CustomerRef">Customer Ref. :</label>
+                        @Html.TextBoxFor(d => d.CustomerRef, new { id = "CustomerRef", @class = "form-control", maxlength = "2000", @required = "required" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CustomerRef">Challan Date :</label>
+                        @Html.TextBoxFor(d => d.NewOrder.ChallanDate, "{0:dd/MM/yyyy}", new { id = "ChallanDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <br />
+
+        <a href="@Url.Action("AddNewPart", "Parts")" class="btn btn-success btn-large pull-right"> Add New Part</a>
+
+        <div class="col-md-12">
+            <div id="updateData" class="table-responsive">
+                @Html.Partial("_EditInwardMaterial")
+            </div>
+        </div>
+        <br>
+    }
+</div>
+
+<br />
+<button type="submit" id="id" onclick="Submitbtn()" class="btn btn-success pull-right"> Submit </button>
+@*@if (Model.proformaInvoiceGenerated == true)
+    {
+        <a href="@Url.Action("Index", "Home")" class="btn btn-info pull-right" role="button">Proforma Invoice generated cannot be edited.</a>
+    }
+    else
+    {
+        <button type="submit" id="id" onclick="Submitbtn()" class="btn btn-success pull-right"> Submit </button>
+    }*@
+
+<br />
+<br />
+<br />
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+<div class="spinner-wrapper" id=" jackkk" style="display:none;">
+    <div class="spinner">
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //$("#DateCreated").datepicker({
+    //    dateFormat: 'dd/mm/yy',
+    //    changeMonth: true,
+    //    changeYear: true,
+    //});
+
+
+    $("#ChallanDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#CustomerId").autocomplete({
+            // do whatever
+        }).val('@Model.NewOrder.CustomerName').data('autocomplete');
+
+        $("#Part_Name").autocomplete({
+            // do whatever
+        }).val('@Model.NewOrder.PartName').data('autocomplete');
+        document.getElementById("CustomerRef").value = "@Model.NewOrder.CustomerRef";
+        @*if (@Model.NewOrder.ChallanDate != null) {
+            document.getElementById("ChallanDate").value = "@Model.NewOrder.ChallanDate.Value.ToShortDateString()";
+        }*@
+        document.getElementById("DateCreated").value = "@Model.NewOrder.OrderDate.ToShortDateString()";
+        document.getElementById("Part_No").value = "@Model.NewOrder.PartNo";
+        document.getElementById("Serial_No").value = "@Model.NewOrder.SerialNo";
+
+    });
+</script>
+<script>
+    function getPartNumber() {
+        var e = document.getElementById("Part_Name").value;
+        var res = e.split(';');
+        var name = res[0];
+        var partno = res[1];
+
+        document.getElementById("Part_Name").value = name
+        document.getElementById("Part_No").value = partno
+    }
+</script>
+
+
+<script type="text/javascript">
+    function Submitbtn() {
+
+        var DateCreated = $("#DateCreated").val();
+        var CustomerId = $("#CustomerId").val();
+        var CustomerRef = $("#CustomerRef").val();
+        var ChallanDate = $("#ChallanDate").val();
+        var ChallanId = 0;
+        var shownVal = document.getElementById("CustomerId").value;
+        var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+
+        var PartName = $("#Part_Name").val();
+        var PartNo = $("#Part_No").val();
+        var SerialNo = $("#Serial_No").val();
+        var Quantity = $("#Quantity").val();
+        var RepairType = $("#Repair_Type").val();
+        var User = document.getElementById("User").value;
+        var Remarks = $("#Remarks").val();
+        var OrderId = $("#OrderId").val();
+
+
+        var OrderDto = {
+            OrderGUID: OrderId,
+            ExemptComponentCost: $('#chkComponentExempt').is(':checked'),
+            PartName: PartName,
+            PartNo: PartNo,
+            SerialNo: SerialNo,
+            Quantity: Quantity,
+            RepairType: RepairType,
+            AssignedUserId: User,
+            Remarks: Remarks
+        }
+        console.log(OrderDto);
+        if (shownVal == "") {
+            alert("Please Fill Customer Name");
+            return false;
+        }
+       
+        var InwardMaterialViewModel = {
+            DateCreated: DateCreated,
+            ChallanDate: ChallanDate,
+            CustomerId: CustomerId,
+            CustomerRef: CustomerRef,
+            NewOrder: OrderDto,
+        };
+        console.log(InwardMaterialViewModel);
+       
+        $.ajax({
+            beforeSend: function () {
+                
+                $('.spinner-wrapper').show()
+
+            },
+            url: '@Url.Action("EditInwardMaterial", "Material")',
+            type: "POST",
+
+            data: InwardMaterialViewModel,
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                alert("Saved succesfully");
+                location.reload(true);
+            },
+            error: function (er) {
+                $('.spinner-wrapper').hide();
+                alert(er);
+            }
+
+        });
+    }
+</script>
+
+<datalist id="CNList">
+    @foreach (var item in Model.Customers)
+    {
+        <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+    }
+</datalist>
+
+
+

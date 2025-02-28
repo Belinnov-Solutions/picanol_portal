@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "QuotationPreview";
+}
+
+<center><h2> Quotation </h2></center>
+<br />
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="CustomerName">Customer Name</label>
+            <input name="id" class="form-control" type="search" list="CNList" autocomplete="on" id="CustomerId" placeholder="Customer Name.." />
+        </div>
+    </div>
+
+
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="CustomerName">Customer Address</label>
+            <input type="text" class="form-control" id="Customer_Address" readonly />
+        </div>
+    </div>
+
+
+
+</div>
+
+<div id="review-products" class="col-sm-12" style="display : none">
+
+    <table class="table table-condensed" >
+        <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Amount</th>
+            <th>IGST %</th>
+            <th>IGST Amount</th>
+            <th>Total Amount</th>
+
+        </tr>
+
+        <tr>
+            <td>Component Cost</td>
+            <td>1</td>
+            <td>3700.00</td>
+            <td>3700.00</td>
+            <td>18</td>
+            <td>666.00</td>
+            <td>4366.00</td>
+
+        </tr>
+        <tr class="txtMult">
+            <td>Labour and Testing</td>
+            <td contenteditable='true' ID="txtQty" class="val1">1</td>
+            <td contenteditable='true' ID="txtRate" class="val2"></td>
+            <td ID="txtAmount" class="val3"></td>
+            <td>18</td>
+            <td ID="txtTaxAmount" class="val4"></td>
+            <td ID="txtTotalAmount" class="val5"></td>
+
+        </tr>
+
+
+
+    </table>
+    </div>
+
+    <datalist id="CNList">
+        @foreach (var item in Model.CustomersList)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+
+    </datalist>
+
+    <script>
+
+        $('#CustomerId').on('change', function () {
+
+            var shownVal = document.getElementById("CustomerId").value;
+            var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+
+
+            //var mainselection = this.value; // get the selection value
+            var data = {
+                CustomerId: CustomerId
+                // mainselection: mainselectionq
+            };
+            $.ajax({
+
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetCustomerAddress", "Invoice")', // name of PHP script
+                data: data, // parameter name and value
+                success: function (data) {
+                    document.getElementById("review-products").style.display = "block";
+                    var str = data;
+                    var lastIndex = str.lastIndexOf(" ");
+
+                    str = str.substring(0, lastIndex);
+
+                    $("#Customer_Address").val(str); // insert in div above
+                    //console.log(data);
+                    //alert(data);
+                    //var n = data.split(" ");
+                    //return n[n.length - 1];
+                    var n = data.split(',').splice(-1);
+                    //console.log(n.split(',').splice(-1));
+                    $('#txtRate').html(n);
+                    $('#txtAmount').html(n);
+                    var IGSTAmount = (n * 1) * (18 / 100)
+                    var IGSTAmount2 = IGSTAmount.toFixed(2)
+                    $('#txtTaxAmount').html(IGSTAmount2);
+
+                    var total = (parseFloat(n) + parseFloat(IGSTAmount2)).toFixed(2)
+                    $('#txtTotalAmount').html(total);
+                },
+
+            });
+        });
+
+
+
+        $(function () {
+            $("[id*=txtQty]").keyup(multInputs);
+            $("[id*=txtRate]").keyup(multInputs);
+            function multInputs() {
+                var mult = 0;
+                $("tr.txtMult").each(function () {
+
+                    var price = $('.val1', this).text();
+                    var qnt = $('.val2', this).text();
+
+                    var total = (price * 1) * (qnt * 1).toFixed(2)
+
+                    $('.val3', this).text(total);
+                    //$('.multTotal', this).text(total);
+
+                    //var TaxValue = $('.multTotal', this).text();
+                    //var Rate = $('.IGSTRate', this).text();
+                    var IGSTAmount = (total * 1) * (18 / 100)
+                    var IGSTAmount2 = IGSTAmount.toFixed(2)
+                    $('.val4', this).text(IGSTAmount2);
+
+                    var TotalAmount = (parseFloat(total) + parseFloat(IGSTAmount2)).toFixed(2)
+                    $('.val5', this).text(TotalAmount);
+
+                });
+            };
+        });
+    </script>

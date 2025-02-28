@@ -1,0 +1,89 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+<table id="data_table">
+
+    <tr>
+        <th>Tracking Number</th>
+        <th>Part Name</th>
+        <th>Part No</th>
+        <th>Serial No</th>
+        <th>Quantity</th>
+        <th>Repair Type</th>
+        <th>User</th>
+        <th>Remarks</th>
+        <th>Add</th>
+
+    </tr>
+    @foreach (var item in Model.SavedOrders)
+    {
+        if (item.LoanedPart == false)
+        {
+            <tr>
+                <td>@item.TrackingNumber</td>
+                <td>@item.PartName</td>
+                <td>@item.PartNo</td>
+                <td>@item.SerialNo</td>
+                <td>1</td>
+                <td>@item.RepairType</td>
+                <td>@item.UserName</td>
+                <td>@item.Remarks</td>
+
+
+            </tr>
+        }
+
+    }
+
+
+    @foreach (var item in Model.Orders)
+    {
+        if (item.LoanedPart == false)
+        {
+            <tr>
+                <td>@item.TrackingNumber</td>
+                <td>@item.PartName</td>
+                <td>@item.PartNo</td>
+                <td>@item.SerialNo</td>
+                <td>1</td>
+                <td>@item.RepairType</td>
+                <td>@item.UserName</td>
+                <td>@item.Remarks</td>
+                
+
+            </tr>
+        }
+
+    }
+    <tfoot>
+       
+            
+        
+            <tr>
+                <td></td>
+                <td><input name="id" class="form-control" type="search" list="lan" autocomplete="off" id="Part_Name" onchange="getPartNumber()" /></td>
+                <td><input type="text" class="form-control" id="Part_No" readonly /></td>
+                <td><input type="text" class="form-control" id="Serial_No" /></td>
+                <td><input type="text" class="form-control" id="Quantity" value="1" readonly /></td>
+                <td>
+                    @Html.DropDownListFor(p => p.RepairType, new SelectList(Model.RepairTypeList, "Text", "Value"), "Select Type", new { id = "Repair_Type", @class = "form-control" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(p => p.Users, new SelectList(Model.Users, "UserId", "UserName"), "Select Name", new { id = "User", @class = "form-control" })
+                </td>
+
+                <td><input type="text" class="form-control" id="Remarks" /></td>
+                <td>
+                    <input type="button" class="add" onclick="add_row();" value="Add Row">
+                </td>
+            </tr>
+        
+    </tfoot>
+</table>
+
+<datalist id="lan">
+    @foreach (var item in Model.Parts)
+    {
+        <option id="@item.PartId" data-value="@item.PartId" value="@item.PartName"></option>
+
+    }
+
+</datalist>

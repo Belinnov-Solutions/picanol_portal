@@ -1,0 +1,204 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+@{
+	ViewBag.Title = "RecordPayment";
+}
+<h2>RecordPayment</h2>
+
+@using (Html.BeginForm("GetRecordPayment", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data", Id = "form0" }))
+{
+<div class="row">
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="PaymentMethod">Payment Method</label>
+			@Html.DropDownListFor(p => p.SelectPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select Payment Method", new { id = "PaymentMethod", @class = "form-control" })
+			@Html.HiddenFor(model => model.OrderId, new { id = "HOrderId" })
+			@Html.HiddenFor(model => model.InvoiceNo, new { id = "HInvoiceNo" })
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="Amount">Amount</label>
+			@Html.TextBoxFor(d => d.Amount, new { id = "Amount", @class = "form-control" })
+
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="BankName">Bank Name</label>
+			@Html.TextBoxFor(d => d.BankName, new { id = "BankName", @class = "form-control" })
+
+		</div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label for="Date">Date</label>
+			@*@Html.TextBoxFor(d => d.InDate, "{0:dd/MM/yyyy}", new { id = "InDate", @class = "form-control", maxlength = "500" })*@
+			@Html.TextBoxFor(d => d.InDate, "{0:dd/MM/yyyy}", new { id = "InDate", @class = "", })
+		</div>
+	</div>
+
+	<div class="col-sm-12">
+		<div class="form-group">
+			<label for="Refernce">Refernce </label>
+			@Html.TextAreaFor(d => d.Refernce, new { id = "Refernce", @class = "form-control" })
+
+		</div>
+	</div>
+
+
+	<div class="col-sm-6">
+		<div class="form-group">
+			@Html.LabelFor(p => p.InvoiceImage.InvoiceImages, new { @class = "" })
+			<div class="field" align="left">
+				<input type="file" id="files" name="images" multiple="multiple" />
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+	<br />
+<button type="submit" class="btn btn-success" id="btnSave1" value="Save">Submit </button>
+<br>
+	<br>
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+	$("#InDate").datepicker({
+		//dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true,
+		//autoclose: true,
+		todayHighlight: true,
+		format: "dd/mm/yyyy"
+
+	});
+</script>
+<script type="text/javascript">
+
+        $("#btnSave1").click(function () {
+            var InvoiceNumber = $("#Table #InvoiceNumber").text();
+            $('#HInvoiceNo').val(InvoiceNumber)
+            var OrderId = $("#Table #OrderGuid").text();
+            $('#HOrderId').val(OrderId)
+            var Invoice = $('#Invoice').val();
+            if (Invoice == '') {
+                alert('Please fill your Invoice!');
+                return false;
+            }
+            var PaymentMode = $('#PaymentMethod').val();
+            if (PaymentMode == '') {
+                alert('Please Select your Payment Method');
+                return false;
+            }
+            var Amount = $('#Amount').val();
+            if (Amount == '') {
+                alert('Please fill your Amount!');
+                return false;
+            }
+            var BankName = $('#BankName').val();
+            if (BankName == '') {
+                alert('Please fill your BankName!');
+                return false;
+            }
+            var Reference = $('#Refernce').val();
+            if (Reference == '') {
+                alert('Please fill your Reference Number!');
+                return false;
+            }
+            var InDate = $('#InDate').val();
+            if (InDate == '') {
+                alert('Please Select your Date!');
+                return false;
+            }
+
+
+            @*var InvoiceListViewModel = {
+		     //Invoice: Invoice,
+		     InvoiceNo: InvoiceNumber,
+		     OrderId : OrderId,
+			 PaymentType: PaymentMode,
+			 Amount: Amount,
+			 BankName: BankName,
+			 Refernce: Refernce,
+			 InDate: InDate,
+			 //files: files,
+        };
+        $.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("RecordPayment", "Invoice")', // name of PHP script
+            data: InvoiceListViewModel, // parameter name and value
+			success: function (data) {
+
+			},
+
+			});*@
+		});
+</script>
+<style>
+	input[type="file"] {
+		display: block;
+	}
+
+	.imageThumb {
+		max-height: 75px;
+		border: 2px solid;
+		padding: 1px;
+		cursor: pointer;
+	}
+
+	.pip {
+		display: inline-block;
+		margin: 10px 10px 0 0;
+	}
+
+	.remove {
+		display: block;
+		background: #444;
+		border: 1px solid black;
+		color: white;
+		text-align: center;
+		cursor: pointer;
+	}
+
+		.remove:hover {
+			background: white;
+			color: black;
+		}
+</style>
+<script>
+	$(document).ready(function () {
+		if (window.File && window.FileList && window.FileReader) {
+			$("#files").on("change", function (e) {
+				var files = e.target.files,
+					filesLength = files.length;
+				for (var i = 0; i < filesLength; i++) {
+					var f = files[i]
+					var fileReader = new FileReader();
+					fileReader.onload = (function (e) {
+						var file = e.target;
+						$("<span class=\"pip\">" +
+							"<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+							"<br/><span class=\"remove\">Remove image</span>" +
+							"</span>").insertAfter("#files");
+						$(".remove").click(function () {
+							$(this).parent(".pip").remove();
+						});
+
+					});
+					fileReader.readAsDataURL(f);
+				}
+			});
+		} else {
+			alert("Your browser doesn't support to File API")
+		}
+	});
+</script>
+
+

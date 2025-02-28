@@ -1,0 +1,50 @@
+﻿@*@model Picanol.ViewModels.PartsViewModel
+<div class="col-sm-12">
+    <table>
+        <tr>
+            <th>Part Number</th>
+            <th>Part Name</th>
+            <th>Existing Stock</th>
+            <th>New Stock</th>
+            <th>Remarks</th>
+            <th>Action</th>
+        </tr>
+@foreach (var item in Model.PartsList)
+{
+        <tr>
+            <td hidden id="Pid">@item.PartId</td>
+            <td id="Pno">@item.PartNumber</td>
+            <td id="Pname">@item.PartName</td>
+            <td id="PStock">@item.Stock</td>
+            <td><input type="text" class="form-control" id="NewStock" /></td>
+            <td><input type="text" class="form-control" id="Remarks" /></td>
+            <td><button type="submit" onclick="Save()" class="btn btn-primary">Save</button></td>
+        </tr>
+}
+    </table>
+</div>*@
+
+
+
+@model Picanol.ViewModels.PartsViewModel
+<div class="col-sm-12">
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Part Number</th>
+                <th>Part Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.PartsList)
+            {
+                <tr>
+                    <td><a href="@Url.Action("PartsMovement","Parts",new{partId=@item.PartId , partNumber=@item.PartNumber , partName = @item.PartName , partStock=@item.Stock , openingStock = @item.OpeningBalance})">@item.PartNumber</a></td>
+                    <td>@item.PartName</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

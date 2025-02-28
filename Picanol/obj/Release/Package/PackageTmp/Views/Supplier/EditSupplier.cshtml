@@ -1,0 +1,199 @@
+﻿@model Picanol.ViewModels.SupplierViewModel
+@{
+	ViewBag.Title = "EditSupplier";
+}
+
+<h2>EditSupplier</h2>
+<div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="SupplierName">Supplier Name</label>
+				@Html.TextBoxFor(d => d.SupplierName, new { id = "SupplierName", @class = "form-control" })
+
+
+			</div>
+		</div>
+
+
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="AddressLine1">Address Line1</label>
+				@Html.TextBoxFor(d => d.AddressLine1, new { id = "AddressLine1", @class = "form-control" })
+
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="AddressLine2">Address Line2</label>
+				@Html.TextBoxFor(d => d.AddressLine2, new { id = "AddressLine2", @class = "form-control" })
+
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="City">City</label>
+				@Html.TextBoxFor(d => d.City, new { id = "City", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="District">District</label>
+				@Html.TextBoxFor(d => d.District, new { id = "District", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="State">State</label>
+				@Html.TextBoxFor(d => d.State, new { id = "State", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="PIN">PIN</label>
+				@Html.TextBoxFor(d => d.PIN, new { id = "PIN", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="ContactPerson">Contact Person</label>
+				@Html.TextBoxFor(d => d.ContactPerson, new { id = "ContactPerson", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="Mobile">Mobile</label>
+				@Html.TextBoxFor(d => d.Mobile, new { id = "Mobile", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="Email">Email</label>
+				@Html.TextBoxFor(d => d.Email, new { id = "Email", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="GSTIN">GSTIN</label>
+				@Html.TextBoxFor(d => d.GSTIN, new { id = "GSTIN", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="StateCode">State Code</label>
+				@Html.TextBoxFor(d => d.StateCode, new { id = "StateCode", @class = "form-control" })
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="PAN">PAN</label>
+				@Html.TextBoxFor(d => d.PAN, new { id = "PAN", @class = "form-control" })
+			</div>
+		</div>
+
+	</div>
+</div>
+<button type="submit" class="btn btn-success btn-large pull-left" id="btnSave" value="Save">Save</button>
+<br />
+<script type="text/javascript">
+	 $("#btnSave").click(function () {
+
+		 var SupplierName = $('#SupplierName').val();
+		 if (SupplierName == '') {
+			 alert('Please fill your Supplier Name!');
+			 return false;
+		 }
+		 var PaymentMode = $('#PaymentMethod').val();
+		 if (PaymentMode == '') {
+			 alert('Please Select your Payment Method');
+			 return false;
+		 }
+		 var AddressLine1 = $('#AddressLine1').val();
+		 if (AddressLine1 == '') {
+			 alert('Please fill your Address Line1!');
+			 return false;
+		 }
+		 var AddressLine2 = $('#AddressLine2').val();
+		 if (AddressLine2 == '') {
+			 alert('Please fill your Address Line2!');
+			 return false;
+		 }
+		 var City = $('#City').val();
+		 if (City == '') {
+			 alert('Please fill your City!');
+			 return false;
+		 }
+		 var District = $('#District').val();
+		 if (District == '') {
+			 alert('Please fill your District!');
+			 return false;
+		 }
+		 var State = $('#State').val();
+		 if (State == '') {
+			 alert('Please fill your State!');
+			 return false;
+		 }
+		 var PIN = $('#PIN').val();
+		 if (PIN == '') {
+			 alert('Please fill your !');
+			 return false;
+		 }
+		 var ContactPerson = $('#ContactPerson').val();
+		 if (ContactPerson == '') {
+			 alert('Please fill ContactPerson!');
+			 return false;
+		 }
+		 var Mobile = $('#Mobile').val();
+		 if (Mobile == '') {
+			 alert('Please fill your Mobile Number!');
+			 return false;
+		 }
+		 var Email = $('#Email').val();
+		 if (Email == '') {
+			 alert('Please fill your Email!');
+			 return false;
+		 }
+		 var GSTIN = $('#GSTIN').val();
+		 if (GSTIN == '') {
+			 alert('Please fill your GSTIN');
+			 return false;
+		 }
+		 var StateCode = $('#StateCode').val();
+		 if (StateCode == '') {
+			 alert('Please fill your StateCode!');
+			 return false;
+		 }
+		 var PAN = $('#PAN').val();
+		 if (PAN == '') {
+			 alert('Please fill your PAN');
+			 return false;
+		 }
+
+		 var SupplierViewModel = {
+			 SupplierName: SupplierName,
+			 AddressLine1: AddressLine1,
+			 AddressLine2: AddressLine2,
+			 City: City,
+			 District: District,
+			 State: State,
+			 PIN: PIN,
+			 ContactPerson: ContactPerson,
+			 Mobile: Mobile,
+			 Email: Email,
+			 GSTIN: GSTIN,
+			 StateCode: StateCode,
+			 PAN: PAN,
+        };
+        $.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("EditSupplier", "Supplier")', // name of PHP script
+			data: SupplierViewModel, // parameter name and value
+			success: function (data) {
+
+			},
+
+			});
+			});
+</script>
+
+

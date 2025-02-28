@@ -1,0 +1,218 @@
+﻿@model Picanol.ViewModels.PartsViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+@*<link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />*@
+
+<body>
+    <div class="container">
+        <a href="@Url.Action("Index", "Inventory")" class="btn btn-primary btn-large pull-left"> Back</a>
+
+        <div class="text-center">
+
+            @if (Model.IsAddStock == true)
+            {
+                <h3><b>View Stock</b></h3>
+            }
+            else
+            {
+                <h3><b>View Low Stock</b></h3>
+            }
+        </div>
+        @if (Model.IsAddStock == true)
+        {
+             <div class="row" style="margin-left:180px;">
+
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3">
+                    <label for="Part">Select Part Name</label><br />
+                    <input name="id" class="form-control" type="search" list="lan" autocomplete="off" id="Part_Name" />
+                </div>
+                <div class="col-lg-3">
+                    <label for="Part"></label><br />
+                    <button type="submit" id="id" onclick="Search()" class="btn btn-info pull-left"> Submit </button>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+
+            <br />
+
+            <div id="divResultdata" class="table-responsive">
+                @Html.Partial("_AddStock")
+            </div>
+
+            <datalist id="lan">
+                @foreach (var item in Model.PartsList)
+                {
+                    <option id="@item.PartId" data-value="@item.PartId" value="@item.PartName"></option>
+
+                }
+
+            </datalist>
+        }
+        else
+        {
+    <div class="row" style="margin-left:180px;">
+        
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3">
+                <input name="id" class="form-control" type="search" list="lan" autocomplete="on" id="Part_Name" />
+            </div>
+            <div class="col-lg-3">
+                <button type="submit" id="id" onclick="Search()" class="btn btn-info pull-left"> Submit </button>
+            </div>
+        
+        <div class="col-sm-3"></div>
+    </div>
+
+            <br />
+            <br />
+            <div id="divResultdata" class="table-responsive">
+                @Html.Partial("_AddStock")
+            </div>
+
+
+
+            <datalist id="lan">
+                @foreach (var item in Model.PartsList)
+                {
+                    <option id="@item.PartId" data-value="@item.PartId" value="@item.PartName"></option>
+
+                }
+
+            </datalist>
+
+        }
+
+
+        @*<div class="signal"></div>*@
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        @*function Search() {
+            $("#table").hide();
+            var PartName = $("#Part_Name").val();
+
+            var data = {
+                PartName: PartName
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetPartStock", "Parts")', // name of PHP script
+                data: data, // parameter name and value
+                success: function (data) {
+
+                    $('.signal').hide();
+                    $("#divResultdata").html(data);
+                },
+
+            });
+        }*@
+
+        function Search() {
+            var PartName = $("#Part_Name").val();
+            var data = {
+                PartName: PartName
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetPartByName", "Parts")', // name of PHP script
+                data: data, // parameter name and value
+                success: function (data) {
+
+                    $('.spinner-wrapper').hide();
+                    $("#divResultdata").html(data);
+                },
+
+            });
+        }
+
+        function Save() {
+            var PartNumber = $("#Pno").text();
+            var PartName = $("#Pname").text();
+            var Stock = $("#PStock").text();
+            var NewStock = document.getElementById("NewStock").value;
+            var PartId = $("#Pid").text();
+            var Remarks = document.getElementById("Remarks").value;
+            var PartDto = {
+
+                PartName: PartName,
+                PartNumber: PartNumber,
+                Stock: Stock,
+                PartId: PartId,
+                NewStock: NewStock,
+                Remarks: Remarks
+
+            };
+
+            var PartsViewModel = {
+                SelectedPart: PartDto
+            }
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("UpdatePartStock", "Parts")', // name of PHP script
+                data: PartsViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    if (data = "success")
+                    {
+                        alert("Stock is Updated!");
+                        location.reload(true);
+                    }
+                    else {
+                        alert("Oops.. Something went Wrong!");
+                    }
+                },
+
+            });
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+@{
+    ViewBag.Title = "SubCustomerList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container">
+        <a href="@Url.Action("CustomerList", "Customer")" class="btn btn-primary btn-large pull-left"> Back</a>
+		<a href="@Url.Action("AddSubCustomer")" class="btn btn-danger btn-large pull-right">New Sub Customer</a>
+        <div class="row" style="font-size:small;font-family:Calibri;">
+            <h3 style="text-align: center"><b>Sub Customer List</b></h3>
+
+
+            <datalist id="CNList">
+                @foreach (var item in Model.SubCustomerList)
+                {
+                    <option id="@item.SubCustomerId" data-value="@item.SubCustomerId" value="@item.SubCustomerName"></option>
+
+                }
+            </datalist>
+
+            
+
+            <div class="col-sm-3" style="margin-top: 30px">
+                <div class="form-group">
+                </div>
+            </div>
+            <div class="col-sm-3" style="margin-left:100px;">
+                <div class="form-group">
+
+                    <input class="form-control" type="search" value="" list="CNList" id="CustomerId" placeholder="Enter sub Customer Name" />
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Search"></label>
+                    <button type="submit" value="Submit" id="btnSearch" onclick="btnSearch()" class="btn btn-info">
+                        Search
+
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function btnSearch() {
+        var searchString = $("#CustomerId").val();
+        var data = {
+            Searching: searchString,
+
+        };
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("SearchSubCustomerList", "Customer")',
+            data: data,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $('#updateData').html(data).show();
+            },
+            error: function (response) {
+                $('.spinner-wrapper').hide();
+                $('#updateData').html(data).show();
+
+            }
+
+        });
+    }
+    function changepage(PageNo) {
+        location.href="@Url.Action("SubCustomerList", "Customer")/?PageSize=10&PageNo= " + PageNo ;
+
+    }
+    </script>
+
+
+    <div id="updateData" class="table-responsive">
+        @Html.Partial("_FilterSubCustomerList")
+    </div>
+</body>
+</html>

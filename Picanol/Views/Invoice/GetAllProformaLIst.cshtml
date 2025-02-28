@@ -1,0 +1,484 @@
+﻿@*@model IEnumerable<Picanol.Models.ProformaInvoiceDto>*@
+@model Picanol.ViewModels.ProformaViewModel
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int OrderListCount = Model.List.Count;
+
+    //int noOfPages = OrderListCount / 10;
+    int TotalNumberRecord = Model.TotalNumberCounts;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = OrderListCount / PageSize;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+        .datepicker {
+            z-index: 1151 !important;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 90%;
+            border-color: black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        #lt_overlay {
+            display: none;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+        #lt_loading {
+            display: none;
+            position: fixed;
+            color: #ccc;
+            top: 45%;
+            left: 50%;
+            padding: 20px;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        #lt_overlay {
+            display: none;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .60;
+            filter: alpha(opacity=60);
+        }
+
+        #lt_loading {
+            display: none;
+            position: fixed;
+            color: #ccc;
+            top: 45%;
+            left: 50%;
+            padding: 20px;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+
+
+            .remove:hover {
+                background: white;
+                color: black;
+            }
+
+        #dropdownlist-content {
+            width: 550px;
+            margin-top: 40vh;
+            margin-left: 55px;
+        }
+
+        h4.text-left.d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        span {
+            display: flex;
+            margin-top: -22px;
+        }
+
+        .close {
+            font-size: 28px;
+            color: #ffffff
+        }
+
+            .close:hover {
+                color: #ffffff
+            }
+
+        .listdatadropdown {
+            background-color: #1183ca;
+        }
+
+        #alertMessage {
+            Font-weight: bold;
+        }
+
+        div.modal-body.dropdownlist-body {
+            position: relative;
+            padding: 22px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .text-left d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        h4#alertMessage.modal-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        h4.text-left.d-inline-block.blockkk {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        p#PBillNo.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#PBillNoo.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#Usrnm.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#Usrnmm.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#text111.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#finalAmount.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p#finalAmounts.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button btn.btn-primary.btnn {
+            padding: 6px 26px;
+        }
+
+        button btn.btn-secondary.btnn {
+            padding-right: 25px;
+        }
+
+        .modal-footer {
+            text-align: center !important;
+            background-color: #dadde061 !important;
+        }
+
+        .btn.btn-secondary.btnn {
+            margin-bottom: 0;
+            margin-left: 5px;
+            background-color: #a5adc2b0;
+        }
+
+        #text1.modal-title.listItem-Content {
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        div.col-md-4.cell {
+            width: 4.333333%;
+        }
+
+        div.col-md-3.cell {
+            width: 6%;
+        }
+    </style>
+</head>
+<body>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>
+                    Zone
+                </th>
+                <th>
+                    Customer Name
+                </th>
+                <th>
+                    Tracking Number
+                </th>
+                <th>
+                    P.I. No
+                </th>
+                <th>
+                    Date
+                </th>
+
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+            {
+            <tr style="height:50px;">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrackingNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProformaInvoiceNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td hidden>
+                    @Html.HiddenFor(modelItem => item.OrderGuid, new { id = "OrderGuid" })
+                </td>
+                <td hidden>
+                    @Html.HiddenFor(modelItem => item.CustomerId, new { id = "CustomerIdd" })
+                </td>
+                @* Added by bharat onclick function no proper download date on 19-6-2023 *@
+                <td>
+                    <button type="button" href="#" class="btn-primary" onclick="GetPi(('@item.OrderGuid'), @item.CustomerId)" style="border-radius:3px;">Download</button>
+                </td>
+
+            </tr>
+            }
+        </tbody>
+
+        <input id="LastTrackinNumber" value="@Model.LastTrackingNumber" style="display:none" />
+    </table>
+    <br />
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <td>
+                    @if (i != Model.CurrentPageIndex)
+                    {
+                        <a href="javascript:PagerClick(@i);">@i</a>
+                    }
+                    else
+                    {
+                        <span>@i</span>
+                    }
+                </td>
+            }
+        </tr>
+    </table>
+    @* Pagination Desigining Issue added by bharat date on 19-06-2023 *@
+    @if (TotalNumberRecord == PageSize)
+    {
+<div class="pagination">
+    <div class="row">
+        @if (Model.CurrentPageNo == 1)
+        {
+            <div class="col-md-4 cell" onclick="Submitbutton(@Model.CurrentPageNo);">Prev</div>
+        }
+        else
+        {
+            <div class="col-md-4 cell" onclick="Submitbutton(@Model.CurrentPageNo-1);">Prev</div>
+        }
+        @{
+            int startIndex = Model.CurrentPageNo - (Model.CurrentPageNo % 5);
+            if (startIndex == 0)
+            {
+                startIndex += 1;
+            }
+            if (Model.CurrentPageNo % 5 == 0)
+            {
+                startIndex = Model.CurrentPageNo;
+            }
+
+        }
+
+        @for (int i = startIndex; i < startIndex + 5; i++)
+        {
+            if (i == Model.CurrentPageNo)
+            {
+                <div class="col-md-3 cell active" onclick="Submitbutton(@i style=" width:4.333333% !important;");">@Model.CurrentPageNo</div>
+            }
+            else
+            {
+                <div class="col-md-3 cell " onclick="Submitbutton(@i);" style="width:4.333333% !important;">@i</div>
+            }
+        }
+        <div class="col-md-3 cell" onclick="Submitbutton(@Model.CurrentPageNo+1);" style="width:4.333333% !important;">Next</div>
+    </div>
+    <div class="pull-right">@TotalNumberRecord Record Found</div>
+</div>
+    }
+    else if (TotalNumberRecord == 0)
+    {
+        <div class="col-lg-10"> There is no Record</div>
+        <div class="pagination">
+            <div class="row">
+                <div class="col-md-10 cell" onclick="submitResult(@Model.CurrentPageNo-1);" style="width:4.333333% !important;">Prev</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row" style="max-width:358vh;">
+                @if (Model.CurrentPageNo == 1)
+                {
+                    <div class="col-md-6 cell" onclick="Submitbutton(@Model.CurrentPageNo);" style="width:4.333333% !important;">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-6 cell" onclick="Submitbutton(@Model.CurrentPageNo-1);" style="width:4.333333% !important;">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPageNo - (Model.CurrentPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrentPageNo; i++)
+                {
+                    if (i == Model.CurrentPageNo)
+                    {
+                        <div class="col-md-6 cell active" onclick="Submitbutton(@i);" style="width:4.333333% !important;">@Model.CurrentPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5 cell " onclick="Submitbutton(@i);" style="width:4.333333% !important;">@i</div>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    <script>
+        //Added by bharat onclick function no proper download date on 19 - 6 - 2023
+        function GetPi(OrderGuid, CustomerIdd) {
+
+            var SelectedOrderId = OrderGuid;
+       console.log(SelectedOrderId);
+            var SelectedCustomerId = CustomerIdd;
+       var TrackingNumber = document.getElementById("LastTrackinNumber").value;
+       var SelectedValue = "PerformaInvoice";
+             var OrdersViewModel = {
+                TrackingNo: TrackingNumber,
+                SelectedAction: SelectedValue,
+                 SelecetCustomerId: SelectedCustomerId,
+                SelectedOrderId: SelectedOrderId,
+            }
+            $.ajax({
+                beforeSend: function () {
+                    /*$('.signal').show()*/
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("ProcessAction", "Invoice")', // name of PHP script
+                data: OrdersViewModel, // parameter name and value
+                success: function (response) {
+                    if (response == "success") {
+                        /*$('.signal').hide();*/
+                        $('.spinner-wrapper').hide();
+                        window.location = '@Url.Action("ReturnView", "Invoice")';
+                        $('#alertModal').modal('hide');
+                        $('#wihoutPiModal').modal('hide');
+
+                    }
+                }
+            })
+
+        }
+    </script>
+
+</body>
+
+</html>

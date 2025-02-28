@@ -1,0 +1,359 @@
+﻿@model Picanol.ViewModels.PartsViewModel
+@{
+    ViewBag.Title = "AddNewPart";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <button type="submit" class="btn btn-primary btn-large pull-left" onclick="history.back()">Back </button>
+    <div class="container" style="width:800px">
+
+        <h3 id="editPart" class="text-center"><b>Add Part</b></h3>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-6" id="hidden4" style="display: none; margin-left: -12px;">
+                    <label for="LastPartNumber">Last Part Number</label>
+                    @Html.TextBoxFor(d => d.LastPartNo, new { id = "LastPartNumber", @class = "form-control", @readonly = "readonly" })
+                </div>
+                <div class="col-sm-6"></div>
+            </div>
+        </div>
+        <div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="PartType">Part Type</label>
+                        @if (Model.SelectedPart == null)
+                        {
+                            @Html.DropDownListFor(p => p.SelectedPartType, new SelectList(Model.PartTypeList, "Text", "Value"), "Select Part Type", new { id = "PartType", @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(d => d.SelectedPart.PartType, new { id = "PartType", @class = "form-control", @readonly = "readonly" })
+                        }
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="PartName">Part Name</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.PartName, new { id = "PartName", @class = "form-control" })
+                        @Html.HiddenFor(model => model.SelectedPart.PartId, new { id = "PartId" })
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="PartNo">Part Number</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.PartNumber, new { id = "PartNumber", @class = "form-control" })
+
+                    </div>
+                </div>
+                @*<div class="col-sm-6" id="hidden_div" style="display: none;">
+                    <div class="form-group">
+                        <label for="SerialNumber">Serial Number  </label>
+                        @Html.TextBoxFor(d => d.SelectedPart.SerialNo, new { id = "SerialNumber", @class = "form-control" })
+
+
+                    </div>
+                </div>*@
+                <div class="col-sm-6" id="hidden1" style="display: none;">
+                    <div class="form-group">
+                        <label for="SerialNumber">Serial Number  </label>
+                        @Html.TextBoxFor(d => d.SelectedPart.SerialNo, new { id = "SerialNumber", @class = "form-control" })
+
+
+                    </div>
+                </div>
+                @if (Model.SelectedPart == null)
+                {
+                    <div class="col-sm-6" id="hidden2" style="display: none;">
+                        <div class="form-group">
+                            <label for="Stock">Stock</label>
+                            @Html.TextBoxFor(d => d.SelectedPart.Stock, new { id = "Stock", @class = "form-control" })
+
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-6" id="hidden2" style="display: none;">
+                        <div class="form-group">
+                            <label for="Stock">Stock</label>
+                            @Html.TextBoxFor(d => d.SelectedPart.Stock, new { id = "Stock", @class = "form-control", @readonly = "readonly" })
+
+
+                        </div>
+                    </div>
+                }
+                <div class="col-sm-6" id="hidden7" style="display: none;">
+                    <div class="form-group">
+                        <label for="Stock">New Stock</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.NewStock, new { id = "NewStock", @class = "form-control", @placeholder = "Enter New Stock" })
+
+
+                    </div>
+                </div>
+                <br>
+                <div class="col-sm-6" id="hidden3" style="display: none;">
+                    <div class="form-group">
+                        <label for="Price">Price</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.Price, new { id = "Price", @class = "form-control" })
+
+                    </div>
+                </div>
+                <div class="col-sm-6" id="hidden5" style="display: none;">
+                    <div class="form-group">
+
+                        <label for="PurchaseDate">Purchase Date</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.PurchaseDate, "{0:dd/MM/yyyy}", new { id = "PurchaseDate", @class = "form-control", maxlength = "500", @placeholder = "Select Purchase Date" ,style = "autocomplete:off"})
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6" id="hidden6" style="display: none;">
+                    <div class="form-group">
+                        <label for="Remarks">Remarks</label>
+                        @Html.TextBoxFor(d => d.SelectedPart.Remarks, new { id = "Remarks", @class = "form-control" })
+
+                    </div>
+                </div>
+
+
+                @*<div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="Supplier">Supplier</label>
+                        @Html.DropDownListFor(p => p.SelectSupplier, new SelectList(Model.SelectSupplierList, "Text", "Value"), "Select Supplier Type", new { id = "Supplier", @class = "form-control" })
+                    </div>
+                </div>*@
+
+
+            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-info btn-large" id="btnSave" value="Save">Submit </button>
+        </div>
+        <br />
+        <br />
+
+        @*<div class="signal"></div>*@
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        $("#PartType").click(function () {
+            var selectedValue = $(this).find('option:selected').val();
+            if (selectedValue == "Board") {
+                document.getElementById('hidden1').style.display = "none";
+                document.getElementById('hidden2').style.display = "none";
+                document.getElementById('hidden3').style.display = "none";
+            } if (selectedValue == "Component") {
+                document.getElementById('hidden1').style.display = "block";
+                document.getElementById('hidden2').style.display = "block";
+                document.getElementById('hidden3').style.display = "block";
+                document.getElementById('hidden4').style.display = "block";
+                //document.getElementById('hidden5').style.display = "block";
+                document.getElementById('hidden6').style.display = "block";
+            }
+
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var PartType = $('#PartType').val();
+            if (PartType == "Board") {
+                document.getElementById('btnSave').style.display = "none";
+                document.getElementById('editPart').innerHTML = "View Part";
+            }
+            if (PartType == "Component") {
+                document.getElementById('hidden1').style.display = "block";
+                document.getElementById('hidden2').style.display = "block";
+                document.getElementById('hidden3').style.display = "block";
+                document.getElementById('hidden4').style.display = "block";
+                document.getElementById('hidden5').style.display = "block";
+                document.getElementById('hidden6').style.display = "block";
+                document.getElementById('hidden7').style.display = "block";
+
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+    $("#btnSave").click(function () {
+
+        var PartType = $('#PartType').val();
+        var PartId = $('#PartId').val();
+        var PartName = $('#PartName').val();
+        var PurchaseDate = $('#PurchaseDate').val();
+
+        if(PartId == 0) {
+            if (PartName == '') {
+            alert('Please fill your Part Name!');
+            return false;
+            }
+            var PartNumber = $('#PartNumber').val();
+             if (PartNumber == '') {
+                alert('Please fill Part Number!.');
+                return false;
+            }
+            var SerialNumber = $('#SerialNumber').val();
+            if (SerialNumber == '' && PartType != 'Board') {
+                alert('Please fill your SerialNumber!');
+                return false;
+            }
+            var Stock = $('#Stock').val();
+            if (Stock == '' && PartType !='Board') {
+                alert('Please fill  Stock !.');
+                return false;
+            }
+            var Price = $('#Price').val();
+            if (PartType == 'Component' && Price == '') {
+                alert('Please fill Price!');
+                return false;
+            }
+         }
+
+        if (PartId != 0) {
+            if (PartName == '') {
+                alert('Please Select Part Name !.');
+                return false;
+            }
+
+        var PartNumber = $('#PartNumber').val();
+            if (PartNumber == '') {
+                alert('Please fill Part Number!.');
+                return false;
+            }
+
+            var SerialNumber = $('#SerialNumber').val();
+            if (SerialNumber == '') {
+                alert('Please fill your SerialNumber!');
+                return false;
+            }
+            var Stock = $('#Stock').val();
+            var NewStock = $('#NewStock').val();
+            var Price = $('#Price').val();
+            if (NewStock == '') {
+                alert('Please fill New Stock !.');
+                return false;
+            }
+
+            if (PartType == 'Component' && Price == '') {
+                alert('Please fill Price!');
+                return false;
+            }
+            if (PurchaseDate == '') {
+                alert('Please select Purchase Date');
+                return false;
+            }
+        }
+
+		 var Supplier = $('#Supplier').val();
+		 var Remarks = $('#Remarks').val();
+
+		 var PartDto = {
+			 PartType: PartType,
+			 PartName: PartName,
+			 PartNumber: PartNumber,
+			 SerialNo: SerialNumber,
+			 Stock: Stock,
+			 Price: Price,
+			 PartId:PartId,
+			 Supplier: Supplier,
+			 PurchaseDate: PurchaseDate,
+			 NewStock:NewStock,
+			 Remarks: Remarks
+		 };
+
+		 var PartsViewModel = {
+		     SelectedPart: PartDto
+		 }
+        $('#btnSave').attr('disabled', 'disabled');
+		 $.ajax({
+		     beforeSend: function () {
+                 $('.spinner-wrapper').show()
+		     },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("AddNewPart", "Parts")', // name of PHP script
+		     data: PartsViewModel, // parameter name and value
+             success: function (data) {
+                 $('.spinner-wrapper').hide();
+			    alert("Part Added");
+                 window.location = '@Url.Action("Index", "Inventory")';
+                 $('#btnSave').removeAttr('disabled');
+			},
+
+			});
+			});
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#PartNumber").change(function () {
+                var x = document.getElementById("PartNumber").value;
+                var LastPartNumber = $('#LastPartNumber').val();
+                var p = LastPartNumber.split(';');
+                var partR = p[0];
+                var partE = p[1];
+                var E = parseInt(partE.slice(1));
+
+                var R = parseInt(partR.slice(1));
+
+                var EntertedPart = parseInt(x.slice(1));
+                var res = x.charAt(0)
+                if (res == "E" && E >= EntertedPart) {
+                    alert("Part Number Already Exist!")
+                }
+                if (res == "R" && R >= EntertedPart) {
+                    alert("Part Number Already Exist!")
+                }
+            })
+        });
+    </script>
+
+    <script type="text/javascript">
+
+
+        $("#PurchaseDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            document.getElementById("NewStock").value = "";
+            document.getElementById("PurchaseDate").value = "";
+        });
+    </script>
+</body>
+</html>

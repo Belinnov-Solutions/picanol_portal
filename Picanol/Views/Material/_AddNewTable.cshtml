@@ -1,0 +1,149 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+<table id="data_table">
+
+    <tr>
+        
+        <th>Part Name</th>
+        <th>Part No</th>
+        <th>Serial No</th>
+        <th>Quantity</th>
+        <th>Repair Type</th>
+        <th>User</th>
+        <th>Remarks</th>
+        <th>Add/Delete</th>
+        
+       </tr>
+
+    @foreach (var item in Model.Orders)
+    {
+        if (item.LoanedPart == false)
+        {
+            <tr>
+                
+                <td>@item.PartName</td>
+                <td>@item.PartNo</td>
+                <td>@item.SerialNo</td>
+                @*<td>1</td>*@
+                <td>@item.Qty</td>
+                <td>@item.RepairType</td>
+                <td>@item.UserName</td>
+                <td>@item.Remarks</td>
+                <td>
+                    <input type="button" value='Delete' class='delete' onclick="Delete('@item.PartNo','@item.SerialNo')" />
+                </td>
+                
+            </tr>
+        }
+
+    }
+    
+        
+
+    
+    <tfoot>
+        @if (Model.LoanItem == true)
+        {
+            //foreach (var item in Model.Orders)
+            //{
+            //    if (item.LoanedPart == true)
+            //    {
+                    <tr>
+                        <td><input type="text" class="form-control" id="Part_Name" value="@Model.NewOrder.PartName" readonly /></td>
+                        @*<td>@Html.DropDownListFor(p => p.Parts, new SelectList(Model.Parts, "PartName", "PartName"), "Select Name", new { id = "Part_Name", @class = "form-control", @onchange = "getPartNumber()" })</td>*@
+                        <td><input type="text" class="form-control" id="Part_No" value="@Model.NewOrder.PartNo" readonly /></td>
+                        @*<td><input type="text" class="form-control" id="Part_No" /></td>*@
+                        <td><input type="text" class="form-control" id="Serial_No" value="@Model.NewOrder.SerialNo" readonly /></td>
+                        <td><input type="text" class="form-control" id="Quantity" value="@Model.NewOrder.Qty" readonly /></td>
+                        <td>
+                            @Html.DropDownListFor(p => p.RepairType, new SelectList(Model.RepairTypeList, "Text", "Value"), "Select Type", new { id = "Repair_Type", @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(p => p.Users, new SelectList(Model.Users, "UserId", "UserName"), "Select Name", new { id = "User", @class = "form-control" })
+                        </td>
+                        <td><input type="text" class="form-control" id="Remarks" /></td>
+                        <td>
+                            <input type="button" class="add" onclick="add_row();" value="Add Row">
+                        </td>
+                    </tr>
+                    @*break;
+                }
+            }*@
+        }
+        else
+        {
+            <tr>
+
+                <td><input name="id" class="form-control" type="search" list="lan" autocomplete="off" id="Part_Name" onchange="getPartNumber()" /></td>
+                <td><input type="text" class="form-control" id="Part_No" readonly /></td>
+                <td><input type="text" class="form-control" id="Serial_No" /></td>
+                <td><input type="number" class="form-control" id="Quantity" value="1" readonly /></td>
+               
+                <td>
+                    @Html.DropDownListFor(p => p.RepairType, new SelectList(Model.RepairTypeList, "Text", "Value"), "Select Type", new { id = "Repair_Type", @class = "form-control" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(p => p.Users, new SelectList(Model.Users, "UserId", "UserName"), "Select Name", new { id = "User", @class = "form-control" })
+                </td>
+
+                <td><input type="text" class="form-control" id="Remarks" /></td>
+                <td>
+                    <input type="button" class="add" onclick="add_row();" value="Add Row">
+                </td>
+            </tr>
+        }
+    </tfoot>
+</table>
+
+<datalist id="lan">
+    @foreach (var item in Model.Parts)
+    {
+        <option id="@item.PartId" data-value="@item.PartId" value="@item.PartName"></option>
+
+    }
+
+</datalist>
+
+<script type="text/javascript">
+    function DeleteOrder(orderId) {
+        var OrderDto = {
+            OrderGUID: orderId
+        };
+
+        $.ajax({
+            beforeSend: function () {
+                $('.signal').show()
+            },
+            type: 'POST',
+            url: '@Url.Action("DeleteOrder", "Material")',
+            datatype: "json",
+            contentType: "application/json",
+            data: JSON.stringify(OrderDto),
+            success: function (data) {
+                $('.signal').hide();
+                if (data.result == false) {
+                    alert(data.msg);
+                }
+                else {
+                    $('#updateData').html(data);
+                }
+            },
+            error: function (response) {
+                $('.signal').hide();
+                if (response.status === 0) {
+                    alert('No connection. Verify application is running.');
+                } else if (response.status == 401) {
+                    alert('Unauthorized');
+                } else if (response.status == 405) {
+                    alert('HTTP verb not supported [405]');
+                } else if (response.status == 500) {
+                    alert('Internal Server Error [500].')
+                } else if (response.status == 502 || response.status == -1) {
+                    alert('Connection Failed.');
+                } else {
+                    alert(response.data);
+                }
+            }
+        });
+
+    }
+</script>

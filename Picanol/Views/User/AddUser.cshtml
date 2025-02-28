@@ -1,0 +1,224 @@
+﻿@model Picanol.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "AddUser";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        .form-group i {
+            margin-left: -30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<a href="@Url.Action("UserList", "User")" class="btn btn-primary btn-large pull-left"> Back</a>
+    <div class="container" style="width:800px;">
+        
+        <div class="text-center">
+            <h3><b>User Management</b></h3>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="UserName">User Name</label>
+                    @Html.TextBoxFor(model => model.User.UserName, new { @class = "form-control", id = "Uname", @placeholder = "Enter Name" })
+                    @Html.HiddenFor(model => model.User.UserId, new { id = "UserID" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="LoginID">User Email</label>
+                    @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control", id = "UEmail", @placeholder = "Enter Email ID" })
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="LoginID">User MobileNo</label>
+                    @Html.TextBoxFor(model => model.User.MobileNo, new { @class = "form-control", id = "UMobile", @placeholder = "Enter Mobile No" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="DealerName">Select Role </label>
+
+                    @if (Model.User.RoleId > 0)
+                    {
+                        Model.SelectedRoleId = Model.User.RoleId;
+                        @Html.DropDownListFor(model => model.SelectedRoleId, new SelectList(Model.role, "RoleId", "RoleName"), "Select Role", new { id = "RID", @class = "form-control" })
+                        @*@Html.DropDownListFor(p => p.User.RoleId new SelectList {Model.role) , id = "RoleId", @class = "form-control"})*@
+                    }
+
+                    else
+                    {
+                        @Html.DropDownListFor(p => p.SelectedRoleId, new SelectList(Model.role, "RoleId", "RoleName"), "Select Role", new { id = "RID", @class = "form-control" })
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="Password">Password</label>
+                <div class="input-group">
+                    @*<input type="password" class="form-control pwd" id="Upass" value="@Model.User.Password">*@
+                    @Html.TextBoxFor(model => model.User.Password, new { @class = "form-control pwd", id = "Upass", @placeholder = "Enter Password", @type = "password" })
+                    <span class="input-group-btn" style="margin-left: 15px;">
+                        <button class="btn btn-default reveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label for="Password">Confirm Password</label>
+                <div class="input-group">
+                    @*<input type="password" class="form-control pwd" id="Upass" value="@Model.User.Password">*@
+                    @Html.TextBoxFor(model => model.User.Password, new { @class = "form-control cpwd", id = "CUpass", @placeholder = "Enter Password", @type = "password" })
+                    <span class="input-group-btn">
+                        <button class="btn btn-default creveal" type="button"><i class="glyphicon glyphicon-eye-open"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div><br/>
+        <div class="text-center">
+            <button type="submit" class="btn btn-info btn-large" id="btnSave" value="Save">Submit </button>
+        </div>
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+       
+    
+
+    <script type="text/javascript">
+
+        var passField = $('input[type=password]');
+
+        $("#btnSave").click(function () {
+
+            var UserName = $('#Uname').val();
+            if (UserName == '') {
+                alert('Please fill your Username!');
+                document.getElementById('<%=Uname%>').focus();
+                return false;
+            }
+            var Email = $('#UEmail').val();
+            if (Email == '') {
+                alert('Please fill your Email!');
+                document.getElementById('<%=UEmail%>').focus();
+                return false;
+            }
+
+            var MobileNo = $('#UMobile').val();
+            if (MobileNo == '') {
+                alert('Please Enter MobileNo!');
+                document.getElementById('<%=UMobile%>').focus();
+                return false;
+            }
+            var Password = $('#Upass').val();
+            if (Password == '') {
+                alert('Please fill your Password!');
+                document.getElementById('<%=Upass%>').focus();
+                return false;
+            }
+
+            var CPassword = $('#CUpass').val();
+            if (Password != CPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            var RoleID = $('#RID').val();
+            if (RoleID == '') {
+                alert('Please Select Role!');
+                document.getElementById('<%=Upass%>').focus();
+                return false;
+            }
+
+
+
+            var UserID = $('#UserID').val();
+            var UserModel = {
+                UserName: UserName,
+                Password: Password,
+                RoleID: RoleID,
+                Email: Email,
+                UserID: UserID,
+                MobileNo: MobileNo
+
+            };
+            $.ajax({
+
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("AddUser", "User")', // name of PHP script
+                data: UserModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    alert("User Added successfully");
+                    window.location = '@Url.Action("UserList", "User")';
+                },
+
+            });
+
+        });
+
+
+        $('.show-pass').hover(function () {
+            passField.attr('type', 'text');
+        }, function () {
+            passField.attr('type', 'password');
+        })
+
+
+
+
+        $(".reveal").on('click', function () {
+            var $pwd = $(".pwd");
+            if ($pwd.attr('type') === 'password') {
+                $pwd.attr('type', 'text');
+            } else {
+                $pwd.attr('type', 'password');
+            }
+
+
+
+        });
+        $(".creveal").on('click', function () {
+
+            var $cpwd = $(".cpwd");
+            if ($cpwd.attr('type') === 'password') {
+                $cpwd.attr('type', 'text');
+            } else {
+                $cpwd.attr('type', 'password');
+            }
+
+
+        });
+
+    </script>
+</body>
+</html>

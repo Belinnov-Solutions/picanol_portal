@@ -1,0 +1,328 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+@{
+    ViewBag.Title = "WorkOrderListFilter";
+
+}
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int OrderListCount = Model.Customers.Count;
+    //int noOfPages = OrderListCount / 10;
+    int TotalNumberRecord = Model.TotalNumberRecord;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = OrderListCount / PageSize;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        @*@if (userInfo.RoleId == 5)
+            {
+                <a href="@Url.Action("WorkOrder")" class="btn btn-success btn-large"><i class="fam-add"></i> Add New</a>
+            }*@
+
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-sm-4">
+				<button type="submit" class="btn btn-primary btn-large pull-left" onclick="history.back()">Back </button>
+				</div>
+                <div class="col-sm-4">
+                    <h3 class="text-center"><b>Work Order List</b></h3>
+                </div>
+                
+                @if (userInfo.RoleId == 5)
+                {
+                    <div class="col-sm-4">
+                        <div class="btn-group pull-right" role="group" aria-label="Basic mixed styles example">
+                            <button type="submit" class="btn btn-danger" value="Submit" id="btnSearch" onclick="Submitbtn(1, 'excelResult')">
+                                Generate Excel
+                            </button>
+                            <a href="@Url.Action("WorkOrder")" class="btn btn-info btn-large"><i class="fam-add"></i>Add New</a>
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-4">
+                        <div class="btn-group pull-right" role="group" aria-label="Basic mixed styles example">
+                            <button type="submit" class="btn btn-danger" value="Submit" id="btnSearch" onclick="Submitbtn(1, 'excelResult')">
+                                Generate Excel
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-sm-4"></div>
+            </div>
+        </div>
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="CustomerName">Customer Name</label>
+                        <input name="id" class="form-control" type="search" list="CNList" autocomplete="on" id="CustomerId" placeholder="Enter Customer Name" />
+                    </div>
+                </div>
+                @if (userInfo.RoleId != 1 && userInfo.RoleId != 2)
+                {
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="UserName">Assigned To</label>
+                            <input name="id" class="form-control" type="search" list="UserList" placeholder="Enter Name" autocomplete="on" id="UserId" />
+                        </div>
+                    </div>
+                }
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="StartDate">From Date</label>
+                        @Html.TextBoxFor(d => d.WorkOrder.StartDate, "{0:dd/MM/yyyy}", new { id = "StartDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="EndDate">To Date</label>
+                        @Html.TextBoxFor(d => d.WorkOrder.EndDate, "{0:dd/MM/yyyy}", new { id = "EndDate", @class = "form-control", maxlength = "500", autocomplete = "off" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <button type="submit" onclick="Submitbtn(1, '')" style="margin-top:25px" class="btn btn-info"> Submit </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="divResultdata" class="table-responsive">
+            @Html.Partial("_WorkOrderListAfterFilter")
+        </div>
+
+        <!--new pagination for provisional bill-->
+        <!--<div class="pagination">
+            <div class="row">
+                <div class="col-md-4 cell" onclick="changepage(@Model.CurrnetPageNo-1);">Prev</div>
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5 - 1);
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo + 1;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-3 cell active" onclick="changepage(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="changepage(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="changepage(@Model.CurrnetPageNo+1);">Next</div>
+            </div>
+        </div>
+        <div>@TotalNumberRecord Record Found</div>-->
+        <!--End Here-->
+
+
+        <div class="signal"></div>
+        <datalist id="CNList">
+            @foreach (var item in Model.Customers)
+            {
+                <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+            }
+
+        </datalist>
+
+        <datalist id="UserList">
+            @foreach (var item in Model.Users)
+            {
+                <option id="@item.UserId" data-value="@item.UserId" value="@item.UserName"></option>
+
+            }
+
+        </datalist>
+
+    </div>
+    <script>
+
+    $("#StartDate").datepicker({
+
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+    });
+
+    $("#EndDate").datepicker({
+
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+
+
+    });
+     function changepage(pageno) {
+              //  location.href = "@Url.Action("WorkOrderListFilter", "ServiceRequest")/?PageSize=10&PageNo= " + pageno;
+            }
+    </script>
+
+    <script>
+    function Submitbtn(value, s) {
+
+
+        var shownVal = document.getElementById("CustomerId").value;
+        var PageSize = 10;
+        var PageNo = value;
+
+        if (shownVal != '') {
+            var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+        }
+        if (@userInfo.RoleId != 1 && @userInfo.RoleId != 2) {
+            var shown = document.getElementById("UserId").value;
+            if (shown != '') {
+                var AssignedTo = document.querySelector("#UserList option[value='" + shown + "']").dataset.value;
+
+            }
+
+        }
+        var StartDate = $("#StartDate").val();
+        var sdate = moment(StartDate, 'dd/mm/yyyy').format('x');
+        var EndDate = $("#EndDate").val();
+        var edate = moment(EndDate, 'dd/mm/yyyy').format('x');
+        if (edate < sdate) {
+            alert('To Date should be always greater then From Date !.');
+            return false;
+
+
+        }
+
+            var StartDate = $("#StartDate").val();
+            var EndDate = $("#EndDate").val();
+            if (StartDate != '' && EndDate == '') {
+                alert("Please Select To Date");
+                return false;
+
+            }
+            var EndDate = $("#EndDate").val();
+            var StartDate = $("#StartDate").val();
+            if (EndDate != '' && StartDate == '') {
+                alert("Please Select From Date");
+                return false;
+            }
+            var WorkOrderViewModel =
+            {
+                CustomerId: CustomerId,
+                UserId: AssignedTo,
+               // StartDate: StartDate,
+               // EndDate: EndDate,
+                SDate: StartDate,
+                EDate: EndDate,
+                AssignedTo: AssignedTo,
+                PageSize: PageSize,
+                PageNo: PageNo,
+
+        }
+
+        if (s != "excelResult") {
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("WorkOrdersList", "ServiceRequest")', // name of PHP script
+                data: WorkOrderViewModel, // parameter name and value
+                success: function (data) {
+                    $('.signal').hide();
+                    $("#divResultdata").html(data);
+                },
+
+            });
+        } else {
+            $.ajax({
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetWorkOrderDownloadParameter", "ServiceRequest")', // name of PHP script
+                data: WorkOrderViewModel, // parameter name and value
+                success: function (data) {
+                    $('.signal').hide();
+                    location.href = "@Url.Action("GetWoExcelParameter", "ServiceRequest")"
+                },
+
+            });
+        }
+
+
+
+
+        }
+
+
+    </script>
+
+
+    <style>
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+    </style>
+
+    <!--End Here-->
+
+</body>
+</html>

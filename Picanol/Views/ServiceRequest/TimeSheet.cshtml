@@ -1,0 +1,269 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 49%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding:10px;">
+        <a href="@Url.Action("FilterServiceRequest", "ServiceRequest",new { PageSize = 10, PageNo = 1 })" class="btn btn-primary btn-large pull-left"> Back</a>
+        <h3 class="text-center"><b>Time Sheet</b></h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="row">
+                    <p id="WorkOrderNo" style="font-size:16px;"><b>Work Order No. :</b> @Model.WorkOrder.WorkOrderNo </p>
+                    @Html.HiddenFor(model => model.TimeSheet.WorkOrderId, new { id = "WorkOrderId" })
+                    @Html.HiddenFor(model => model.TimeSheet.ProvisionalBillId, new { id = "ProvisionalBillId" })
+                    @Html.HiddenFor(model => model.TimeSheet.TimeSheetId, new { id = "TimeSheetId" })
+                </div>
+                <div class="row">
+                    <p id="Customers" style="font-size:16px;"><b>Customer :</b> @Model.WorkOrder.CustomerName </p>
+                    @Html.HiddenFor(model => model.WorkOrder.CustomerId, new { id = "CustomerId" })
+
+                </div>
+                <div class="row">
+                    <p id="CustomerAddress" style="font-size:16px;"><b>Address:</b> @Model.WorkOrder.CustomerAddress </p>
+                </div>
+            </div>
+            <div class="col-sm-6 text-center">
+                <div class="row">
+                    @*<p id="Date" style="font-size:16px;"><b>Date :</b> @DateTime.Now.Date.ToShortDateString() </p>*@
+                    <p id="Date" style="font-size:16px;"><b>Date :</b> @Model.TimeSheet.DateCreated.ToShortDateString() </p>
+                </div>
+
+                <div class="row">
+                    <p style="font-size:16px;"><b>Start Date :</b> @Model.TimeSheet.TillFromDate.ToShortDateString()</p>
+                    <input class="hidden" id="StartDate" value=" @Model.TimeSheet.TillFromDate.ToShortDateString()" />
+                </div>
+                <div class="row">
+                    <p id="End Date" style="font-size:16px;"><b>EndDate :</b> @Model.TimeSheet.TillDate.ToShortDateString() </p>
+                    <input class="hidden" id="EndDate" value=" @Model.TimeSheet.TillDate.ToShortDateString()" />
+                </div>
+
+            </div>
+        </div>
+        <br />
+
+        <div class="col-xl-12">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Description</th>
+                        <th style="display:none;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.WeekDates.Keys)
+                    {
+                        <tr>
+                            <td colspan="3" style="background-color: #dddddd">Week : @item</td>
+                        </tr>
+
+                        foreach (var item1 in Model.WeekDates[item])
+
+                        {
+                            <tr>
+
+                                @if (item1.isWeekend)
+                                {
+                                    <td style="color:red">
+                                        @item1.WorkDate
+                                    </td>
+                                }
+                                else
+                                {
+
+                                    <td>
+                                        @item1.WorkDate
+                                    </td>
+                                }
+
+                                @if (Model.TimeSheet.FinalSubmit)
+                                {
+                                    <td>
+                                        @item1.TotalHours
+                                    </td>
+                                    <td>
+                                        @item1.Description
+                                    </td>
+                                    <td style="display:none;">
+                                        @item
+                                    </td>
+                                }
+                                else
+                                {
+                                    if (item1.TotalHours == "0")
+                                    {
+                                        <td class="Ti"><input type="text" class="form-control" id="Time" /></td>
+
+                                    }
+                                    else
+                                    {
+                                        <td class="Ti"><input type="text" class="form-control" value="@item1.TotalHours" id="Time" /></td>
+
+                                    }
+                                    <td><input type="text" class="form-control" value="@item1.Description" id="Description" autocomplete="on" /></td>
+                                    <td style="display:none;">
+                                        @item
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="LBDays">Remarks :</label>
+                    @if (Model.TimeSheet.FinalSubmit)
+                    {
+                        @Html.DisplayFor(model => model.TimeSheet.Remarks, new { @class = "form-control", id = "TimeSheetRemarks", @placeholder = "Enter Remarks" })
+                    }
+                    else
+                    {
+                        @Html.TextAreaFor(model => model.TimeSheet.Remarks, new { @class = "form-control", id = "TimeSheetRemarks", @placeholder = "Enter Remarks" })
+                    }
+
+                </div>
+            </div>
+        </div>
+        <br />
+        @if (Model.TimeSheet.FinalSubmit || Model.TimeSheet.Authorized == true)
+        {
+            <center><a href="@Url.Action("PrintTimeSheet", "ServiceRequest", new { ProvisionalBillId = Model.TimeSheet.ProvisionalBillId })" class="btn btn-primary">Print</a></center>
+        }
+        else
+        {
+            <center><button type="submit" value="1" onclick="SendData()" class="btn btn-info btn-large">Save</button></center>
+        }
+        <div class="signal"></div>
+    </div>
+    <script>
+    $("button").click(function () {
+        var Submit = this.value;
+        var CustomerId = $("#CustomerId").val();
+        var WorkOrderId = $("#WorkOrderId").val();
+        var ProvisionalBillId = $("#ProvisionalBillId").val();
+        var TimeSheetRemarks = $("#TimeSheetRemarks").val();
+        var oTable = document.getElementById('myTable');
+        @*var fromDate = $("#StartDate").text();
+        var toDate = $("#EndDate").text();*@
+        var fromDate = $("#StartDate").val();
+        var toDate = $("#EndDate").val();
+        var TimeSheetId = $("#TimeSheetId").val();
+        console.log(fromDate);
+        console.log(toDate);
+
+
+        //gets rows of table
+        var rowLength = oTable.rows.length;
+        var TimeSheetArray = [];
+
+        //loops through rows
+        for (i = 1; i < rowLength; i++) {
+
+            //gets cells of current row
+            var oCells = oTable.rows.item(i).cells;
+
+            if (oCells.item(1) == null) {
+
+                i = i + 1;
+                oCells = oTable.rows.item(i).cells;
+            }
+            //var Date = oCells.item(0).children[0].value;
+            var Date = oCells.item(0).innerText;
+            var Time = oCells.item(1).children[0].value;
+            if (Time == "") {
+                Time = 0;
+            }
+            var Description = oCells.item(2).children[0].value;
+            var WeekNo = oCells.item(3).innerText;
+            //loops through each cell in current row
+            var WorkOrderDto = {
+                WeekNo: WeekNo,
+                WorkDate: Date,
+                TotalHours: Time,
+                Description: Description,
+
+
+            }
+            TimeSheetArray.push(WorkOrderDto);
+
+        }
+        if (confirm("Are You Sure to Submit? No Further Changes Will Be Done! ")) {
+            var Submit = 2;
+            var TimeSheet = {
+                Remarks: TimeSheetRemarks,
+                WorkOrderId: WorkOrderId,
+                CustomerId: CustomerId,
+                FromDate: fromDate,
+                ToDate: toDate,
+                TimeSheetId: TimeSheetId,
+                ButtonValue: Submit,
+                ProvisionalBillId: ProvisionalBillId
+            }
+        }
+        else {
+            var Submit = 1;
+            var TimeSheet = {
+                Remarks: TimeSheetRemarks,
+                WorkOrderId: WorkOrderId,
+                CustomerId: CustomerId,
+                FromDate: fromDate,
+                ToDate: toDate,
+                TimeSheetId: TimeSheetId,
+                ButtonValue: Submit,
+                ProvisionalBillId: ProvisionalBillId
+            }
+        }
+
+        var WorkOrderViewModel = {
+            TimeSheetDetails: TimeSheetArray,
+            TimeSheet: TimeSheet
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.signal').show()
+            },
+            type: "POST",
+            url: '@Url.Action("SaveTimeSheet", "ServiceRequest")',
+            data: WorkOrderViewModel,
+            success: function (data) {
+                $('.signal').hide();
+                if (data == "success") {
+                    alert("Details Submitted");
+                    window.location = '@Url.Action("WorkOrderListFilter", "ServiceRequest")';
+                } else {
+                    alert(data);
+                }
+
+            },
+
+        });
+    });
+    </script>
+</body>

@@ -1,0 +1,525 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+@{
+    ViewBag.Title = "ListInvoices";
+}
+
+<h2>List Invoices</h2>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+</head>
+<body>
+
+    @using (Html.BeginForm("ListInvoices", "Invoice", FormMethod.Post))
+        {
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="CustomerName">Customer Name</label>
+
+                @Html.DropDownListFor(p => p.SelectedCustomer, new SelectList(Model.CustomersList, "CustomerId", "CustomerName"), "Select Name", new { id = "CustomerName", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                @Html.LabelFor(p => p.FromDate, new { @class = "" })
+                @Html.TextBoxFor(d => d.FromDate, "{0:dd/MM/yyyy}", new { id = "FromDate", @class = "form-control", maxlength = "500" })
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                @Html.LabelFor(p => p.ToDate, new { @class = "" })
+                @Html.TextBoxFor(d => d.ToDate, "{0:dd/MM/yyyy}", new { id = "ToDate", @class = "form-control", maxlength = "500" })
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <button type="submit" style="margin-top:25px" class="btn btn-success" id="btnSubmit"> Submit </button>
+            </div>
+        </div>
+    </div>
+    <table id="Table">
+        <tr>
+
+            <th>Status</th>
+            <th>Date</th>
+            <th>Invoice Number</th>
+            <th>Customers</th>
+            <th>Due Date</th>
+            <th>Amount</th>
+            <th>Action</th>
+
+        </tr>
+        @foreach (var item in Model.InvoicesList)
+        {
+            <tr>
+
+
+                <td>@item.Status</td>
+                <td>@item.DateCreated</td>
+                <td id="InvoiceNumber">@item.InvoiceNo</td>
+                <td>@item.CustomerName</td>
+                <td>@item.DueDate</td>
+                <td>@item.Amount</td>
+                <td id="OrderGuid" style="display:none;">@item.OrderGuid</td>
+                <td id="Paid" style="display:none;">@item.Paid</td>
+                @*<td>@item.Action</td>*@
+                <td>
+                    @Html.DropDownListFor(p => p.SelectActionType, new SelectList(Model.SelectActionTypeList, "Text", "Value"), "Select Action Type", new { id = "ActionType", @class = "form-control" })
+                </td>
+
+                @*<td><button type="submit" class="btn btn-success btn-large pull-left" id="btnEdit" value="Save">Edit </button></td>
+                    <td><button type="submit" class="btn btn-success btn-large pull-left" id="btnDelete" value="Save">Delete/button></td>*@
+            </tr>}
+    </table>
+    }
+
+
+
+    
+
+
+
+    @using (Html.BeginForm("RecordPayment", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data", Id = "form0" }))
+    {
+
+        <div class="modal fade" id="myModal" role="dialog" style="margin-left:45px; width:100%;">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="INVC" value="">Record Payment -  </h4>
+                    </div>
+                    <div class="clear">
+                        @*<div class="col-lg-12">*@
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+
+                                    <label for="Invoice">Invoice</label>
+                                    @Html.TextBoxFor(d => d.InvoiceNo, new { id = "Invoice", @class = "form-control" })
+                                </div>
+                            </div>*@
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="PaymentMethod">Payment Method</label>
+                                @Html.DropDownListFor(p => p.SelectPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select Payment Method", new { id = "PaymentMethod", @class = "form-control" })
+                                @Html.HiddenFor(model => model.OrderId, new { id = "HOrderId" })
+                                @Html.HiddenFor(model => model.InvoiceNo, new { id = "HInvoiceNo" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Amount">Amount</label>
+                                @Html.TextBoxFor(d => d.Amount, new { id = "Amount", @class = "form-control" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="BankName">Bank Name</label>
+                                @Html.TextBoxFor(d => d.BankName, new { id = "BankName", @class = "form-control" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Date">Date</label>
+                                @Html.TextBoxFor(d => d.InDate, "{0:dd/MM/yyyy}", new { id = "InDate", @class = "form-control", maxlength = "500" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Refernce">Refernce </label>
+                                @Html.TextAreaFor(d => d.Refernce, new { id = "Refernce", @class = "form-control" })
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(p => p.InvoiceImage.InvoiceImages, new { @class = "" })
+                                <div class="field" align="left">
+                                    <input type="file" id="fileInvoice" name="images" multiple="multiple" onchange="editFiles(event,'fileInvoice')" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-large pull-right" id="btnSave1" value="Save">Submit </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @using (Html.BeginForm("RecordDispatchDetails", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data", Id = "form0" }))
+    {
+        <div class="modal fade" id="myModal1" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="clear">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ChallanNo">Challan Number</label>
+                                @Html.TextBoxFor(d => d.ChallanNo, new { id = "ChallanNo", @class = "form-control" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="DispatchDate">Dispatch Date</label>
+                                @Html.TextBoxFor(d => d.DispatchDate, "{0:dd/MM/yyyy}", new { id = "DispatchDate", @class = "form-control", maxlength = "500" })
+                                @Html.HiddenFor(model => model.InvoiceNo, new { id = "DDInvoiceNo" })
+                            </div>
+                        </div>
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="TotalBoxes">Total Boxes</label>
+                                    @Html.TextBoxFor(d => d.TotBox, new { id = "TotBox", @class = "form-control" })
+
+                                </div>
+                            </div>*@
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Date">Date</label>
+                                    @Html.TextBoxFor(d => d.DisDate, "{0:dd/MM/yyyy}", new { id = "DisDate", @class = "form-control", maxlength = "500" })
+
+                                </div>
+                            </div>*@
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="DispatchDetails">Dispatch Details</label>
+                                @Html.TextAreaFor(d => d.DispatchDetails, new { id = "DispatchDetails", @class = "form-control" })
+
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="TrackingRef">Tracking Refernce</label>
+                                    @Html.TextBoxFor(d => d.TrackingRef, new { id = "TrackingRef", @class = "form-control" })
+
+                                </div>
+                            </div>*@
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.DisImage.DisImages, new { @class = "" })
+                                    <div class="field" align="left">
+                                        <input type="file" id="fileDispatch" name="images" multiple="multiple" onchange="editFiles(event,'fileDispatch')" />
+                                    </div>
+                                </div>
+                            </div>*@
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-large pull-right" id="btnSave2" value="Save">Submit </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    @*<script type="text/javascript">
+        $("#btnSave1").click(function () {
+            var InvoiceNumber = $("#Table #InvoiceNumber").text();
+            $('#HInvoiceNo').val(InvoiceNumber)
+            var OrderId = $("#Table #OrderGuid").text();
+            $('#HOrderId').val(OrderId)
+            var Invoice = $('#Invoice').val();
+            if (Invoice == '') {
+                alert('Please fill your Invoice!');
+                return false;
+            }
+            var PaymentMode = $('#PaymentMethod').val();
+            if (PaymentMode == '') {
+                alert('Please Select your Payment Method');
+                return false;
+            }
+            var Amount = $('#Amount').val();
+            if (Amount == '') {
+                alert('Please fill your Amount!');
+                return false;
+            }
+            var BankName = $('#BankName').val();
+            if (BankName == '') {
+                alert('Please fill your BankName!');
+                return false;
+            }
+            var Reference = $('#Refernce').val();
+            if (Reference == '') {
+                alert('Please fill your Reference Number!');
+                return false;
+            }
+            var InDate = $('#InDate').val();
+            if (InDate == '') {
+                alert('Please Select your Date!');
+                return false;
+            }
+            
+        });
+        
+            
+    </script>
+    <script type="text/javascript">
+        $("#btnSave2").click(function () {
+            var InvoiceNumber = $("#Table #InvoiceNumber").text();
+            $('#DDInvoiceNo').val(InvoiceNumber)
+
+            var TrackingNo = $('#TrackingNo').val();
+            if (TrackingNo == '') {
+                alert('Please fill your TrackingNo!');
+                return false;
+            }
+            var Board = $('#Board').val();
+            if (Board == '') {
+                alert('Please fill your Board!');
+                return false;
+            }
+            var TotBox = $('#TotBox').val();
+            if (TotBox == '') {
+                alert('Please fill your TotalBoxes!');
+                return false;
+            }
+            var DisDate = $('#DisDate').val();
+            if (DisDate == '') {
+                alert('Please Select your Date!');
+                return false;
+            }
+            var Company = $('#Company').val();
+            if (Company == '') {
+                alert('Please fill your Company!');
+                return false;
+            }
+            var TrackingRef = $('#TrackingRef').val();
+            if (TrackingRef == '') {
+                alert('Please fill your TrackingRef!');
+                return false;
+            }
+            var files = $('#fileDispatch').val();
+            if (files == '') {
+                alert('Please Select your Image!');
+                return false;
+            }
+            
+        });
+    </script>*@
+
+
+    @*@{var listItems = new List<SelectListItem>
+        {
+        new SelectListItem { Text = "Edit", Value="Edit" },
+        new SelectListItem { Text = "RecordPayment", Value="RecordPayment" },
+        new SelectListItem { Text = "Dispatch", Value="Dispatch" }
+        };
+            }
+            @Html.DropDownList("Action", new SelectList(listItems, "Value", "Text"))*@
+    <br />
+</body>
+</html>
+<script type="text/javascript">
+    var currentSelectedValue;
+    $("#ActionType").click(function () {
+        var selectedValue = $(this).find('option:selected').val();
+        if (currentSelectedValue && currentSelectedValue == selectedValue) {
+            return;
+        }
+        else {
+            currentSelectedValue = selectedValue;
+        }
+        if (selectedValue == "RecordPayment") {
+
+            var Paid = $("#Table #Paid").text();
+            if (Paid == 1) {
+                var InvoiceNumber = $("#Table #InvoiceNumber").text();
+                @*location.href = "@Url.Action("RecordPayment", "Order")";*@
+                $('#myModal').modal('show');
+                $("#myModal .modal-title ").text("RecordPayment - " + InvoiceNumber);
+                $("#ActionType")[0].selectedIndex = 0;
+            }
+            else {
+                alert("Payment Not Received");
+                $("#ActionType")[0].selectedIndex = 0;
+            }
+
+        }
+        else {
+            if (selectedValue == "Dispatch") {
+                var InvoiceNumber = $("#Table #InvoiceNumber").text();
+                @* location.href = "@Url.Action("Dispatch", "Order")";*@
+                $('#myModal1').modal('show');
+                $("#myModal1 .modal-title ").text("Dispatch Details - " + InvoiceNumber);
+                $("#ActionType")[0].selectedIndex = 0;
+
+            }
+        }
+
+    });
+</script>
+<style>
+    input[type="file"] {
+        display: block;
+    }
+
+    .imageThumb {
+        max-height: 75px;
+        border: 2px solid;
+        padding: 1px;
+        cursor: pointer;
+    }
+
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .remove:hover {
+            background: white;
+            color: black;
+        }
+</style>
+<script>
+    function editFiles(e, fileId) {
+        console.log("Event", e);
+        var files = e.target.files,
+			filesLength = files.length;
+        console.log("Files", files);
+        for (var i = 0; i < filesLength; i++) {
+            var f = files[i];
+            var fileReader = new FileReader();
+            fileReader.onload = (function (e) {
+                var file = e.target;
+                $("<span class=\"pip\">" +
+					"<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+					"<br/><span class=\"remove\">Remove image</span>" +
+					"</span>").insertAfter("#" + fileId);
+                $(".remove").click(function () {
+                    $(this).parent(".pip").remove();
+                });
+
+                // Old code here
+                /*$("<img></img>", {
+				  class: "imageThumb",
+				  src: e.target.result,
+				  title: file.name + " | Click to remove"
+				}).insertAfter("#files").click(function(){$(this).remove();});*/
+
+            });
+            fileReader.readAsDataURL(f);
+        }
+    }
+</script>
+
+
+
+<script type="text/javascript">
+
+    $("#FromDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+
+    });
+
+    $("#ToDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+
+
+    });
+
+    $("#DispatchDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+
+    });
+
+    $("#DisDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        //onSelect: function (selected) {
+        //    var dateSplit = selected.split('/');
+        //    var newDate = dateSplit[1] + '/' + dateSplit[0] + '/' + dateSplit[2];
+        //    var dt = new Date(newDate);
+        //    dt.setDate(dt.getDate());
+        //},
+
+    });
+
+    $("#InDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        //onSelect: function (selected) {
+        //    var dateSplit = selected.split('/');
+        //    var newDate = dateSplit[1] + '/' + dateSplit[0] + '/' + dateSplit[2];
+        //    var dt = new Date(newDate);
+        //    dt.setDate(dt.getDate());
+        //},
+
+    });
+</script>
+
+
+
+

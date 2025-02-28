@@ -1,0 +1,823 @@
+﻿
+@model Picanol.ViewModels.OrderDetailsViewModel
+@using Picanol.Helpers
+@{
+    /**/
+
+
+    ViewBag.Title = "OrderDetail";
+}
+
+@*<link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .big-checkbox {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <a href="@Url.Action("OrdersList", "Order")" style="margin-left:-25px;" class="btn btn-primary btn-large pull-left">Back</a>
+    </div>
+    <div class="container center-block">
+        @using (Html.BeginForm("PreviewInvoice", "Order", FormMethod.Post))
+        {
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-sm-6">
+                    <p id="Customers"><b>Customer:</b> @Model.OrderDetails.CustomerName</p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h5><b>Customer Ref:</b> @Model.OrderDetails.CustomerRef </h5>
+                    @Html.HiddenFor(model => model.OrderDetails.CustomerId, new { id = "CID" })
+                    @Html.HiddenFor(model => model.SelectedOrderGuid, new { id = "GUID" })
+                    @Html.HiddenFor(model => model.OrderDetails.CustomerRef, new { id = "CRF" })
+                    @Html.HiddenFor(model => model.OrderDetails.TrackingNumber, new { id = "TRN" })
+                    @Html.HiddenFor(model => model.OrderDetails.PartName, new { id = "PartName" })
+                    @Html.HiddenFor(model => model.OrderDetails.PartNo, new { id = "PartNo" })
+                    @Html.HiddenFor(model => model.OrderDetails.SerialNo, new { id = "SerialNo" })
+                    @Html.HiddenFor(model => model.OrderDetails.ChallanDate, new { id = "ChallanDate" })
+                    @Html.HiddenFor(model => model.OrderDetails.RepairType, new { id = "RepairType" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h5 id="BoardName"><b>Board Name: </b> @Model.OrderDetails.PartName @Model.OrderDetails.PartNo</h5>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <h5 id="SerialNo"><b>Serial No.:</b> @Model.OrderDetails.SerialNo </h5>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h5 id="TrakingID"><b>Tracking ID:</b> @Model.OrderDetails.TrackingNumber</h5>
+                </div>
+                @*<div class="col-sm-6">
+                       <h4 id="Status">  Status : @Model.OrderDetails.Status</h4>
+                    </div>*@
+                <div class="col-sm-2">
+                    <h5><b>Status:</b></h5>
+                </div>
+
+                <div id="os" class="col-sm-4">
+                    @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                    {
+                        <h5> @Html.DisplayFor(model => model.OrderDetails.Status, new { id = "OrderStatus", @class = "form-control" })</h5>
+
+                    }
+                    else
+                    {
+                        <h5>
+                            @Html.DropDownListFor(p => p.OrderDetails.Status, new SelectList(Model.OrderStatusList, "Text", "Value"), "Select Status", new { id = "OrderStatus", @class = "form-control" })
+                        </h5>
+                    }
+                    @*<h4> @Html.DisplayFor(model => model.OrderDetails.Status, new { id = "OrderStatus", @class = "form-control" })</h4>
+                        @Html.HiddenFor(model => model.OrderDetails.Status, new { id = "OrderST" })*@
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <h5><b>Packing Type:</b></h5>
+                </div>
+                <div class="col-sm-4">
+                    @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                    {
+                        @Html.DisplayFor(model => model.OrderDetails.PackingType, new { id = "DPacking_Type", @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(p => p.OrderDetails.PackingType, new SelectList(Model.PackingTypeList, "Text", "Value"), "Select Packing Type", new { id = "Packing_Type", @class = "form-control" })
+
+                    }
+                </div>
+
+
+
+                <div class="col-sm-2">
+                    <h5><b>Assigned To:</b></h5>
+                </div>
+                <div class="col-sm-4" style="margin-top:00px">
+                    @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                    {
+                        <h5> @Html.DisplayFor(model => model.OrderDetails.AssignedUserName, new { @class = "form-control" })</h5>
+                    }
+                    else
+                    {
+
+                        @Html.DropDownListFor(p => p.OrderDetails.AssignedUserId, new SelectList(Model.Users, "UserId", "UserName"), "Select Name", new { id = "AssignedUser", @class = "form-control" })
+
+                    }
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <h5 style="margin-left:-20px"><b>Time Taken:</b></h5>
+                    </div>
+
+                    <div class="col-sm-4">
+                        @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                        {
+                            <h5> @Html.DisplayFor(model => model.OrderDetails.TimeTaken, new { id = "DTimeTaken", @class = "form-control" })</h5>
+                        }
+                        else
+                        {
+                            <h5> @Html.TextBoxFor(model => model.OrderDetails.TimeTaken, new { id = "TimeTaken", @class = "form-control", @placeholder = "Enter Time Taken" })</h5>
+                        }
+                    </div>
+                    @*<div class="col-sm-4" style="margin-top:00px">
+                            @Html.DropDownListFor(p => p.OrderStatus, new SelectList(Model.OrderStatusList, "Text", "Value"), "Select Status", new { id = "Status_Type", @class = "form-control" })
+                        </div>*@
+
+
+
+                    <div class="col-sm-2">
+                        <h5><b>Repair Type:</b></h5>
+                    </div>
+
+                    <div class="col-sm-4">
+
+                        <h5> @Html.DisplayFor(model => model.OrderDetails.RepairType, new { id = "RepairType", @class = "form-control" })</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h5>
+                        <b>UnRepaired</b>
+
+                        @if (@Model.OrderDetails.URDCheck != null)
+                        {
+                            if (@Model.OrderDetails.RepairType == "UnRepairedBoards")
+                            {
+                                <input type="checkbox" class="Checkbox" id="check3" value="1" name="check" onchange="cTrig('check3')" checked style="width: 25px; height: 25px;" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="Checkbox" id="check3" value="1" name="check" onchange="cTrig('check3')" style="width: 25px; height: 25px; " />
+                            }
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="Checkbox" id="check3" value="1" name="check" onchange="cTrig('check3')" style="width: 25px; height: 25px; " />
+                        }
+                    </h5>
+                </div>
+
+                <div class="col-sm-3">
+                    <h5>
+                        <b>Exempt Component Cost</b>
+
+                        @if (@Model.OrderDetails.ExemptComponentCost)
+                        {
+                            <input type="checkbox" class="Checkbox" id="chkComponentExempt" value="1" name="chkComponentExempt" onchange="cTrig('chkComponentExempt')" checked style="width: 25px; height: 25px;" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="Checkbox" id="chkComponentExempt" value="0" name="chkComponentExempt" onchange="cTrig('chkComponentExempt')" style="width: 25px; height: 25px;" />
+                        }
+                    </h5>
+                </div>
+
+                @*<div class="col-sm-1">
+                        <h4 style="font-size : medium"> Exempt Labour Cost </h4>
+                    </div>
+                    <div class="col-sm-1">
+
+                        <h4><input type="checkbox" class="Checkbox" id="chkLabourExempt" value="1" name="chkLabourExempt" onchange="cTrig('chkLabourExempt')" /></h4>
+                    </div>*@
+                <div class="col-sm-2">
+                    <h5><b>Remarks:</b></h5>
+                </div>
+                <div class="col-sm-4">
+                    <h5> @Html.TextBoxFor(model => model.OrderDetails.Remarks, new { id = "Remarks", @class = "form-control", @placeholder = "Enter Remarks" })</h5>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                </div>
+                <div class="col-sm-3">
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label><strong>Discount :</strong></label>
+
+                            <input name="id" class="form-control" type="search" value="@Model.OrderDetails.Discount" autocomplete="off" id="Discount" placeholder="Enter Discount" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <br />
+            <a href="@Url.Action("AddNewPart", "Parts")" class="btn btn-success btn-large pull-right"> Add New Part</a>
+
+            <div class="col-md-12" style="margin-top:10px">
+                <div id="updateData" class="table-responsive">
+                    @Html.Partial("_AllOrderParts")
+                </div>
+            </div>
+            <br />
+
+
+            @*<div class="row">
+                    @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                    {
+                        <center><button type="submit" onclick="return validateForm()" id="invoice" class="btn btn-info btn-large" style="margin-top:30px ; margin-left: 300px" name="btnsearch" value="Invoice">Print </button></center>
+
+                    }
+                </div>
+
+                <center>
+                    @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                    {
+                        <button type="submit" id="jobSheet" class="btn btn-info btn-large" style="margin-top: -55px ; margin-left: -200px " name="btnsearch" value="Job">Preview JobSheet </button>
+                    }
+
+                </center>*@
+
+        }
+        <div class="row">
+            @if (Model.OrderDetails.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+            {
+                <div><button type="submit" onclick="Submitbtn()" id="saveItems" style="margin-top: 70px" class="btn btn-success pull-right" disabled="disabled"> Submit </button></div>
+            }
+            else
+            {
+                <div><button type="submit" onclick="Submitbtn()" id="saveItems" style="margin-top:70px" class="btn btn-success pull-right"> Submit </button></div>
+            }
+
+        </div>
+
+
+        <br /><br />
+        <datalist id="lan">
+            @foreach (var item in Model.Parts)
+            {
+                <option id="@item.PartId" value="@item.PartName"></option>
+
+            }
+
+        </datalist>
+
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            //var cb = document.getElementById(chkComponentExempt).val();
+            //var cb = @Model.OrderDetails.ExemptComponentCost;
+            var cb = $("#chkComponentExempt").is(":checked");
+
+
+
+            $(document).ready(function () {
+                //$("#saveItems").attr("disabled", "disabled")
+                //$("#jobSheet").attr("disabled", "disabled")
+                //$("#invoice").attr("disabled", "disabled")
+
+            })
+        </script>
+
+        <script>
+            function validateForm() {
+                var TimeTaken = $("#TimeTaken").val();
+                var PackingType = $("#Packing_Type").val();
+
+                //do validation
+                if (TimeTaken != 0 && PackingType != "") {
+                    return true; //let page be submitted
+                }
+                else {
+                    alert("Please fill Time Taken and Packing Type");
+                    return false; //do not let submission go through
+                }
+            }
+        </script>
+
+
+        <script>
+
+    @*$('#Part_Name').on('change', function () {
+        var mainselection = this.value; // get the selection value
+        var data = {
+            mainselection: mainselection
+        };
+        $.ajax({
+
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GetPartNo", "Material")', // name of PHP script
+            data: data, // parameter name and value
+            success: function (data) {
+
+                $("#Part_No").val(data); // insert in div above
+            },
+
+        });
+    });*@
+
+
+        </script>
+
+        <script>
+    var NewOrder = [];
+    function add_row() {
+        var stock = document.getElementById("ProStock").value
+        console.log(stock);
+        var price = document.getElementById("ProPrize").value
+        var qty = document.getElementById("Quantity").value
+
+        //if (parseInt(qty) > parseInt(stock)) {
+        //    alert("Stock of this product is" + stock);
+        //    return false;
+        //}
+        //remove stock check and put price check by shijo
+        if (price == 0) {
+            alert("Stock of this product is" + price);
+            return false;
+        }
+        var OrderId = $("#GUID").val();
+        var Part_No = document.getElementById("Part_No").value;
+        var Quantity = document.getElementById("Quantity").value;
+        var PartName = $("#Part_Name").val();
+
+        if (PartName == "") {
+            alert("Part Name must be filled");
+            return false;
+        }
+
+        if (Quantity == "") {
+            alert("Quantity must be filled");
+            return false;
+        }
+
+        for (var i = NewOrder.length; i--;) {
+            if (NewOrder[i].PartName == PartName && NewOrder[i].PartNumber == Part_No) {
+                alert("Component Already Added");
+                document.getElementById("Part_No").value = "";
+                document.getElementById("Part_Name").value = "";
+                document.getElementById("Quantity").value = "";
+                return false;
+            }
+        }
+        var OrderPartDto = {
+            //SelectedOrderGuid: SelectedOrderGuid,
+            PartNumber: Part_No,
+            Qty: Quantity,
+            PartName: PartName
+        };
+        NewOrder.push(OrderPartDto);
+        OrderDetailsViewModel = {
+            NewConsumedParts: NewOrder,
+            SelectedOrderGuid: OrderId
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("getDetailView", "Order")',
+            //datatype: "json",
+            //contentType: "application/json",
+            //data: JSON.stringify(NewOrder) + '&OrderId =' + $("#GUID").val(),
+            //data:{ 'NewOrder' : JSON.stringify(NewOrder) , '&OrderId =' : OrderId},
+            data: OrderDetailsViewModel,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $("#saveItems").removeAttr("disabled")
+                if (data.result == false) {
+                    alert(data.msg);
+                }
+                else {
+                    // $('.signal').hide();
+                    $('#updateData').html(data);
+                }
+            },
+            error: function (response) {
+                $('.spinner-wrapper').hide();
+
+            }
+
+        });
+
+    }
+
+    function Submitbtn() {
+        console.log("Order Array", NewOrder);
+        var Status = $("#OrderStatus").val();
+        var TimeTaken = $("#TimeTaken").val();
+        var Remarks = $("#Remarks").val();
+        var CustomerId = $("#CID").val();
+        var SelectedOrderGuid = $("#GUID").val();
+        var PackingType = $("#Packing_Type").val();
+        var RepairType = $("#RepairType").val();
+        var Discount = $("#Discount").val();
+        var AssignedUserId = $("#AssignedUser").val();
+        var check = 0;
+        if (TimeTaken == "") {
+            alert('Please fill Time !');
+            return false;
+        }
+        //if (TimeTaken == 0) {
+        //    if (confirm('Is Time Taken = 0')) {
+                if (Status == '') {
+                    alert('Please Select Status !');
+                    return false;
+                }
+
+                if (AssignedUserId == '') {
+                    alert('Please Assign User!');
+                    return false;
+                }
+
+                if (PackingType == 0) {
+                    alert('Please Select Packing Type !');
+                    return false;
+                }
+                var t = $('#check3').is(':checked');
+                if (t == false) {
+                    check = 0;
+                }
+                else {
+                    check = 1;
+                }
+
+        var OrderDto = {
+                    Discount: Discount,
+                    OrderGUID: SelectedOrderGuid,
+                    RepairType: RepairType,
+                    TimeTaken: TimeTaken,
+                    Status: Status,
+                    Remarks: Remarks,
+                    PackingType: PackingType,
+                    AssignedUserId: AssignedUserId,
+                    URDCheck: check,
+                    ExemptLabourCost: $('#chkLabourExempt').is(':checked'),
+                    //ExemptComponentCost: $('#chkComponentExempt').is(':checked'),
+                    ExemptComponentCost: cb,
+
+                }
+                var OrderDetailsViewModel = {
+                    CustomerId: CustomerId,
+                    SelectedOrderGuid: SelectedOrderGuid,
+                    ConsumedParts: NewOrder,
+                    OrderDetails: OrderDto
+                };
+
+                console.log("Order Array", NewOrder);
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: 'POST',
+                    url: '@Url.Action("Submitbtn", "Order")',
+                    data: OrderDetailsViewModel,
+                    success: function (data) {
+                        //$('.signal').hide();
+                        $('.spinner-wrapper').hide();
+                        if (data.result == false) {
+                            alert(data.msg);
+                        }
+                        else {
+                            $('#updateData').html(data);
+                            //$(".Status").html("qwerty");
+                            //$('#Status').html('<h4>Status : In Process</h4>');
+                            alert("Successfully Submitted");
+                            window.location = '@Url.Action("OrdersList", "Order")';
+                        }
+                    },
+                    error: function (response) {
+                        $('.spinner-wrapper').hide();
+                        alert("Please Try Again");
+                    }
+                });
+            //}
+        //}
+        //else {
+        //    return false;
+        //}
+    }
+
+        </script>
+
+
+
+        <script>
+    function Send() {
+        var TimeTaken = $("#TimeTaken").val();
+        var CustomerId = $("#CID").val();
+        var OrderGUID = $("#GUID").val();
+        var PackingType = $("#Packing_Type").val();
+        var PartName = $("#PartName").val();
+        var PartNo = $("#PartNo").val();
+        var SerialNo = $("#SerialNo").val();
+        var ChallanDate = $("#ChallanDate").val();
+        var newUrl = '@Url.Action("Invoice","Order")';
+        var OrderDetails = {
+            TimeTaken: TimeTaken,
+            CustomerId: CustomerId,
+            OrderGUID: OrderGUID,
+            PartName: PartName,
+            PartNo: PartNo,
+            SerialNo: SerialNo,
+            ChallanDate: ChallanDate,
+            PackingType: PackingType
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GenerateInvoice", "Order")', // name of PHP script
+            data: OrderDetails, // parameter name and value
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                alert("You will now be redirected.");
+                window.location.href = '@Url.Action("Invoice","Order")';
+            },
+
+        });
+    }
+        </script>
+        <script>
+
+    function Delete(partId, partName, partNumber) {
+        var OrderGUID = $("#GUID").val();
+        var OrderPartDto = {
+            PartName: partName,
+            PartNumber: partNumber
+        }
+        if (partId == 0) {
+            var OrderDetailsViewModel = {
+                NewConsumedParts: NewOrder,
+                orderPart: OrderPartDto,
+                SelectedOrderGuid: OrderGUID
+            }
+            for (var i = NewOrder.length; i--;) {
+                if (NewOrder[i].PartName == partName) {
+                    NewOrder.splice(i, 1);
+                }
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("DeletePart", "Order")', // name of PHP script
+                data: OrderDetailsViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#id").removeAttr("disabled")
+                    if (data.result == false) {
+                        alert(data.msg);
+                    }
+                    else {
+                        $('.spinner-wrapper').hide();
+                        $('#updateData').html(data);
+                    }
+                },
+
+            });
+        }
+        else {
+            var OrderGUID = $("#GUID").val();
+            var newUrl = '@Url.Action("DeletePart","Order")';
+            var OrderDetailsViewModel = {
+                NewConsumedParts: NewOrder,
+                PartId: partId,
+                SelectedOrderGuid: OrderGUID
+            }
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("DeletePart", "Order")', // name of PHP script
+                data: OrderDetailsViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#id").removeAttr("disabled")
+                    if (data.result == false) {
+                        alert(data.msg);
+                    }
+                    else {
+                        $('.spinner-wrapper').hide();
+                        $('#updateData').html(data);
+                    }
+                },
+
+            });
+        }
+    }
+        </script>
+
+        <script>
+    function Preview() {
+        var TimeTaken = $("#TimeTaken").val();
+        var CustomerId = $("#CID").val();
+        var TrackingNumber = $("#TRN").val();
+        var CustomerRef = $("#CRF").val();
+        var OrderGUID = $("#GUID").val();
+        var PackingType = $("#Packing_Type").val();
+        var newUrl = '@Url.Action("Invoice","Order")';
+        var Status = document.getElementById("os").innerText;
+        //var s = Status.valueOf("value");
+        //var Statu = $("#OrderST").val();
+        if (Status == 'Open') {
+            alert('Please Submit Order');
+            return;
+        }
+        //else if (Status == 'InProgress')
+        //{
+        //var TimeTaken = $("#TimeTaken").val();
+        //var CustomerId = $("#CID").val();
+        //var OrderGUID = $("#GUID").val();
+        //var PackingType = $("#Packing_Type").val();
+        var newUrl = '@Url.Action("Invoice","Order")';
+        var OrderDetails = {
+            TrackingNumber: TrackingNumber,
+            CustomerRef: CustomerRef,
+            TimeTaken: TimeTaken,
+            CustomerId: CustomerId,
+            OrderGUID: OrderGUID,
+            PackingType: PackingType
+        }
+        var OrderDetailsViewModel = {
+            OrderDetails: OrderDetails,
+            // SelectedOrderGuid: OrderGUID
+        }
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GenerateInvoice", "Order")', // name of PHP script
+            data: OrderDetailsViewModel, // parameter name and value
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                alert("You will now be redirected.");
+                window.location.href = '@Url.Action("GenerateInvoice", "Order")';
+            },
+
+        });
+
+        //}
+
+    }
+
+        </script>
+
+        <script>
+    var NewOrder = [];
+    function JobSheet() {
+        var TimeTaken = $("#TimeTaken").val();
+        var CustomerId = $("#CID").val();
+        var OrderGUID = $("#GUID").val();
+        var PackingType = $("#Packing_Type").val();
+        var PartName = $("#PartName").val();
+        var PartNo = $("#PartNo").val();
+        var SerialNo = $("#SerialNo").val();
+        var ChallanDate = $("#ChallanDate").val();
+
+
+        var OrderDto = {
+            TimeTaken: TimeTaken,
+            CustomerId: CustomerId,
+            OrderGUID: OrderGUID,
+            PartName: PartName,
+            PartNo: PartNo,
+            SerialNo: SerialNo,
+            ChallanDate: ChallanDate,
+            PackingType: PackingType
+        }
+
+
+        // NewOrder.push(OrderDto);
+        //var OrderDetailsViewModel = {
+        //     OrderDetails: NewOrder,
+
+        // }
+        $.ajax({
+
+            type: "POST",  // method of sending data
+            url: '@Url.Action("JobSheet", "Order")', // name of PHP script
+            data: OrderDto, // parameter name and value
+            success: function (data) {
+
+
+            },
+
+        });
+    }
+
+        </script>
+        <script>
+            function cTrig(check3) {
+                console.log("unrepaid checked")
+                if (document.getElementById(check3).checked == false) {
+                    return false;
+                } else {
+                    var box = confirm("Are you sure you want to do this?");
+                    if (box == true)
+                        return true;
+                    else
+                        document.getElementById(check3).checked = false;
+
+                }
+            }
+            function cTrig(chkLabourExempt) {
+                if (document.getElementById(chkLabourExempt).checked == false) {
+                    return false;
+                } else {
+                    var box = confirm("Are you sure you want to do this?");
+                    if (box == true)
+                        return true;
+                    else
+                        document.getElementById(chkLabourExempt).checked = false;
+
+                }
+            }
+            //function cTrig(chkComponentExempt) {
+            //    if (document.getElementById(chkComponentExempt).checked == false) {
+            //        return false;
+            //    } else {
+            //        var box = confirm("Are you sure you want to do this?");
+            //        if (box == true)
+            //            return true;
+            //        else
+            //            document.getElementById(chkComponentExempt).checked = false;
+
+            //    }
+            //}
+
+            function cTrig(chkComponentExempt) {
+                if (document.getElementById(chkComponentExempt).checked == false) {
+                    var box = confirm("Are you sure you want to do uncheck?");
+                    if (box == true)
+                        cb = false;
+                    return false;
+                } else {
+                    var box = confirm("Are you sure you want to do check?");
+                    if (box == true) {
+                        cb = true;
+                        return true;
+                    } else {
+                        document.getElementById(chkComponentExempt).checked = false;
+                    }
+
+
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

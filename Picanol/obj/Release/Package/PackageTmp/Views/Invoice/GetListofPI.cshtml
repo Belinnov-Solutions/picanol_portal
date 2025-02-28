@@ -1,0 +1,377 @@
+﻿@*@model IEnumerable<Picanol.Models.ProformaInvoiceDto>*@
+@model Picanol.ViewModels.ProformaViewModel
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int OrderListCount = Model.List.Count;
+
+    //int noOfPages = OrderListCount / 10;
+    int TotalNumberRecord = Model.TotalNumberCounts;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = OrderListCount / PageSize;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+</head>
+<style>
+    span.ui-datepicker-month {
+        display: contents
+    }
+
+    .row {
+        margin-right: -15px;
+        margin-left: 3px !important;
+    }
+
+    .pagination .row {
+        margin-right: -15px;
+        margin-left: 3px !important;
+        display: flex;
+        justify-content: center;
+        width: auto;
+    }
+
+    .pagination {
+        padding-left: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 20px 0px;
+        border-radius: 4px;
+    }
+
+    .cell {
+        border: 1px solid #5bc0de;
+        cursor: pointer;
+    }
+
+    .active {
+        color: white;
+        background-color: #0e15ea;
+    }
+</style>
+<body>
+    <a href="javascript:history.back()"class="btn btn-primary btn-large pull-left"> Back</a>
+
+    <div class="container">
+      
+        <div class="btn-group pull-right" role="group" aria-label="Basic mixed styles example">
+            <button type="button" class="btn btn-danger" value="Submit" id="btnSearch" onclick="ExcelResult()">Download PI Report</button>
+        </div>
+
+        <h3 class="text-center"><b>Proforma List</b></h3>
+
+        <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+        <div class="row" style="font-family:Calibri">
+            <div class="col-sm-2" style="width: 18.499999995%;margin-left:-2rem">
+                <div class="form-group">
+                    <label for="CustomerName">Customer Name</label>
+                    <input name="id" class="form-control" type="search" list="CNList" autocomplete="off" placeholder="Customer Name" id="CustomerId" />
+                    <input type="hidden" id="custId" value=@userInfo.UserId>
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="width: 18.499999995%">
+                <div class="form-group">
+                    <label for="StartDate">From Date</label>
+                    @Html.TextBoxFor(d => d.FDate, "{0:dd/MM/yyyy}", new { id = "StartDate", @class = "form-control", maxlength = "500", autocomplete = "off", @placeholder = "Enter From Date" })
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="width: 18.499999995%">
+                <div class="form-group">
+                    <label for="EndDate">To Date</label>
+                    @Html.TextBoxFor(d => d.TDate, "{0:dd/MM/yyyy}", new { id = "EndDate", @class = "form-control", maxlength = "500", autocomplete = "off", @placeholder = "Enter TO Date" })
+                </div>
+            </div>
+            @if (userInfo.RoleId == 6)
+            {
+                <div class="col-sm-2" style="width: 18.499999995%">
+                    <div class="form-group">
+                        <label for="CustomerName">Proforma Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice/Invoice No" id="ProformaInvoiceNo" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-2" style="width: 18.499999995%">
+                    <div class="form-group">
+                        <label for="CustomerName">Proforma Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice No" id="ProformaInvoiceNo" />
+                    </div>
+                </div>
+            }
+            <div class="col-sm-1" style="width: 18.499999995%;margin-right: -13rem;">
+                <div class="form-group">
+                    <button type="submit" style="margin-top:25px" value="Submit" id="btnSearch" onclick="Submitbutton(1)" class="btn btn-info">Submit</button>
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="divResultdata" class="table-responsive">
+            @Html.Partial("GetAllProformaLIst")
+            <div class="pull-right">@TotalNumberRecord Record Found</div>
+        </div>
+        @*<div class="pull-right">@TotalNumberRecord Record Found</div>*@
+        <!--End Here-->
+        <div id="pagingDiv"></div>
+
+    </div>
+
+    <script>
+        function ExcelResult(){
+       // $("#btnSearch").click(function () {
+            var shownVal = document.getElementById("CustomerId").value;
+            //var UserId = $("#custId").val();
+            var enterDate = $("#StartDate").val();
+            if (enterDate != "") {
+                var split = enterDate.split("/");
+                var StartDate = split[0] + "/" + split[1] + "/" + split[2];
+            }
+            else {
+                var StartDate = "";
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != "") {
+                var split1 = lastDate.split("/");
+                var EndDate = split1[0] + "/" + split1[1] + "/" + split1[2];
+            }
+            else {
+                var EndDate = "";
+            }
+
+            var ProformaInvoiceNo = $("#ProformaInvoiceNo").val();
+            if (shownVal != "") {
+                var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            }
+
+            var enterDate = $("#StartDate").val();
+            if (enterDate != '' && lastDate == '') {
+                   alert("Please select To date !");
+               return false;
+
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != '' && enterDate == '') {
+                alert("Please select From Date !.");
+                return false;
+            }
+            var ProformaInvoiceNo = $("#ProformaInvoiceNo").val();
+
+            var ProformaViewModel =
+                {
+                CustomerId: CustomerId,
+
+                StartDate: StartDate,
+                EndDate: EndDate,
+                ProformaInvoiceNo: ProformaInvoiceNo,
+
+                PageSize: 15,
+                PageNo: 1,
+                }
+
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("GetExcelDownloadParameter", "Invoice")', // name of PHP script
+                data: ProformaViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                     location.href = "@Url.Action("GetProformaInvoiceListForExcel", "Invoice")"
+                    //$("#divResultdata").html(data);
+                },
+
+                error: function (xhr, status, error) {
+                    $('.spinner-wrapper').hide();
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    //alert('Error - ' + errorMessage);
+                    alert("Something went wrong! while creating excel");
+                }
+
+            });
+        }//);
+           @* $("#StartDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+            });
+
+            $("#EndDate").datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+            });*@
+
+
+        $(function () {
+            $("#StartDate").datepicker({ dateFormat: "dd/mm/yy" }).val()
+            $("#EndDate").datepicker({ dateFormat: "dd/mm/yy" }).val()
+        });
+
+        function Submitbutton(val) {
+            var shownVal = document.getElementById("CustomerId").value;
+            if (shownVal != "") {
+                var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            }
+            console.log(CustomerId);
+            var enterDate = $("#StartDate").val();
+            if (enterDate != "") {
+                var split = enterDate.split("/");
+                var StartDate = split[0] + "/" + split[1] + "/" + split[2];
+            }
+            else {
+                var StartDate = "";
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != "") {
+                var split1 = lastDate.split("/");
+                var EndDate = split1[0] + "/" + split1[1] + "/" + split1[2];
+            }
+            else {
+                var EndDate = "";
+            }
+            var enterDate = $("#StartDate").val();
+            if (enterDate != '' && lastDate == '') {
+                alert("Please select To date !");
+                return false;
+
+            }
+            var lastDate = $("#EndDate").val();
+            if (lastDate != '' && enterDate == '') {
+                alert("Please select From Date !.");
+                return false;
+            }
+            var PageSize = 10;
+            var PageNo = val;
+
+            var ProformaInvoiceNo = document.getElementById("ProformaInvoiceNo").value;
+
+            var ProformaViewModel =
+            {
+                CustomerId: CustomerId,
+                StartDate: StartDate,
+                EndDate: EndDate,
+                PageSize: PageSize,
+                PageNo: PageNo,
+                ProformaInvoiceNo: ProformaInvoiceNo,
+
+                }
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("SearchPIData", "Invoice")', // name of PHP script
+                data: ProformaViewModel, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#divResultdata").html(data);
+                },
+
+                error: function (xhr, status, error) {
+                    $('.spinner-wrapper').hide();
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+
+            });
+            }//);
+
+            $(document).ready(function () {
+                var total = parseInt($('#hdnTotal').val());
+                var PageSize = 15;
+                BindList(1, PageSize);
+                var result = Paging(1, PageSize, total, "myClass", "myDisableClass");
+                $("#pagingDiv").html(result)
+
+
+                //$("#pagingButton").click(function (e) {
+
+                //});
+
+                $("#pagingDiv").on("click", "a", function () {
+                    var result = Paging($(this).attr("pn"), PageSize, total, "myClass", "myDisableClass")
+                    $("#pagingDiv").html(result);
+                    var pagenumber = $(this).attr("pn");
+                    BindList(pagenumber, PageSize)
+
+                });
+
+
+                function Paging(PageNumber, PageSize, TotalRecords, ClassName, DisableClassName) {
+                    var ReturnValue = "";
+
+                    var TotalPages = Math.ceil(TotalRecords / PageSize);
+                    if (+PageNumber > 1) {
+                        if (+PageNumber == 2)
+                            ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='" + (+PageNumber - 1) + "' class='" + ClassName + "'>Previous</a>   ";
+                        else {
+                            ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                            ReturnValue = ReturnValue + (+PageNumber - 1) + "' class='" + ClassName + "'>Previous</a>   ";
+                        }
+                    }
+                    else
+                        ReturnValue = ReturnValue + "<span class='" + DisableClassName + "'>Previous</span>   ";
+                    if ((+PageNumber - 3) > 1)
+                        ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='1' class='" + ClassName + "'>1</a> ..... | ";
+                    for (var i = +PageNumber - 3; i <= +PageNumber; i++)
+                        if (i >= 1) {
+                            if (+PageNumber != i) {
+                                ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                                ReturnValue = ReturnValue + i + "' class='" + ClassName + "'>" + i + "</a> | ";
+                            }
+                            else {
+                                ReturnValue = ReturnValue + "<span style='font-weight:bold;'>" + i + "</span> | ";
+                            }
+                        }
+                    for (var i = +PageNumber + 1; i <= +PageNumber + 3; i++)
+                        if (i <= TotalPages) {
+                            if (+PageNumber != i) {
+                                ReturnValue = ReturnValue + "<a style='cursor:pointer;' pn='";
+                                ReturnValue = ReturnValue + i + "' class='" + ClassName + "'>" + i + "</a> | ";
+                            }
+                            else {
+                                ReturnValue = ReturnValue + "<span style='font-weight:bold;'>" + i + "</span> | ";
+                            }
+                        }
+                    if ((+PageNumber + 3) < TotalPages) {
+                        ReturnValue = ReturnValue + "..... <a style='cursor:pointer;' pn='";
+                        ReturnValue = ReturnValue + TotalPages + "' class='" + ClassName + "'>" + TotalPages + "</a>";
+                    }
+                    if (+PageNumber < TotalPages) {
+                        ReturnValue = ReturnValue + "   <a style='cursor:pointer;' pn='";
+                        ReturnValue = ReturnValue + (+PageNumber + 1) + "' class='" + ClassName + "'>Next</a>";
+                    }
+                    else
+                        ReturnValue = ReturnValue + "   <span class='" + DisableClassName + "'>Next</span>";
+
+                    return (ReturnValue);
+                }
+
+            });
+
+
+        
+    </script>
+
+    <datalist id="CNList">
+        @foreach (var item in Model.CustomersList)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+
+    </datalist>
+</body>
+</html>

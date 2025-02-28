@@ -1,0 +1,85 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	td, th {
+		border: 1px solid #dddddd;
+		text-align: center;
+		padding: 8px;
+	}
+
+	tr:nth-child(even) {
+		background-color: #dddddd;
+	}
+</style>
+<html>
+<body>
+	<table id="Table">
+		<tr>
+
+			<th>Status</th>
+			<th>Date</th>
+			<th>Invoice Number</th>
+			<th>Customers</th>
+			<th>Due Date</th>
+			<th>Amount</th>
+			<th>Action</th>
+
+
+
+		</tr>
+		@foreach (var item in Model.InvoicesList)
+		{
+			<tr>
+				<td>@item.Status</td>
+				<td>@item.DateCreated</td>
+				<td id="InvoiceNumber">@item.InvoiceNo</td>
+				<td>@item.CustomerName</td>
+				<td>@item.DueDate</td>
+				<td>@item.Amount</td>
+				<td id="OrderGuid" style="display:none;">@item.OrderGuid</td>
+				<td id="Paid" style="display:none;">@item.Paid</td>
+				@*<td>@item.Action</td>*@
+				<td>
+					@Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.SelectActionTypeList, "Text", "Value"), "Select Action Type", new { id = "ActionType", @class = "form-control", @onchange= "invokeAction(this)"})
+				</td>
+
+				@*<td><button type="submit" class="btn btn-success btn-large pull-left" id="btnEdit" value="Save">Edit </button></td>
+					<td><button type="submit" class="btn btn-success btn-large pull-left" id="btnDelete" value="Save">Delete/button></td>*@
+			</tr>}
+	</table>
+</body>
+</html>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+    var currentSelectedValue = [];
+	function invokeAction(element) {
+		var index = element.closest('tr').rowIndex;
+		var selectedValue = element.options[element.selectedIndex].value;
+		
+		if (!selectedValue) { return;}
+		if (currentSelectedValue[index] && (currentSelectedValue[index] == selectedValue)) {
+            return;
+        }
+        else {
+			currentSelectedValue[index] = selectedValue;
+		}
+
+		switch (selectedValue) {
+			case "RecordPayment":
+				location.href = "@Url.Action("RecordPayment", "Invoice")";
+				break;
+			case "Dispatch":
+                location.href = "@Url.Action("Dispatch", "Invoice")";
+				break;
+			default:
+				break;
+		}
+    }
+</script>

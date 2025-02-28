@@ -1,0 +1,139 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@{
+
+    Layout = "../Shared/View.cshtml";
+}
+<style>
+    .cancelledImg {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: -1;
+        opacity: 0.15;
+    }
+
+    .rotate_image {
+        @* -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        *@ -webkit-transform: rotate(-20deg);
+        -moz-transform: rotate(-20deg);
+        -ms-transform: rotate(-20deg);
+        -o-transform: rotate(-20deg);
+        transform: rotate(-20deg);
+    }
+
+
+</style>
+
+<div class="container">
+    @if (Model.InvoiceDetails.Cancelled == true)
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="text-right">
+                        <img class="cancelledImg rotate_image" src="~/Content/Images/cancelledImg.jpg" style="height:840px; width: 100%; margin-top:100px; margin-right:80px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-md-12">
+        <div class="row">
+
+            <div class="col-md-4"><div class="text-left" style="font-size:large">Ref: @Model.InvoiceDetails.InvoiceNo </div></div>
+            <div class="col-md-8"><div class="text-right" style="margin-top:-20px">Date: @Model.InvoiceDetails.InvoiceDate.Value.ToShortDateString()</div></div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="col-md-12">
+        <div class="text-left">
+            To,<br />
+            @Model.CustomerDetails.CustomerName <br />
+            @Model.CustomerDetails.ShippingAddressLine1 @Model.CustomerDetails.ShippingAddressLine2 @Model.CustomerDetails.District @Model.CustomerDetails.City @Model.CustomerDetails.PIN<br />
+            State: @Model.CustomerDetails.State <br />
+            Code: @Model.CustomerDetails.StateCode<br />
+            Contact: @Model.CustomerDetails.Mobile <br />
+        </div>
+    </div>
+    &nbsp;<br />
+    &nbsp;<br />
+
+    <div class="col-md-12">
+        <div class="text-left">
+            <b><u>SUB:- DISPATCH OF NOT REPAIRABLE BOARD</u></b>
+
+        </div>
+    </div>
+
+    &nbsp;<br />
+
+    <div class="col-md-12">
+        <div class="text-left">
+            Dear Sir,<br />
+
+            <br />
+            We are sending the following PCBS, which we have received from you as these are<br />
+            beyond repair at our repair station,so back to you through _____________<br />
+            Courier vide docket No:___________ dated: ____________ on to pay basis.
+
+        </div>
+    </div>
+    &nbsp;<br />
+    &nbsp;<br />
+    &nbsp;<br />
+    <div class="col-md-12">
+        <table style="width:100%">
+            <tr style="font-weight:bold;">
+                <th><u>OUR REF NO</u></th>
+                <th><u>YOUR RGP NO</u></th>
+                <th><u>ITEM</u></th>
+                <th><u>DESCRIPTION</u></th>
+                <th><u>SERIAL NO</u></th>
+                <th><u>QTY</u></th>
+            </tr>
+            <tr>
+                <td>@Model.OrderDetails.TrackingNumber</td>
+                <td>@Model.OrderDetails.CustomerRef</td>
+                <td>@Model.OrderDetails.PartName</td>
+                <td>@Model.OrderDetails.PartNo</td>
+                <td>@Model.OrderDetails.SerialNo</td>
+                <td>1</td>
+            </tr>
+        </table>
+
+    </div>
+
+    &nbsp;<br />
+    &nbsp;<br />
+    &nbsp;<br />
+
+    <div class="col-md-12">
+        <div class="text-left">
+            Please acknowledge the receipt of the same at your end.<br />
+            &nbsp;<br />
+            Thanks and Regards,<br />
+            &nbsp;<br />
+            For PICANOL INDIA PVT LTD<br />
+            &nbsp;<br />
+            &nbsp;<br />
+            &nbsp;<br />
+            AUTHORIZED SIGNATORY<br />
+            <b>OUR GSTIN: 07AAECP4023H1ZO</b><br />
+            &nbsp;<br />
+            &nbsp;<br />
+            <b>PARTY GSTIN: @Model.CustomerDetails.GSTIN </b><br />
+            APPX VALUE OF THE GOODS RS .......... /--
+
+        </div>
+    </div>
+
+
+
+</div>
+

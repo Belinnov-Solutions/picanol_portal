@@ -1,0 +1,207 @@
+﻿
+@model IEnumerable<Picanol.Models.OrderPaymentDto>
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Record Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            border-color: black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+    <datalist id="CNList">
+        @foreach (var item in Model)
+        {
+            foreach (var list in item.Customers)
+            {
+                <option id="@list.CustomerId" data-value="@list.CustomerId" value="@list.CustomerName"></option>
+            }
+        }
+
+    </datalist>
+</head>
+<body>
+    @if (userInfo.RoleId != 8)
+    {<datalist id="CNList">
+    @foreach (var item in Model)
+    {
+        foreach (var list in item.Customers)
+        {
+            <option id="@list.CustomerId" data-value="@list.CustomerId" value="@list.CustomerName"></option>
+        }
+    }
+
+</datalist>
+    <div class="container">
+        <button onclick="history.back()" class="btn btn-primary btn-large pull-left">Back</button>
+        <h3><b>All Payment Record</b></h3>
+        <div class="row" style="font-family:Calibri; margin-left:-44px">
+            <div class="col-sm-2" style="width: 27.5%;margin-left:3rem">
+                <div class="form-group">
+                    <label for="CustomerName">Customer Name</label>
+                    <input name="id" class="form-control" type="search" list="CNList" autocomplete="on" placeholder="Customer Name" id="CustomerId" />
+                    <input type="hidden" id="custId" value=@userInfo.UserId>
+                </div>
+            </div>
+
+            @if (userInfo.RoleId == 6)
+            {
+                <div class="col-sm-2" style="width: 25.5%">
+                    <div class="form-group">
+                        <label for="CustomerName">P.I No./Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice/Invoice No" id="provionalbillid" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-2" style="width: 25.5%">
+                    <div class="form-group">
+                        <label for="CustomerName">Proforma Invoice No</label>
+                        <input name="id" class="form-control" type="search" autocomplete="off" placeholder="Proforma Invoice No" id="provionalbillid" />
+                    </div>
+                </div>
+            }
+            <div class="col-sm-1" style="width: 18.499999995%;margin-right: -13rem;">
+                <div class="form-group">
+                    <button type="submit" style="margin-top:25px" value="Submit" id="btnSearch" onclick="submit()" class="btn btn-info">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="divResultdata" class="table-responsive">
+            <table id="payment-table">
+                <thead>
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Customer Name</th>
+                        <th>P.I No.</th>
+                        <th>Invoice No.</th>
+                        <th>Invoice Amount</th>
+                        <th>Payment Type</th>
+                        <th>Amount Paid</th>
+                        <th>TDS</th>
+                        <th>Received Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in @Model)
+                    {
+                        <tr>
+                            <td>@item.PDate</td>
+                            <td>@item.CustomerName</td>
+                            <td>@item.ProvisionalBillNo</td>
+                            <td>@item.InvoiceNo</td>
+                            <td>@item.InvoiceAmount</td>
+                            <td>@item.PaymentType</td>
+                            <td>@item.AmountPaid</td>
+                            <td>@item.TDS</td>
+                            <td>@item.ReceivedAmount</td>
+                            @if (@item.Status == "Completed")
+                            {
+                                <td style="color:green">@item.Status</td>
+                            }
+                            else
+                            {
+                                <td style="color: #942911">@item.Status</td>
+                            }
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+    <script src="script.js"></script>
+    <script>
+        //const paymentTable = document.getElementById("payment-table");
+        //const paymentRows = paymentTable.getElementsByTagName("tr");
+
+        //for (let i = 1; i < paymentRows.length; i++) {
+        //    const paymentCells = paymentRows[i].getElementsByTagName("td");
+        //    const paymentAmount = parseFloat(paymentCells[1].textContent.slice(1));
+        //    paymentRows[i].classList.add(paymentAmount > 100 ? "highlight" : "");
+        //}
+
+
+        function submit(){
+            
+            var shownVal = document.getElementById("CustomerId").value;
+            if (shownVal != "") {
+                var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+                
+            }
+            var ProvisionalBillNo = $("#provionalbillid").val();
+           /* var pk = $("#provionalbillid").text();*/
+                var OrderPaymentDto =
+                {
+                    CustomerId: CustomerId,
+                    ProvisionalBillNo: ProvisionalBillNo,
+                }
+
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST", 
+                url: '@Url.Action("FilterPaymentList", "ServiceRequest")', 
+                data: OrderPaymentDto, 
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#divResultdata").html(data);
+                },
+
+                error: function (xhr, status, error) {
+                    $('.spinner-wrapper').hide();
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Error - ' + errorMessage);
+                }
+
+            });
+
+            
+        }
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,281 @@
+﻿@model Picanol.ViewModels.WorkOrderViewModel
+
+
+
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int OrderListCount = Model.Customers.Count;
+    //int noOfPages = OrderListCount / 10;
+    int TotalNumberRecord = Model.TotalNumberRecord;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = OrderListCount / PageSize;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            border-color: black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-lg-12">
+        <table>
+            <tr>
+                <th>Work Order No.</th>
+                <th>Customer Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Assigned To</th>
+                <th>Actions</th>
+
+            </tr>
+
+            @foreach (var item in Model.WorkOrdersList)
+            {
+                <tr>
+                    <td>@item.WorkOrderNo</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.StartDate.Value.ToShortDateString()</td>
+                    <td>@item.EndDate.Value.ToShortDateString()</td>
+                    <td>@item.AssignedUserName</td>
+                    <td>
+                        @*@if (item.WorkOrderType == ConstantsHelper.WorkOrderType.AllFOC.ToString())
+                            {
+                                <a href="@Url.Action("WorkOrderPDF", "ServiceRequest", new { WorkOrderNo = item.WorkOrderNo })" class="btn btn-primary btn-xs">&nbsp;&nbsp;&nbsp;Work Order&nbsp;&nbsp;&nbsp;&nbsp;</a><br />
+                                <a href="@Url.Action("FOCTimeSheetList", "TimeSheet", new { workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">Time Sheet</a><br />
+
+                            }
+                            else
+                            {*@
+                        @if (userInfo.RoleId == 5)
+                        {
+                            <a href="@Url.Action("WorkOrderDetails", "ServiceRequest", new { WorkOrderId = item.WorkOrderId, Type = 1 })" class="btn btn-primary btn-xs" style="width:110px;">Edit</a><br />
+                        }
+
+                        <a href="@Url.Action("WorkOrderDetails", "ServiceRequest", new { WorkOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs" style="width:110px;">Details</a><br />
+                        <a href="@Url.Action("ProvisionalBillList", "ServiceRequest", new { WorkOrderId = item.WorkOrderId })" class="btn btn-success btn-xs" style="width:110px;">Proforma Invoice</a><br />
+                        <a href="@Url.Action("WorkOrderPDF", "ServiceRequest", new { WorkOrderNo = item.WorkOrderId })" class="btn btn-danger btn-xs" style="width:110px;">Download</a><br />
+                        @if (userInfo.RoleId == 5)
+                        {
+                            <button onclick="myFunction(@item.WorkOrderId,'@item.ContactPerson','@item.EmailId')" class="btn btn-primary btn-xs" style="width:112px;">Email</button><br />
+
+                        } @*if (item.ProvisionalBillCreated)
+                            {
+                                <a href="@Url.Action("TimeSheet", "ServiceRequest", new { workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">Time Sheet</a><br />
+                            }
+                            else
+                            {
+                                <button onclick="clickAlert()" class="btn btn-primary btn-xs">Time Sheet</button><br />
+                            }*@
+
+                        @*<a href="@Url.Action("PrintTimeSheet", "ServiceRequest", new {workOrderId = item.WorkOrderId})" class="btn btn-primary btn-xs">Print Sheet</a><br />*@
+                        @*if (item.ProvisionalBillCreated && userInfo.RoleId == 5 || userInfo.RoleId == 6)
+                            {
+                             <a href="@Url.Action("ServiceRequestInvoice", "ServiceRequest", new { workOrderId = item.WorkOrderId })" class="btn btn-primary btn-xs">Invoice</a><br />
+                            }*@
+                        @*else
+                            {
+                                <button onclick="clickAlert()" class="btn btn-primary btn-xs">Invoice</button><br />
+                            }*@
+                        @if (userInfo.RoleId == 5)
+                        {
+                            @*<button onclick="myFunction(@item.WorkOrderId,'@item.ContactPerson','@item.EmailId')" class="btn btn-primary btn-xs">&nbsp;&nbsp;&nbsp;&nbsp;Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><br />*@
+
+                            @*<a href="@Url.Action("Delete", "ServiceRequest", new {id = item.WorkOrderId})" class="btn btn-danger btn-xs">&nbsp;&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;&nbsp;</a>*@
+                        }
+                        @*}*@
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+    </div>
+    <!--new Pagination 170721-->
+    <!--new pagination for provisional bill-->
+    @if (TotalNumberRecord == PageSize)
+    {
+
+
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrnetPageNo == 1)
+                {
+                    <div class="col-md-4 cell" onclick="Submitbtn(@Model.CurrnetPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="Submitbtn(@Model.CurrnetPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-3 cell active" onclick="Submitbtn(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="Submitbtn(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="Submitbtn(@Model.CurrnetPageNo+1);">Next</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrnetPageNo == 1)
+                {
+                    <div class="col-md-6 cell" onclick="Submitbtn(@Model.CurrnetPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-6 cell" onclick="Submitbtn(@Model.CurrnetPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrnetPageNo; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-6 cell active" onclick="Submitbtn(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5 cell " onclick="Submitbtn(@i);">@i</div>
+                    }
+                }
+                @*<div class="col-md-3 cell" onclick="changepage(@Model.CurrnetPageNo+1);">Next</div>*@
+            </div>
+        </div>
+    }
+    <div class="pull-right">@TotalNumberRecord Record Found</div>
+    <!--End Here-->
+</body>
+</html>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <label>Work Order Number</label>
+                    <input type="text" name="Display" id="Display" value="" class="form-control" readonly />
+                </h4>
+            </div>
+            <div class="modal-body">
+                <label>Contact Person</label>
+                <input type="text" name="bookId1" id="bookId1" value="" class="form-control" />
+                <label>Email</label>
+                <input type="text" name="bookId2" id="bookId2" value="" class="form-control" />
+                <label>Add Email</label>
+                <input type="text" name="bookId3" id="bookId3" value="" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success pull-right" onclick="SendChanges();">Send</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    function clickAlert() {
+        alert("Proforma Invoice not created. Please create proforma invoice !");
+    }
+    function myFunction(WorkOrderId, ContactPerson, EmailId) {
+
+
+        var WorkOrderId = WorkOrderId;
+        var ContactPerson = ContactPerson;
+        var EmailId = EmailId;
+        $('#bookId1').val(ContactPerson);
+        $('#bookId2').val(EmailId);
+        $('#Display').val(WorkOrderId);
+
+        $('#myModal').modal('show');
+    }
+
+</script>
+
+<script>
+    function SendChanges()
+    {
+        var WorkOrderId = $("#Display").val();
+        var ContactPerson = $("#bookId1").val();
+        var Email = $("#bookId2").val();
+        var MoreEmail = $("#bookId3").val();
+        var EmailId = Email + ';' + MoreEmail;
+
+        var WorkOrderDto = {
+            WorkOrderId: WorkOrderId,
+            ContactPerson: ContactPerson,
+            EmailId: EmailId,
+
+
+        }
+        $.ajax({
+
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SendWOEmailCustomer", "ServiceRequest")', // name of PHP script
+            data: WorkOrderDto, // parameter name and value
+            success: function (response) {
+                $('#myModal').modal('hide');
+                alert("Email has been Sent!");
+                @*window.location = '@Url.Action("FilterServiceRequest", "ServiceRequest")';*@
+            },
+
+        });
+
+
+    }
+</script>

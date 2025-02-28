@@ -1,0 +1,95 @@
+﻿@model Picanol.ViewModels.PartsViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+@*<a href="@Url.Action("UpdatePrice", "Parts")" >Update Price and Stock Difference</a>*@
+
+<body>
+    <a href="@Url.Action("Index", "Inventory")" class="btn btn-primary btn-large pull-left"> Back</a>
+
+    <div id="Grid">
+        <h3 class="text-center"><b>Part List</b></h3>
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Type">Type</label><br />
+                    @Html.DropDownList("Type", new List<SelectListItem>
+        { new SelectListItem { Text = "Components", Value = "Components", Selected=true},
+           new SelectListItem { Text = "Boards", Value = "Boards"},
+
+              }, new { @id = "Type", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="Part">Part</label><br />
+                    <input type="text" id="searchString" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <button type="submit" style="margin-top:25px" value="Submit" id="btnSearch" class="btn btn-info">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+        @*<div class="signal"></div>*@
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+            <div id="updateData" class="table-responsive">
+                @Html.Partial("_PartsList")
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#btnSearch").click(function () {
+
+            var Type = $("#Type").val();
+            var searchString = $("#searchString").val();
+            var data = {
+                Type: Type,
+                searchString: searchString,
+            };
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",
+                url: '@Url.Action("GetFilteredParts", "Parts")',
+                data: data,
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#updateData").html(data);
+                },
+
+            });
+        });
+
+    </script>
+</body>
+</html>

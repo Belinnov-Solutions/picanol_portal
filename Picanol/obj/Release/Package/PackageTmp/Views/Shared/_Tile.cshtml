@@ -1,0 +1,184 @@
+﻿<link href="~/Content/tile.css" rel="stylesheet" type="text/css" />
+
+@*@{
+        var urls = @Model.Path.Split('|');
+    }*@
+@{
+    /**/
+
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+@if (userInfo.RoleName == "Manager" || userInfo.RoleName == "Service Engineer" || userInfo.RoleName == "Assistant Manager" || userInfo.RoleName == "Accounts" || userInfo.RoleName == "External"|| userInfo.RoleName == "AccountsExternal")
+{
+    if (userInfo.RoleName != "External" || userInfo.RoleName != "AccountsExternal")
+    {
+        <a class="tile-link" href="@Url.Action("AddNew", "Material")">
+            <div class="col-md-3 tile">
+                <center> <h3>Inward Material</h3></center>
+                <br />
+                <center>
+                    <span>Add new inward material here</span>
+                </center>
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+            </div>
+        </a>
+    }
+    <a class="tile-link" href="@Url.Action("OrdersList", "Order")">
+        <div class="col-md-3 tile">
+            <center> <h3>Order Management</h3></center>
+            <br />
+            <center>
+                <span>View list of all orders here</span>
+            </center>
+            <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+        </div>
+    </a>
+
+    <a class="tile-link" href="@Url.Action("Index", "Inventory")">
+        <div class="col-md-3 tile">
+            <center> <h3>Inventory Management</h3></center>
+            <br />
+            <center>
+                <span>Manage your inventory here</span>
+            </center>
+            
+            <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+        </div>
+    </a>
+
+}
+@if (userInfo.RoleName == "Area Manager" || userInfo.RoleName == "Manager" || userInfo.RoleName == "Assistant Manager" || userInfo.RoleName == "Accounts" || userInfo.RoleName == "AccountsExternal")
+{
+    <a class="tile-link" href="@Url.Action("UserList", "User")">
+        <div class="col-md-3 tile">
+            <center> <h3>User Management</h3></center>
+            <br />
+            <center>
+                <span>View list of all users here</span>
+            </center>
+           
+            <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+        </div>
+    </a>
+}
+@if (userInfo.RoleName != "Field Engineer" && userInfo.RoleName != "External" || userInfo.RoleName == "AccountsExternal")
+{
+//<a class="tile-link" href="@Url.Action("CustomerList", "Customer")">
+    <a class="tile-link" href="@Url.Action("CustomerList", "Customer",new {PageSize=10,PageNo=1})">
+        <div class="col-md-3 tile">
+            <center> <h3>Customer Management</h3></center>
+            <br />
+            <center>
+                <span>View list of all customers here</span>
+            </center>
+
+            <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+        </div>
+    </a>
+    }
+    @if (userInfo.RoleName == "Manager" || userInfo.RoleName == "Accounts" || userInfo.RoleName == "Assistant Manager" || userInfo.RoleName == "AccountsExternal")
+    {
+        <a class="tile-link" href="@Url.Action("ListInvoices", "Invoice")">
+            <div class="col-md-3 tile">
+                <center> <h2>Invoices</h2></center>
+                <br />
+                <center>
+                    <span>View list of all invoice here</span>
+                </center>
+               
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+
+        <a class="tile-link" href="@Url.Action("Index", "Reports")">
+            <div class="col-md-3 tile">
+                <center> <h3>Reports</h3></center>
+                <br />
+                <center>
+                    <span>View all reports here</span>
+                </center>
+                
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+    }
+
+    @if (userInfo.RoleName == "Service Engineer" || userInfo.RoleName == "Accounts" || userInfo.RoleName == "Area Manager" || userInfo.RoleName == "Field Engineer" || userInfo.RoleName == "Assistant Manager" || userInfo.RoleName == "Manager" || userInfo.RoleName == "AccountsExternal")
+    {
+        <a class="tile-link" href="@Url.Action("WorkOrderListFilter", "ServiceRequest")">
+            <div class="col-md-3 tile">
+                <center> <h3>Work Orders</h3></center>
+                <br />
+                <center>
+                    <span>View list of Work Orders here</span>
+                </center>
+              
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+    }
+    @if (userInfo.RoleName != "Service Engineer")
+    {
+        <a class="tile-link" href="@Url.Action("FilterServiceRequest", "ServiceRequest",new { PageSize = 10, PageNo = 1 })">
+            <div class="col-md-3 tile">
+                <center> <h3>Proforma Invoice</h3></center>
+                <br />
+                <center>
+                    <span>View list of proforma invoice here</span>
+                </center>
+               
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+    }
+    @if (userInfo.RoleName == "External" || userInfo.RoleName == "AccountsExternal")
+    {
+        <a class="tile-link" href="@Url.Action("Allinvoices", "Invoice")">
+            <div class="col-md-3 tile">
+                <center> <h3>All Invoices</h3></center>
+                <br />
+                <center>
+                    <span>View list of All Invoices here</span>
+                </center>
+                
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+
+    }
+
+
+
+
+
+    @*<a class="tile-link" href="@Url.Action("UnderConstruction", "Home")">
+            <div class="col-md-3 tile">
+                <center> <h2>Supplier Management</h2></center>
+                <br />
+
+                <br />
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>
+        <a class="tile-link" href="@Url.Action("UnderConstruction", "Home")">
+            <div class="col-md-3 tile">
+                <center> <h2>Reports</h2></center>
+                <br />
+
+                <br />
+                <h3> <span class="glyphicon glyphicon-circle-arrow-right pull-right"></span></h3>
+
+            </div>
+        </a>*@
+
+

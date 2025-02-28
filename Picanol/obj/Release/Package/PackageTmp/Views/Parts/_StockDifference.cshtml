@@ -1,0 +1,49 @@
+﻿@model Picanol.ViewModels.PartsViewModel
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+
+<table>
+    <tr>
+        <th>Part Number</th>
+        <th>Part Name</th>
+        <th>Accounts Stock</th>
+        <th>Portal Stock</th>
+        <th>Stock Difference</th>
+
+    </tr>
+
+    @foreach (var item in Model.PartsList)
+    {
+        <tr>
+            <td>@item.PartNumber</td>
+            <td>@item.PartName</td>
+            <td>@item.AccountsStock</td>
+            <td>@item.PortalStock</td>
+            @if (@item.StockDifference < 0)
+                {
+                <td bgcolor="red"><font color="White"><b>@item.StockDifference</b></font></td>
+                }
+            @if (@item.StockDifference >= 0)
+                {
+                <td bgcolor="Green"><font color="White"><b>@item.StockDifference</b></font></td>
+            }
+        </tr>
+    }
+</table>

@@ -1,0 +1,87 @@
+﻿
+@{
+    var userInfo = new Picanol.Helpers.UserSession();
+    userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Picanol</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+
+    <style>
+        .bodybg {
+            min-height: 100%;
+            background: linear-gradient(0deg, rgb(0 0 150 / 0.00), rgba(0, 0, 0, 0.5)), url(https://picanol.belinnov.in/content/images/bgimage.png);
+            background-size: cover;
+        }
+    </style>
+</head>
+
+
+
+<body>
+
+    <nav class="navbar navbar" style="background-color: #f2f2f2;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="~/Content/Images/L.png" style="margin-top : -10px">
+            </a>
+
+            @if (@userInfo.UserName != null)
+            {
+                <div class="pull-right">
+                    <p class="navbar-text"><font color="Black">Logged in as: <b> @userInfo.UserName</b> </font></p>
+                    <a href="@Url.Action("LoggedOut", "Home", null)" id="btnLogout" style="color:Black" class="btn btn navbar-btn pull-right"><b>Logout</b></a>
+                </div>
+            }
+
+        </div>
+    </nav>
+    <div class="container body-content" style="width:auto;">
+        @RenderBody()
+        <hr />
+        <footer>
+            &copy; @DateTime.Now.Year - Picanol Portal
+            <div class="pull-right"> Design & Developed by <a href="http://www.belinnov.com"> Belinnov Solutions.</a></div>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+</body>
+</html>
+@*<script type="text/javascript">
+            function preventBack() { window.history.forward(); }
+            setTimeout("preventBack()", 0);
+            window.onunload = function () { null };
+    </script>*@
+<script>
+        $(function () {
+            //setup ajax error handling
+            $.ajaxSetup({
+                error: function (x, status, error) {
+                    if (x.status == 403) {
+                        alert("Sorry, your session has expired. Please login again to continue");
+                        @*window.location.href = "@Url.Action("index","home")";*@
+                        window.location.href = "@Url.Action("Index", "Home", null)";
+                    }
+                    else {
+                        alert("An error occurred: " + status + "nError: " + error);
+                    }
+                }
+            })
+        });
+</script>

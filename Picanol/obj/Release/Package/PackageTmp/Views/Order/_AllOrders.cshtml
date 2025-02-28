@@ -1,0 +1,1282 @@
+﻿
+@model Picanol.ViewModels.OrdersViewModel
+@using Picanol.Helpers
+@{
+    /**/
+
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    int AllOrdersCount = Model.Customers.Count;
+    int NumberOfRecord = Model.NumberOfRecord;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = AllOrdersCount / PageSize;
+    //int noOfPages = provisionalCount / PageSize;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 97%;
+            border-color: black;
+            margin-left: 20px;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+
+        .mydrowpdownstyle {
+            border: 3px solid blue;
+            background-color: white;
+            color: black;
+            border: initial;
+        }
+
+        #dropdownlist-content {
+            width: 550px;
+            margin-top: 40vh;
+            margin-left: 55px;
+        }
+
+        h4.text-left.d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        span {
+            display: flex;
+            margin-top: -22px;
+        }
+
+        .close {
+            font-size: 28px;
+            color: #ffffff
+        }
+
+            .close:hover {
+                color: #ffffff
+            }
+
+        .listdatadropdown {
+            background-color: #1183ca;
+        }
+
+        #alertMessage {
+            Font-weight: bold;
+        }
+
+        div.modal-body.dropdownlist-body {
+            position: relative;
+            padding: 22px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .text-left d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        h4#alertMessage.modal-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        h4.text-left.d-inline-block.blockkk {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        p#trackingNumber.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#customerName.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button btn.btn-primary.btnn {
+            padding: 6px 26px;
+        }
+
+        button btn.btn-secondary.btnn {
+            padding-right: 25px;
+        }
+
+        .modal-footer {
+            text-align: center !important;
+            background-color: #dadde061 !important;
+        }
+
+        .btn.btn-secondary.btnn {
+            margin-bottom: 0;
+            margin-left: 5px;
+            background-color: #a5adc2b0;
+        }
+    </style>
+</head>
+<body>
+    @if (userInfo.RoleId != 8)
+    {
+        @*<table id="myTable" class="table table-condensed table-hover table-bordered table-striped">*@
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Tracking ID</th>
+                    <th>Customer Name</th>
+                    <th>Customer Ref</th>
+                    <th>Part Name</th>
+                    <th>Part Number</th>
+                    <th>Serial Number</th>
+                    <th>Repair Type</th>
+                    <th>Assigned To</th>
+                    <th>Status</th>
+                    <th>PI</th>
+                    <th>InvoiceNo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ordersList)
+                {
+                    <tr>
+                        @if (@item.RepairType == ConstantsHelper.RepairType.Loan.ToString())
+                        {
+                            <td>@item.TrackingNumber</td>
+                        }
+                        else
+                        if (@item.Status == "Dispatched")
+                        {
+                            <td>@item.TrackingNumber</td>
+                        }
+                        else
+                        {
+                            <td><a href="@Url.Action("OrderDetails", "Order", new { id = @item.OrderGUID })" class="TrackingNumber">@item.TrackingNumber</a></td>
+
+                        }
+                        <td class="CustomerName">@item.CustomerName</td>
+                        <td class="CustomerRef">@item.CustomerRef</td>
+                        <td class="PartName">@item.PartName</td>
+                        <td class="PartNo">@item.PartNo</td>
+                        <td class="SerialNo">@item.SerialNo</td>
+                        <td class="RepairType">@item.RepairType</td>
+
+                        <td>@item.UserName</td>
+                        @if (@item.Status == ConstantsHelper.OrderStatus.Open.ToString())
+                        {
+                            <td bgcolor="red"><font color="White"><b>@item.Status</b></font></td>
+                        }
+                        @if (@item.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                        {
+                            <td bgcolor="green"><font color="White"><b>@item.Status</b></font></td>
+                        }
+                        @if (@item.Status == ConstantsHelper.OrderStatus.InProgress.ToString())
+                        {
+                            <td bgcolor="#ffbf00"><b>@item.Status</b></td>
+                        }
+                        @if (@item.Status == ConstantsHelper.OrderStatus.OnHold.ToString())
+                        {
+                            <td bgcolor="#ffea00"><b>@item.Status</b></td>
+                        }
+                        @if (@item.Status == ConstantsHelper.OrderStatus.Dispatched.ToString())
+                        {
+                            <td bgcolor="#A569BD"><font color="White"><b>@item.Status</b></font></td>
+                        }
+
+                        @if (item.ProformaInvoiceNo != null && item.InvoiceNo == null)
+                        {
+                            <td bgcolor="#FFA500" class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                        }
+                        else if (@item.ProformaInvoiceNo != null && @item.InvoiceNo != null)
+                        {
+                            <td class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                        }
+                        else
+                        {
+                            <td class="ProformaInvoiceNo" id="proformaInvoidId"></td>
+                        }
+                        @if (item.InvoiceNo != null)
+                        {
+                            <td class="InoviceNo">@item.InvoiceNo</td>
+                        }
+                        else
+                        {
+                            <td class="InoviceNo"></td>
+                        }
+
+                        <td>@Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.ActionList, "Text", "Text"), "Select", new { id = "Action_Type", @class = "form-control mydrowpdownstyle" })</td>
+                        <td hidden>@item.CustomerId</td>
+                        <td hidden>@item.OrderGUID</td>
+                        <td hidden>@item.InvoiceGenerated</td>
+                        <td hidden>@item.InvoiceCancelled</td>
+                        <td hidden>@item.CustomerEmail</td>
+                        <td hidden id="piDate">@item.ProformaInvoiceDate</td>
+                    </tr>
+
+
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Tracking ID</th>
+                    <th>Customer Name</th>
+                    <th>Customer Ref</th>
+                    <th>Part Name</th>
+                    <th>Part Number</th>
+                    <th>Serial Number</th>
+                    <th>Repair Type</th>
+                    <th>Assigned To</th>
+                    <th>Status</th>
+                    <th>PI</th>
+                    <th>InvoiceNo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ordersList)
+                {
+                    if (item.Status == "Completed" || item.Status == "Dispatched")
+                    {
+
+                        if (item.ProformaInvoiceNo != null)
+                        {
+                            <tr>
+                                @if (@item.RepairType == ConstantsHelper.RepairType.Loan.ToString())
+                                {
+                                    <td>@item.TrackingNumber</td>
+                                }
+                                else
+                                {
+                                    <td><a href="#" class="TrackingNumber">@item.TrackingNumber</a></td>
+
+                                }
+                                <td class="CustomerName">@item.CustomerName</td>
+                                <td class="CustomerRef">@item.CustomerRef</td>
+                                <td class="PartName">@item.PartName</td>
+                                <td class="PartNo">@item.PartNo</td>
+                                <td class="SerialNo">@item.SerialNo</td>
+                                <td class="RepairType">@item.RepairType</td>
+
+                                <td>@item.UserName</td>
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Open.ToString())
+                                {
+                                    <td bgcolor="red"><font color="White"><b>@item.Status</b></font></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                                {
+                                    <td bgcolor="green"><font color="White"><b>@item.Status</b></font></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.InProgress.ToString())
+                                {
+                                    <td bgcolor="#ffbf00"><b>@item.Status</b></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.OnHold.ToString())
+                                {
+                                    <td bgcolor="#ffea00"><b>@item.Status</b></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Dispatched.ToString())
+                                {
+                                    <td bgcolor="#A569BD"><font color="White"><b>@item.Status</b></font></td>
+                                }
+
+                                @if (item.ProformaInvoiceNo != null)
+                                {
+                                    <td bgcolor="#ffbf00" class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td class="ProformaInvoiceNo" id="proformaInvoidId"></td>
+                                }
+
+                                @if (item.InvoiceNo != null)
+                                {
+                                    <td class="InoviceNo">@item.InvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td class="InoviceNo"></td>
+                                }
+
+                                <td>@Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.ActionList, "Text", "Text"), "Select", new { id = "Action_Type", @class = "form-control" })</td>
+                                <td hidden>@item.CustomerId</td>
+                                <td hidden>@item.OrderGUID</td>
+                                <td hidden>@item.InvoiceGenerated</td>
+                                <td hidden>@item.InvoiceCancelled</td>
+                                <td hidden>@item.CustomerEmail</td>
+                                <td hidden id="piDate">@item.ProformaInvoiceDate</td>
+                                @if (item.ProformaInvoiceNo != null)
+                                {
+                                    <td hidden class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td hidden class="ProformaInvoiceNo" id="proformaInvoidId"></td>
+                                }
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                @if (@item.RepairType == ConstantsHelper.RepairType.Loan.ToString())
+                                {
+                                    <td>@item.TrackingNumber</td>
+                                }
+                                else
+                                {
+                                    <td><a href="#" class="TrackingNumber">@item.TrackingNumber</a></td>
+
+                                }
+                                <td class="CustomerName">@item.CustomerName</td>
+                                <td class="CustomerRef">@item.CustomerRef</td>
+                                <td class="PartName">@item.PartName</td>
+                                <td class="PartNo">@item.PartNo</td>
+                                <td class="SerialNo">@item.SerialNo</td>
+                                <td class="RepairType">@item.RepairType</td>
+
+                                <td>@item.UserName</td>
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Open.ToString())
+                                {
+                                    <td bgcolor="red"><font color="White"><b>@item.Status</b></font></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Completed.ToString())
+                                {
+                                    <td bgcolor="green"><font color="White"><b>@item.Status</b></font></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.InProgress.ToString())
+                                {
+                                    <td bgcolor="#ffbf00"><b>@item.Status</b></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.OnHold.ToString())
+                                {
+                                    <td bgcolor="#ffea00"><b>@item.Status</b></td>
+                                }
+                                @if (@item.Status == ConstantsHelper.OrderStatus.Dispatched.ToString())
+                                {
+                                    <td bgcolor="#A569BD"><font color="White"><b>@item.Status</b></font></td>
+                                }
+
+                                @*@if (@item.Status == ConstantsHelper.OrderStatus.Open.ToString())
+                        {
+
+                            <td><button onclick="myFunction(@item.TrackingNumber,'@item.PartName','@item.PartNo','@item.SerialNo','@item.RepairType', '@item.Status')" class="btn btn-info">Edit</button></td>
+                        }*@
+
+                                @if (item.ProformaInvoiceNo != null)
+                                {
+                                    <td bgcolor="#ffbf00" class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td class="ProformaInvoiceNo" id="proformaInvoidId"></td>
+                                }
+
+                                @*@if (item.ProformaInvoiceNo != null)
+                                {
+                                    <td class="ProformaInvoiceNo" id="proformaInvoidId">@item.ProformaInvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td class="ProformaInvoiceNo" id="proformaInvoidId"></td>
+                                }*@
+
+                                @if (item.InvoiceNo != null)
+                                {
+                                    <td class="InoviceNo">@item.InvoiceNo</td>
+                                }
+                                else
+                                {
+                                    <td class="InoviceNo"></td>
+                                }
+
+                                <td>@Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.ActionList, "Text", "Text"), "Select", new { id = "Action_Type", @class = "form-control" })</td>
+                                <td hidden>@item.CustomerId</td>
+                                <td hidden>@item.OrderGUID</td>
+                                <td hidden>@item.InvoiceGenerated</td>
+                                <td hidden>@item.InvoiceCancelled</td>
+                                <td hidden>@item.CustomerEmail</td>
+                                <td hidden id="piDate">@item.ProformaInvoiceDate</td>
+
+                            </tr>
+                        }
+
+                    }
+                }
+            </tbody>
+        </table>
+
+
+
+    }
+    @if (NumberOfRecord == PageSize)
+    {
+        <!--new pagination-->
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPageNo == 1)
+                {
+                    <div class="col-md-4 cell" onclick="submitClick(@Model.CurrentPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="submitClick(@Model.CurrentPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPageNo - (Model.CurrentPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrentPageNo)
+                    {
+                        <div class="col-md-3 cell active" onclick="submitClick(@i);">@Model.CurrentPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="submitClick(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="submitClick(@Model.CurrentPageNo+1);">Next</div>
+            </div>
+        </div>
+    }
+    else if (NumberOfRecord == 0)
+
+    {
+        <div class="col-md-5"> There is no Record</div>
+        <div class="pagination">
+            <div class="row">
+
+                <div class="col-md-10 cell" onclick="submitClick(@Model.CurrentPageNo-1);">Prev</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPageNo == 1)
+                {
+                    <div class="col-md-6 cell" onclick="submitClick(@Model.CurrentPageNo-1);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-6 cell" onclick="submitClick(@Model.CurrentPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPageNo - (Model.CurrentPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrentPageNo; i++)
+                {
+                    if (i == Model.CurrentPageNo)
+                    {
+                        <div class="col-md-5 cell active" onclick="submitClick(@i);">@Model.CurrentPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5 cell " onclick="submitClick(@i);">@i</div>
+                    }
+                }
+                @*<div class="col-md-3 cell" onclick="submitClick(@Model.CurrentPageNo+1);">Next</div>*@
+            </div>
+        </div>
+    }
+    <div>@NumberOfRecord Record Found</div>
+    <!--End Here-->
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <h4 class="modal-title">
+                                    <label>Tracking ID</label>
+                                    <input type="text" name="Display" id="Display" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <h4>
+                                    <label>Repair Type </label>
+                                    <input type="text" style="margin-top:-5px" name="bookId4" id="bookId4" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label>Part Name</label>
+                    <input type="text" name="bookId1" id="bookId1" value="" class="form-control" />
+                    <label>Part Number</label>
+                    <input type="text" name="bookId2" id="bookId2" value="" class="form-control" />
+                    <label>Serial Number</label>
+                    <input type="text" name="bookId3" id="bookId3" value="" class="form-control" />
+                    <label>Repair Type</label>
+                    @*<input type="text" name="bookId5" id="bookId5" value="" class="form-control" />*@
+                    <select id="bookId5" class="form-control">
+                        <option value="" disabled="disabled" selected="selected">Please select a Repair Type</option>
+                        <option value="Chargeable">Chargeable</option>
+                        <option value="FOC">FOC</option>
+                        <option value="RepairWarranty">RepairWarranty</option>
+                        <option value="NoRepairWarranty">NoRepairWarranty</option>
+                        <option value="UnRepairedBoards">UnRepairedBoards</option>
+                        <option value="Loan">Loan</option>
+                        <option value="ReturnLoan">ReturnLoan</option>
+
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendChanges();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="myModalEmail" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <h4 class="modal-title">
+                                    <label>Tracking Number</label>
+                                    <input type="text" name="Show" id="Show" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <h4>
+                                    <label>Customer Name</label>
+                                    <input type="text" style="margin-top:-5px" name="Show2" id="Show2" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label>Email :</label>
+                    <br />
+                    <font size="1" color="red">Add Multiple Email ID's Separated by ";"</font>
+                    <input type="text" name="text1" id="text1" value="" class="form-control" />
+                    <input type="hidden" name="text2" id="text2" value="" class="form-control" />
+                    <input type="hidden" name="text3" id="text3" value="" class="form-control" />
+                    <input type="hidden" name="text4" id="text4" value="" class="form-control" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendEmail();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title">
+                        <label>Dispatch Details </label>
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                    <label for="TrackingNumber">Tracking Number</label>
+                    @Html.TextBoxFor(d => d.DispatchDetails.TrackingNumber, new { id = "TrackingNumberDis", @class = "form-control" })
+
+
+                    <label for="DocketNumber">Docket Number</label>
+                    @Html.TextBoxFor(d => d.DispatchDetails.DocketNumber, new { id = "DocketNumber", @class = "form-control" })
+
+
+                    <label for="DispatchDate">DispatchDate</label>
+                    <input type="text" class="form-control" id="DispatchDate" data-toggle="datepicker">
+                    <label for="DispatchDetails">Dispatch Details</label>
+                    @Html.TextBoxFor(d => d.DispatchDetails.DispatchDetails, new { id = "DispatchDetails", @class = "form-control" })
+
+                    <input type="hidden" name="OrderGUIDDis" id="OrderGUIDDis" value="" class="form-control" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendDispatchDetails();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="alertMessage" style="font-weight: bold; color:white;"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>PI No.:</b></h4>
+                        <p id="proformaInvoice" style="font-size: 16px; display: inline-block; font-weight:bold" class="text-left inline-block"></p>
+                        <br>
+
+                        <h4 class="text-left d-inline-block blockkk"><b>Tracking Number :</b></h4>
+                        <p id="trackingNumber" style="font-size: 16px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name:</b></h4>
+                        <p id="customerName" style="font-size: 14px; padding-left: 0px;" class="text-left inline-block"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="clearCache">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="generateInvoice()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="wihoutPiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="alertMessageWithoutPi" style="font-weight: bold; color:white"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Tracking Number :</b></h4>
+                        <p id="tNumber" style="font-size: 16px; display: inline-block; font-weight:bold" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name:</b></h4>
+                        <p id="cName" style="font-size: 16px; display: inline-block; font-weight: bold" class="text-left inline-block"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="clearCache">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="generateInvoice()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    @*<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" style="font-weight: bold">Info</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <h4 id="cancelMessage"></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," style="font-weight: bold; color:white">Alert</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-center d-inline-block blockkk" id="cancelMessage" style="color:black; font-size:16px; font-weight:bold"></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="clearCache">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    $(function () {
+        $('[data-toggle="datepicker"]').datepicker({
+            autoHide: true,
+            zIndex: 2048,
+            format: 'dd/mm/yyyy',
+        });
+    });
+    function changepage() {
+        var SelectedStatus = $("#Status").val();
+        var SelectedRepairTypes = $("#repairlist").val();
+        var OrdersViewModel = {
+            SelecetCustomerId: CustomerId,
+            ToDate: ToDate,
+            FromDate: FromDate,
+            TrackingNo: TrackingNo,
+            SelectedStatus: SelectedStatus,
+            SelectedRepairType: SelectedRepairTypes,
+        };
+
+        $.ajax({
+            beforeSend: function () {
+                /*$('.signal').show()*/
+                $('.spinner-wrapper').show()
+            },
+            contentType: "Application /JSON",
+            type: "GET",  // method of sending data
+            url: '@Url.Action("GetFilteredOrdersListVersion1", "Order",new { PageSize = 10, PageNo = 1 })', // name of PHP script
+            data: OrdersViewModel, // parameter name and value
+            success: function (data) {
+                /*$('.signal').hide();*/
+                $('.spinner-wrapper').hide();
+                $("#divResultdata").html(data);
+            },
+
+        });
+
+    }
+
+    </script>
+
+
+    <script>
+        $('#Modal').click(function (e) {
+            var TrackingNumber = $(this).data('id');
+            var PartName = $(this).data('partname');
+            var PartNo = $(this).data('partno');
+            var SerialNo = $(this).data('serialno');
+            var RepairType = $(this).data('repairtype');
+            $(".modal-body #Display").val(TrackingNumber);
+            $(".modal-body #bookId1").val(PartName);
+            $(".modal-body #bookId2").val(PartNo);
+            $(".modal-body #bookId3").val(SerialNo);
+            $(".modal-body #bookId2").val(RepairType);
+            $('#myModal').modal('show');
+        });
+    </script>
+    <script>
+        // code to read selected table row cell data (values).
+        function myFunction(TrackingNumber, PartName, PartNo, SerialNo, RepairType, Status) {
+
+            var PartName = PartName;
+            var PartNo = PartNo;
+            var SerialNo = SerialNo;
+            var RepairType = RepairType;
+            var TrackingNumber = TrackingNumber;
+            var Status = Status;
+            $('#bookId1').val(PartName);
+            $('#bookId2').val(PartNo);
+            $('#bookId3').val(SerialNo);
+            $('#bookId4').val(RepairType);
+            $('#Display').val(TrackingNumber);
+            $('#myModal').modal('show');
+        }
+
+    </script>
+
+    <script>
+    $(function () {
+        $('#myTable').on('change', '#Action_Type', function () {
+            var TrackingNumber = $(this).closest('tr').find('td:eq(0)').text();
+            var CustomerName = $(this).closest('tr').find('td:eq(1)').text();
+            var CustomerRef = $(this).closest('tr').find('td:eq(2)').text();
+            var PartName = $(this).closest('tr').find('td:eq(3)').text();
+            var PartNumber = $(this).closest('tr').find('td:eq(4)').text();
+            var SerialNumber = $(this).closest('tr').find('td:eq(5)').text();
+            var RepairType = $(this).closest('tr').find('td:eq(6)').text();
+            var Status = $(this).closest('tr').find('td:eq(8)').text();
+            var pi = $(this).closest('tr').find('td:eq(9)').text();
+            var InvoiceNo = $(this).closest('tr').find('td:eq(10)').text();
+            var SelecetCustomerId = $(this).closest('tr').find('td:eq(12)').text();
+            var SelectedOrderId = $(this).closest('tr').find('td:eq(13)').text();
+            var InvoiceGenerated = $(this).closest('tr').find('td:eq(14)').text();
+            var InvoiceCancelled = $(this).closest('tr').find('td:eq(15)').text();
+            var CustomerEmail = $(this).closest('tr').find('td:eq(16)').text();
+            var piDate = $(this).closest('tr').find('td:eq(17)').text();
+            var SelectedValue = $(this).val();
+
+            var confirmationMsg = ""
+            if (SelectedValue == "PrintOriginalInvoice") {
+                confirmationMsg = "Print Original E-Invoice "
+            } else if (SelectedValue == "PrintDuplicateInvoice") {
+                confirmationMsg = "Print Duplicate E-Invoice"
+            } else if (SelectedValue == "PrintTriplicateInvoice") {
+                confirmationMsg = "Print Triplicate E-Invoice"
+            } else if (SelectedValue == "ViewInvoice") {
+                confirmationMsg = "View E-Invoice"
+            } else if (SelectedValue == "EditProformaInvoice") {
+                confirmationMsg = "Edit Proforma Invoice"
+            } else if (SelectedValue == "PerformaInvoice") {
+                confirmationMsg = "Proforma Invoice"
+            }else {
+                confirmationMsg = SelectedValue
+            }
+
+            var message = "Do you want " + confirmationMsg +"?";
+
+            localStorage.setItem("selectedOrderId", SelectedOrderId);
+            localStorage.setItem("trackingNumber", TrackingNumber);
+            localStorage.setItem("selecetCustomerId", SelecetCustomerId);
+            localStorage.setItem("selectedValue", SelectedValue);
+            localStorage.setItem("alertMessage", message);
+            localStorage.setItem("RepairType", RepairType);
+            localStorage.setItem("proformaInvoice", pi);
+            localStorage.setItem("invoiceNo", InvoiceNo);
+            localStorage.setItem("status", Status);
+            localStorage.setItem("customerName", CustomerName);
+            localStorage.setItem("customerRef", CustomerRef);
+            localStorage.setItem("invoiceGenerated", InvoiceGenerated);
+            localStorage.setItem("invoiceCancelled", InvoiceCancelled);
+            localStorage.setItem("customerEmail", CustomerEmail);
+            localStorage.setItem("partName", PartName);
+            localStorage.setItem("partNumber", PartNumber);
+            localStorage.setItem("serialNumber", SerialNumber);
+            localStorage.setItem("piDate", piDate.toString);
+
+
+            $('#title').text(confirmationMsg);
+            $('#customerName').text(CustomerName);
+            $('#alertMessage').text(message);
+            $('#trackingNumber').text(TrackingNumber);
+            $('#proformaInvoice').text(pi);
+            $('#piDate').val(piDate);
+            
+
+            //Modal without PI
+            $('#alertMessageWithoutPi').text(message);
+            $('#tNumber').text(TrackingNumber);
+            $('#cName').text(CustomerName);
+            //End
+
+            if (SelectedValue == "") {
+                $('#wihoutPiModal').modal('hide');
+                $('#alertModal').modal('hide');
+            } else if (SelectedValue != "" && pi == "") {
+                $('#wihoutPiModal').modal('show');
+                $('#alertModal').modal('hide');
+            } else {
+                $('#alertModal').modal('show');
+            }
+        });
+    });
+
+        function generateInvoice() {
+            var SelectedValue = localStorage.getItem("selectedValue");
+            var RepairType = localStorage.getItem("RepairType");
+            var Status = localStorage.getItem("status");
+            var InvoiceNo = localStorage.getItem("invoiceNo");
+            var SelectedOrderId = localStorage.getItem("selectedOrderId");
+            var TrackingNumber = localStorage.getItem("trackingNumber");
+            var SelecetCustomerId = localStorage.getItem("selecetCustomerId");
+            var pi = localStorage.getItem("proformaInvoice");
+
+            var checktype = RepairType.toLowerCase(RepairType);
+            var fstring = checktype.charAt(0).toUpperCase() + checktype.slice(1);
+
+            console.log(localStorage.getItem("SelectedOrderId"))
+            console.log(localStorage.getItem("TrackingNumber"))
+            console.log(localStorage.getItem("SelecetCustomerId"))
+            console.log(localStorage.getItem("selectedValue"))
+
+            if (SelectedValue == "Edit") //changed shijo
+            {
+                if (Status == "Dispatched") {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("Item already dispatched!");
+                    $('#cancelModal').modal('show');
+
+                    return false;
+                } else if (InvoiceNo != "" && InvoiceNo.includes("RP")) {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("E-Invoice already created for this order! Cannot be edited.");
+                    $('#cancelModal').modal('show');
+                    return false;
+                }
+            }
+
+			if (SelectedValue == "PreViewInvoice") {
+                //alert("Status should be completed!");
+                 if (RepairType != "Chargeable" && RepairType != "NoRepairWarranty") {
+                     $('#alertModal').modal('hide');
+                     $('#cancelMessage').text("Repair Type should be chargeable!");
+                     $('#cancelModal').modal('show');
+					   $('.signal').hide();
+					 return false
+
+
+                 }
+            }
+
+            if (SelectedValue == "PerformaInvoice") {
+                if (RepairType != "Chargeable" && RepairType != "NoRepairWarranty") {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("Repair Type should be chargeable!");
+                    $('#cancelModal').modal('show');
+                    $('.signal').hide();
+                    return false
+                }
+
+            }
+
+
+            if (SelectedValue == "PerformaInvoice" && Status != "Completed") {
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Status should be completed!");
+                $('#cancelModal').modal('show');
+                return false;
+
+            }
+
+            if (SelectedValue == "EditProformaInvoice" && pi == "") {
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Please generate proforma invoice for editing.");
+                $('#cancelModal').modal('show');
+                return false;
+            }
+
+
+
+            if (SelectedValue == "CancelInvoice" && InvoiceNo == "") {
+                //alert("Please generate proforma invoice for editing.");
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("E-Invoice is not generated.");
+                $('#cancelModal').modal('show');
+                return false;
+            }
+
+            if (SelectedValue == "EditProformaInvoice") //cahnged shijo
+            {
+                if (pi == "") {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("Please genrate Proforma Invoice for editing");
+                    $('#cancelModal').modal('show');
+                    return false;
+                } else if (Status == "Dispatched" && InvoiceNo != "") {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("Item already dispatched!");
+                    $('#cancelModal').modal('show');
+                    return false;
+                } else if (InvoiceNo != "" && InvoiceNo.includes("RP")) {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("E-Invoice already created for this order! Cannot be edited.");
+                    $('#cancelModal').modal('show');
+                    return false;
+                }
+
+            }
+
+            if (SelectedValue == "Edit" && InvoiceNo != "") {
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Invoice is generated cannot be edited.");
+                $('#cancelModal').modal('show');
+                return false;
+            }
+
+
+            if (SelectedValue == "DispatchDetails" && Status == "Dispatched") {
+                var orderId = SelectedOrderId;
+                var data = {
+                    orderId: orderId
+                }
+                $.ajax({
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("DispatchDetails", "Order")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        alert("DocketNumber is " + "-" + response.DispatchDetails.DocketNumber + '\n'
+                            + "DispatchDetails is " + "-" + response.DispatchDetails.DispatchDetails + '\n'
+                            + "DispatchDate is" + "-" + response.DispatchDetails.Ddate)
+                    },
+
+                });
+            }
+
+            if (SelectedValue == "PrintOriginalInvoice" || SelectedValue == "PrintDuplicateInvoice"
+                || SelectedValue == "PrintTriplicateInvoice" || SelectedValue == "PrintAll") {
+                if (pi == "" && RepairType == "Chargeable" && RepairType =="NoRepairWarranty") {
+                    $('#alertModal').modal('hide');
+                    $('#cancelMessage').text("Please genrate Proforma Invoice first");
+                    $('#cancelModal').modal('show');
+                    return false;
+                }
+            }
+
+            if (SelectedValue == "Edit") {
+                window.location = '@Url.Action("EditInwardMaterial", "Material")?orderId= ' + SelectedOrderId;
+                return false;
+                //}
+            } else if (SelectedValue == "PerformaInvoice" && Status != "Completed") {
+            @*alert("Status should be completed!");*@
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Status should be completed!");
+                $('#cancelModal').modal('show');
+                return false;
+            } else if ((Status != "Completed" && Status != "Dispatched") && RepairType != "Loan" && SelectedValue != "PerformaInvoice" && SelectedValue != "PreViewInvoice") {
+                $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Status should be completed!");
+                $('#cancelModal').modal('show');
+                return false;
+            }else if(SelectedValue == "PreViewInvoice" && Status != "Completed"){
+			 $('#alertModal').modal('hide');
+                $('#cancelMessage').text("Status should be completed!");
+                $('#cancelModal').modal('show');
+                return false;
+
+			}
+            //
+            else if ((Status != "Completed" && Status != "Dispatched") && SelectedValue == "DispatchDetails") {
+                alert("Status should be completed! ");
+                return false;
+            } else if (SelectedValue == "Email") {
+                document.getElementById("Show").value = TrackingNumber;
+                document.getElementById("Show2").value = CustomerName;
+                document.getElementById("text1").value = CustomerEmail;
+                document.getElementById("text2").value = SelecetCustomerId;
+                document.getElementById("text3").value = SelectedOrderId;
+                document.getElementById("text4").value = SelectedValue;
+                $('#myModalEmail').modal('show');
+                return false;
+            }
+            else if (SelectedValue == "DispatchDetails") {
+                document.getElementById("TrackingNumberDis").value = TrackingNumber;
+                document.getElementById("OrderGUIDDis").value = SelectedOrderId;
+                $('#alertModal').modal('hide');
+                $('#myModal1').modal('show');
+                return false;
+            }
+
+            var OrdersViewModel = {
+                TrackingNo: TrackingNumber,
+                SelectedAction: SelectedValue,
+                SelecetCustomerId: SelecetCustomerId,
+                SelectedOrderId: SelectedOrderId,
+                previewOrigionalInv: SelectedValue,
+                TrackingNo: TrackingNumber
+            }
+
+
+            if (SelectedValue == "Edit"
+                || SelectedValue == "ReturnLoan"
+                || SelectedValue == "CancelInvoice"
+                || SelectedValue == "PrintJobSheet"
+                || SelectedValue == "EditProformaInvoice"
+                || InvoiceNo != ""
+                || RepairType == "RepairWarranty"
+                || RepairType == "UnRepairedBoards"
+                || RepairType == "FOC"
+                || RepairType == "ReturnLoan"
+                || RepairType == "Loan")
+             {
+
+            var OrdersViewModel = {
+                TrackingNo: TrackingNumber,
+                SelectedAction: SelectedValue,
+                SelecetCustomerId: SelecetCustomerId,
+                SelectedOrderId: SelectedOrderId,
+            }
+            $('#alertModal').modal('hide');
+            $.ajax({
+            beforeSend: function () {
+                    /*$('.signal').show()*/
+                    $('.spinner-wrapper').show()
+            },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("ProcessAction", "Invoice")', // name of PHP script
+                data: OrdersViewModel, // parameter name and value
+                success: function (response) {
+                    if (response == "success") {
+                        /*$('.signal').hide();*/
+                        $('.spinner-wrapper').hide();
+                        window.location = '@Url.Action("ReturnView", "Invoice")';
+                        $('#alertModal').modal('hide');
+                        $('#wihoutPiModal').modal('hide');
+
+
+                    }
+                    else
+                    {
+                        $('.spinner-wrapper').hide();
+                        $('#alertModal').modal('hide');
+                        alert(response)
+                        window.location.reload(true);
+                    }
+                    localStorage.removeItem("selectedOrderId");
+                    localStorage.removeItem("trackingNumber");
+                    localStorage.removeItem("selecetCustomerId");
+                    localStorage.removeItem("selectedValue");
+                    clearCache();
+                },
+
+            });
+
+        } else {
+            $.ajax({
+            beforeSend: function () {
+                    /*$('.signal').show()*/
+                    $('.spinner-wrapper').show()
+            },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("PreviewOrigionalInvoice", "Invoice")', // name of PHP script
+                data: OrdersViewModel, // parameter name and value
+                success: function (response) {
+                    if (response == "success") {
+                        /*$('.signal').hide();*/
+                        $('.spinner-wrapper').hide();
+                        window.location = '@Url.Action("ReturnView", "Invoice")';
+                        $('#alertModal').modal('hide');
+                        $('#wihoutPiModal').modal('hide');
+
+                    }
+                    else
+                    {
+                        $('.spinner-wrapper').hide();
+                        $('#alertModal').modal('hide');
+                        alert(response)
+                        window.location.reload(true);
+                    }
+                },
+
+            });
+        }
+
+        }
+
+        function clearCache() {
+            localStorage.removeItem("selectedValue");
+            localStorage.removeItem("RepairType");
+            localStorage.removeItem("status");
+            localStorage.removeItem("invoiceNo");
+            localStorage.removeItem("selectedOrderId");
+            localStorage.removeItem("trackingNumber");
+            localStorage.removeItem("selecetCustomerId");
+            localStorage.removeItem("proformaInvoice");
+        }
+
+    </script>
+</body>
+</html>

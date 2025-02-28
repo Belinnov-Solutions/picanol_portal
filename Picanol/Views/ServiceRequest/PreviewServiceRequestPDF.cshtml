@@ -1,0 +1,454 @@
+﻿
+@model Picanol.ViewModels.ServiceRequestViewModel
+@{
+    ViewBag.Title = "PreviewServiceRequest";
+    Layout = "../Shared/View.cshtml";
+
+}
+
+@*<center><h3>
+        Picanol India Private Limited
+        </h3></center>
+    <center>
+        DSM 621 & 622, DLF Towers,
+        Block-IV,15 Shivaji Marg,Near moti nagar,
+        New-Delhi - 110015<br />
+    </center>
+    <center>
+        Tel.: +91-11-42464024,
+       Fax : +91-11-42461202,
+        Email : kbhl@picanol.be<br />
+    </center>*@
+<div class="container">
+
+
+    <div class="col-lg-12">
+        <div class="text-left">
+            State Code :07
+        </div>
+        <div class="text-right" style="margin-top:-20px">
+            GSTIN - 07AAECP4023H1ZO
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+
+        <table rules="all" border="1" style="width:100% ; border-width:medium">
+            <tr>
+
+                @*<td align="center" colspan="5" style="font-size:large"><b>PROVISIONAL SERVICE BILL</b></td>*@
+
+                <td align="center" colspan="5" style="font-size:large"><b>PROFORMA INVOICE</b></td>
+
+
+                @*<td align="center">Original : White</td>
+            <td align="center">Triplicate : Yellow</td>*@
+            </tr>
+
+            @*<tr>
+
+            <td align="center">Duplicate : Pink</td>
+            <td align="center">Quardruplicate : Green</td>
+        </tr>*@
+            <tr>
+                <td colspan="5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="text-left">
+                                <div class="col-lg-6">Service Bill No. : @Model.ServiceRequest.ProvisionalBillNo</div>
+                                <div class="col-lg-6">Work Order No. : @Model.WorkOrderNo</div>
+                                <div class="col-lg-6">Date : @Model.ServiceRequest.Date </div>
+
+                            </div>
+
+
+
+                            @*</div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">*@
+                            <div class="text-right" style="margin-top:-40px">
+
+                                <div class="col-lg-6">Date of Supply : </div>
+                                <div class="col-lg-6">Place of Supply :</div>
+                                <div class="col-lg-6"></div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+
+            
+            <tr>
+                <td colspan="5">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <strong><u>Details of Receiver / Billed To:</u></strong><br>
+                            @if (Model.SubCustomer == null)
+                            {
+                                <address>
+                                    Name : <strong>@Model.CustomerDetails.CustomerName</strong><br />
+                                    Address : <strong>@Model.CustomerDetails.AddressLine1</strong>, <strong>@Model.CustomerDetails.AddressLine2</strong>,
+                                    <strong>@Model.CustomerDetails.District</strong>, <strong>@Model.CustomerDetails.City</strong> - <strong>@Model.CustomerDetails.PIN</strong><br />
+                                    State : <strong>@Model.CustomerDetails.State</strong><br />
+                                    State Code : <strong>@Model.CustomerDetails.StateCode</strong><br />
+                                    GSTIN : <strong>@Model.CustomerDetails.GSTIN</strong><br />
+                                </address>
+                            }
+                            else
+                            {
+                                <address>
+                                    Name : <strong>@Model.SubCustomer.SubCustomerName</strong><br />
+                                    Address : <strong>@Model.SubCustomer.AddressLine1</strong>, <strong>@Model.SubCustomer.AddressLine2</strong>,
+                                    <strong>@Model.CustomerDetails.District</strong>, <strong>@Model.CustomerDetails.City</strong> - <strong>@Model.CustomerDetails.PIN</strong><br />
+                                    State : <strong>@Model.SubCustomer.State</strong><br />
+                                    State Code : <strong>@Model.SubCustomer.StateCode</strong><br />
+                                    GSTIN : <strong>@Model.SubCustomer.GSTIN</strong><br />
+                                </address>
+                            }
+                        </div>
+                        <div class="col-xs-6">
+                            <strong><u>Details of Consignee / Shipped To:</u></strong><br />
+                            <address>
+                                Name: <strong>@Model.CustomerDetails.CustomerName</strong><br />
+
+                                @if (Model.ServiceRequest.ShippingAddress != null)
+                                {
+                                    <text>Address: <strong>@Model.ServiceRequest.ShippingAddress</strong></text><br />
+                                }
+                                else
+                                {
+                                    <text>
+                                        Address: <strong>@Model.CustomerDetails.ShippingAddressLine1</strong>,
+                                        <strong>@Model.CustomerDetails.ShippingAddressLine2</strong>,
+                                        <strong>@Model.CustomerDetails.ShippingDistrict</strong>,
+                                        <strong>@Model.CustomerDetails.ShippingCity</strong> -
+                                        <strong>@Model.CustomerDetails.PIN</strong>
+                                    </text><br />
+                                }
+
+                                State: <strong>@Model.CustomerDetails.State</strong><br />
+
+                                @if (Model.ServiceRequest.ShippingStateCode != null)
+                                {
+                                    <text>State Code: <strong>@Model.ServiceRequest.ShippingStateCode</strong></text><br />
+                                }
+                                else
+                                {
+                                    <text>State Code: <strong>@Model.CustomerDetails.StateCode</strong></text><br />
+                                }
+
+                                GSTIN: <strong>@Model.CustomerDetails.GSTIN</strong><br />
+                            </address>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">Sr. No.</td>
+                <td align="center">Particulars of Service</td>
+                <td align="center">SAC</td>
+                <td align="center"></td>
+                <td align="center">Amount (in Rs.)</td>
+            </tr>
+            <tr>
+                <td>&nbsp;1</td>
+                <td>&nbsp;Service rendered to your (M/c type):- </td>
+                <td></td>
+                <td align="center"> @Model.ServiceRequest.MachineName</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;2</td>
+                <td>&nbsp;Call Type :- </td>
+                <td></td>
+                <td align="center">@Model.ServiceRequest.CallType</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;3</td>
+                <td>&nbsp;Service Engineer Name:- </td>
+                <td></td>
+                <td align="center">@Model.ServiceRequest.UserName</td>
+                <td>&nbsp;</td>
+            </tr>
+            @*<tr>
+            <td>&nbsp;4</td>
+            <td>&nbsp;Attended:- From <b>@Model.ServiceRequest.FDate </b> to <b>@Model.ServiceRequest.TDate </b> (Days)</td>
+            <td></td>
+            <td></td>
+            <td>&nbsp;</td>
+        </tr>*@
+            <tr>
+                <td>&nbsp;4</td>
+                <td>
+                    &nbsp;<b>Days Attended</b> <br />
+                    <table rules="all" border="1" style="width:50% ; margin-left:5px">
+                        <tr>
+                            <td>&nbsp;&nbsp;Attended From</td>
+                            <td>&nbsp;&nbsp;Attended To</td>
+
+
+                        </tr>
+
+                        @foreach (var item in Model.ServiceRequest.ServiceDaysList)
+                        {
+                            <tr>
+                                <td>&nbsp;&nbsp;@item.FromDate.ToShortDateString()</td>
+                                <td>&nbsp;&nbsp;@item.ToDate.ToShortDateString()</td>
+
+                            </tr>
+                        }
+
+
+                    </table>
+
+                </td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;5</td>
+                <td>&nbsp;Service charge for <b>@Model.ServiceRequest.ServiceDays</b> Days <b>Rs:- @Model.ServiceRequest.ServiceCharge</b> /-per day</td>
+                <td align="center">998739</td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.ServiceChargeAmount</td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;6</td>
+                <td>&nbsp;Pocket Expense for<b> @Model.ServiceRequest.PocketExpensesDays</b> Days <b>Rs:- @Model.ServiceRequest.PocketExpenses</b> /-per day</td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.PocketExpensesAmount</td>
+            </tr>
+            <tr>
+                <td>&nbsp;7</td>
+                <td>&nbsp;Loading and Boarding Expense for <b>@Model.ServiceRequest.BoardingDays</b> Days <b>Rs:-@Model.ServiceRequest.BoardingCharges</b> /- per day</td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.BoardingAmount</td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;8</td>
+                <td>&nbsp;Overtime Expense for<b> @Model.ServiceRequest.OvertimeHours</b> Hours <b>Rs:-@Model.ServiceRequest.OvertimeCharges</b> /- per Hour</td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.OvertimeAmount</td>
+            </tr>
+
+
+            <tr>
+                <td>&nbsp;9</td>
+                <td>
+                    &nbsp;<b>Conveyance & Incidental Expense</b> <br />
+                    <table rules="all" border="1" style="width:50% ; margin-left:5px">
+                        <tr>
+                            <td>&nbsp;&nbsp;From</td>
+                            <td>&nbsp;&nbsp;To</td>
+                            <td>&nbsp;&nbsp;Description</td>
+                            <td>&nbsp;&nbsp;Amount</td>
+
+                        </tr>
+
+                        @foreach (var item in Model.ServiceRequest.ConeyanceExpenseDetails)
+                        {
+                            <tr>
+                                <td>&nbsp;&nbsp;@item.ExpenseFrom</td>
+                                <td>&nbsp;&nbsp;@item.ExpenseTo</td>
+                                <td>&nbsp;&nbsp;@item.Remarks</td>
+                                <td>&nbsp;&nbsp;@item.Amount</td>
+
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>&nbsp;&nbsp;@Model.ServiceRequest.ConveyanceExpenses</td>
+
+                        </tr>
+                    </table>
+                </td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.ConveyanceExpenses</td>
+            </tr>
+            <tr>
+                <td>&nbsp;10</td>
+                <td>
+                    &nbsp;<b>Air Fare / Rail Fare</b> <br />
+                    <table rules="all" border="1" style="width:50% ; margin-left:5px">
+                        <tr>
+                            <td>&nbsp;&nbsp;From</td>
+                            <td>&nbsp;&nbsp;To</td>
+                            <td>&nbsp;&nbsp;Description</td>
+                            <td>&nbsp;&nbsp;Amount</td>
+
+                        </tr>
+
+                        @foreach (var item in Model.ServiceRequest.FareExpenseDetails)
+                        {
+                            <tr>
+                                <td>&nbsp;&nbsp;@item.ExpenseFrom</td>
+                                <td>&nbsp;&nbsp;@item.ExpenseTo</td>
+                                <td>&nbsp;&nbsp;@item.Remarks</td>
+                                <td>&nbsp;&nbsp;@item.Amount</td>
+
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>&nbsp;&nbsp;@Model.ServiceRequest.Fare</td>
+
+                        </tr>
+
+                    </table>
+
+                </td>
+                <td></td>
+                <td></td>
+                <td>&nbsp;@Model.ServiceRequest.Fare</td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Total Amount Before Tax</td>
+                <td>&nbsp; ₹@Model.ServiceRequest.AmountBeforeTax</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Add: CGST</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Add: SGST</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Add: IGST</td>
+                <td>&nbsp;@Model.ServiceRequest.GST%</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Tax Amount: GST</td>
+                <td>&nbsp;₹@Model.ServiceRequest.TaxAmount</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">&nbsp;Total Amount After Tax:</td>
+                <td>&nbsp;₹@Model.ServiceRequest.FinalAmount</td>
+            </tr>
+            <tr>
+                <td colspan="5"><b>&nbsp; Total Invoice Amount in Words:</b> @Model.ServiceRequest.AmountInWords</td>
+
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6" style="float:left">
+                                <div style="font-weight: bold; text-decoration: underline;font-size:15px">
+                                    Bank Details
+                                </div><br />
+                                <div>
+                                    &nbsp;<b>Bank Account Number: 008705006161</b><br />
+                                    &nbsp;<b>BankName:  ICICI Bank </b><br />
+                                    &nbsp;<b>Bank Branch IFSCCode :ICIC0000087</b><br />
+                                    <b>
+                                        Bank Branch:
+                                        54, B-Block, Community
+                                        Centre, Janakpuri,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New
+                                        Delhi-110058
+                                    </b>
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="col-lg-6" style="float:right; margin-top:10px">
+                                Certified that the particulars given above are true and correct.<br />
+                                For Picanol India Pvt. Ltd.<br />
+                                <div class="text-right">
+                                    <img src="~/Content/Images/Signature/@Model.ServiceRequest.UImagepath" width="100" height="100" /><br />
+                                    @Model.ServiceRequest.UserName
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="text-right">
+                        Authorised Signatory
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="text-right">
+                        E. & O.E.
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <b>&nbsp; &nbsp;Customer Authentication </b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6" style="float:left;">
+
+                                &nbsp;Customer Name : @Model.ServiceRequest.AuthorizedBy <br />
+                                &nbsp;Customer Phone No. : @Model.CustomerDetails.Mobile <br />
+                                &nbsp;Customer Email : @Model.ServiceRequest.AuthorizerEmail <br />
+                                &nbsp;Authorised Date :
+                                <br />
+                                <br />
+                                <br />
+
+                            </div>
+                            <div class="col-lg-6" style="float:right; margin-top:10px">
+
+                                <img src="~/Content/Images/Signature/@Model.ServiceRequest.Imagepath" width="100" height="100" />
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="5">
+                    <div class="text-right">
+                        Customer Signatory
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>

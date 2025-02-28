@@ -1,0 +1,74 @@
+﻿
+@model Picanol.ViewModels.PartsViewModel
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        border-color: black;
+    }
+
+    td, th {
+        border: 1px solid black;
+        text-align: center;
+        padding: 5px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+
+<table width="100%">
+    <thead>
+        <tr>
+
+            <th>Part Number</th>
+            <th>Part Name</th>
+            @*<th>Serial</th>*@
+
+            @*<th>Stock</th>*@
+            <th>Edit</th>
+            @*<th>Delete</th>*@
+
+        </tr>
+    <thead>
+    <tbody>
+        @foreach (var item in Model.PartsList)
+        {
+            <tr>
+                @if (@item.PartTypeId == 1)
+                {
+                    <td>@item.PartNumber</td>
+                }
+                else
+                {
+                    <td><a href="@Url.Action("PartsMovement","Parts",new{partId=@item.PartId , partNumber=@item.PartNumber , partName = @item.PartName , partStock=@item.Stock , openingStock = @item.OpeningBalance})">@item.PartNumber</a></td>
+                }
+                <td>@item.PartName</td>
+                @*<td>@item.SerialNo</td>*@
+                @*<td>@item.Stock</td>*@
+
+                @if (@item.PartTypeId == 1)
+                {
+                    <td><a href="@Url.Action("AddNewPart", "Parts", new {partId = @item.PartId})" id="viewBtn" class="btn btn-primary btn-large">View</a></td>
+                }
+                else
+                {
+                    <td><a href="@Url.Action("AddNewPart", "Parts", new {partId = @item.PartId})" id="edtBtn" class="btn btn-primary btn-large">Edit</a></td>
+                }
+
+                @*Comment By sunit*@
+
+                @*<td><a href="@Url.Action("AddNewPart", "Parts", new {partId = @item.PartId})" id="edtBtn" class="btn btn-primary btn-large">Edit</a></td>*@
+
+                @*End*@
+
+                @*<td><a href="@Url.Action("PartsMovement", "Parts", new{partId=@item.PartId , partNumber=@item.PartNumber , partName = @item.PartName , partStock=@item.Stock , openingStock = @item.OpeningBalance})" class="btn btn-primary btn-large">Edit</a></td>*@
+                @*<td><a href="@Url.Action("DeletePart", "Parts", new {partId = @item.PartId})" class="btn btn-primary btn-large">Delete</a></td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+

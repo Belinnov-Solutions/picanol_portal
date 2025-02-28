@@ -1,0 +1,1361 @@
+﻿@model Picanol.ViewModels.InvoiceListViewModel
+
+
+@{ int allOrderInvoice = Model.CustomersList.Count;
+    //int noPage = allOrderInvoice / 10;
+    int CountList = Model.CountList;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noPage = allOrderInvoice / PageSize;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+
+
+    <style>
+
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+
+        .datepicker {
+            z-index: 1151 !important;
+        }
+
+        @*table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }*@
+
+        @*tr:nth-child(even) {
+            background-color: #dddddd;
+        }*@
+
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 93%;
+            border-color: black;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .mydrowpdownstyle {
+            border: 3px solid blue;
+            background-color: white;
+            color: black;
+            border: initial;
+        }
+
+        #dropdownlist-content {
+            /* width: 550px;
+            margin-top: 40vh;
+            margin-left: 55px;*/
+            width: 693px;
+            margin-top: 40vh;
+            margin-left: -5px;
+        }
+
+        h4.text-left.d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        span {
+            display: flex;
+            margin-top: -22px;
+        }
+
+        .close {
+            font-size: 28px;
+            color: #ffffff
+        }
+
+            .close:hover {
+                color: #ffffff
+            }
+
+        .listdatadropdown {
+            background-color: #1183ca;
+        }
+
+        #alertMessage {
+            Font-weight: bold;
+        }
+
+        div.modal-body.dropdownlist-body {
+            position: relative;
+            padding: 22px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .text-left d-inline-block {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        h4#alertMessage.modal-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        h4.text-left.d-inline-block.blockkk {
+            display: inline-block;
+            flex-direction: row-reverse;
+            color: #a99d9d;
+        }
+
+        p#trackingNumber.text-left.inline-block {
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+            padding-left: 0px;
+        }
+
+        p#customerName.text-left.inline-block {
+            font-size: 17px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        button btn.btn-primary.btnn {
+            padding: 6px 26px;
+        }
+
+        button btn.btn-secondary.btnn {
+            padding-right: 25px;
+        }
+
+        .modal-footer {
+            text-align: center !important;
+            background-color: #dadde061 !important;
+        }
+
+        .btn.btn-secondary.btnn {
+            margin-bottom: 0;
+            margin-left: 5px;
+            background-color: #a5adc2b0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>Reference number</th>
+                <th>Date</th>
+                <th>Invoice Number</th>
+                <th>Credit Note</th>
+                <th>Debit Note</th>
+                <th>Customer Name</th>
+                <th>Amount</th>
+                <th>CRN Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.InvoicesList)
+            {
+                if (item.creditNote != null)
+                {
+                    <tr style="background-color: #FFA500">
+                        <td>@item.TrackingNo</td>
+                        <td>@item.DateCreated</td>
+                        <td>@item.InvoiceNo</td>
+                        <td>@item.creditNote</td>
+                        <td>@item.DebitNoteNo</td>
+                        <td>@item.CustomerName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.CreditNoteAmount</td>
+                        <td>
+                            @Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.SelectActionTypeList, "Text", "Text"), "Select Action Type", new { id = "ActionType", @class = "form-control" })
+                        </td>
+                        <td hidden>@item.OrderGuid</td>
+                        <td hidden>@item.Paid</td>
+                        <td hidden>@item.CustomerEmail</td>
+                        <td hidden>@item.CustomerId</td>
+                        <td hidden>@item.LabourCost</td>
+                        <td hidden>@item.ComponentsCost</td>
+                        <td hidden>@item.RepairCharges</td>
+                        <td hidden>@item.PackingCharges</td>
+                        <td hidden>@item.ForwardingCharges</td>
+                        <td hidden>
+                            <input type="hidden" class="form-control" value=@item.CustomerId id="CustomerId">
+                        </td>
+                    </tr>
+                }
+                else
+                {
+
+                    <tr>
+                        <td>@item.TrackingNo</td>
+                        <td>@item.DateCreated</td>
+                        <td>@item.InvoiceNo</td>
+                        <td>@item.creditNote</td>
+                        <td>@item.DebitNoteNo</td>
+                        <td>@item.CustomerName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.CreditNoteAmount</td>
+                        <td>
+                            @Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.SelectActionTypeList, "Text", "Text"), "Select Action Type", new { id = "ActionType", @class = "form-control" })
+                        </td>
+                        <td hidden>@item.OrderGuid</td>
+                        <td hidden>@item.Paid</td>
+                        <td hidden>@item.CustomerEmail</td>
+                        <td hidden>@item.CustomerId</td>
+                        <td hidden>@item.LabourCost</td>
+                        <td hidden>@item.ComponentsCost</td>
+                        <td hidden>@item.RepairCharges</td>
+                        <td hidden>@item.PackingCharges</td>
+                        <td hidden>@item.ForwardingCharges</td>
+                        <td hidden>
+                            <input type="hidden" class="form-control" value=@item.CustomerId id="CustomerId">
+                        </td>
+                    </tr>
+                }
+
+
+
+            }
+
+
+        </tbody>
+    </table>
+    <!--new pagination-->
+    @if (CountList == PageSize)
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPage == 1)
+                {
+                    <div class="col-md-4 cell" onclick="submitbutton(@Model.CurrentPage);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="submitbutton(@Model.CurrentPage-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPage - (Model.CurrentPage % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPage % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPage;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <div class="col-md-3 cell active" onclick="submitbutton(@i);">@Model.CurrentPage</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="submitbutton(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="submitbutton(@Model.CurrentPage+1);">Next</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPage != 1)
+
+                {
+                    <div class="col-md-6 cell" onclick="submitbutton(@Model.CurrentPage-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPage - (Model.CurrentPage % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPage % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPage;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrentPage; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <div class="col-md-6 cell active" onclick="submitbutton(@i);">@Model.CurrentPage</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5 cell " onclick="submitbutton(@i);">@i</div>
+                    }
+                }
+                @*<div class="col-md-3 cell" onclick="submitbutton(@Model.CurrentPage+1);">Next</div>*@
+            </div>
+        </div>
+    }
+    <div class="pull-right">@CountList Record Found</div>
+
+
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-lg-12">
+                        <h4 class="modal-title">
+                            <label>Record Payment </label>
+                            @*<input type="text" name="Display" id="Display" value="" class="form-control" readonly />*@
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label for="PaymentMethod">Payment Method</label>
+                    @Html.DropDownListFor(p => p.OrderPayment.SelectedPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select Payment Method", new { id = "PaymentMethod", @class = "form-control" })
+                    @Html.HiddenFor(model => model.OrderPayment.OrderGUID, new { id = "OrderIdRP" })
+                    @Html.HiddenFor(model => model.OrderPayment.InvoiceNo, new { id = "InvoiceNoRP" })
+                    <label for="BankName">Details</label>
+                    @Html.TextBoxFor(d => d.OrderPayment.PaymentDetails, new { id = "PaymentDetails", @class = "form-control" })
+                    <label for="DatePaid">Date Paid</label>
+                    @*@Html.TextBoxFor(d => d.OrderPayment.DatePaid, "{0:dd/MM/yyyy}", new { id = "DatePaid", @class = "form-control", maxlength = "500" })*@
+                    <input type="text" class="form-control" id="DatePaid" data-toggle="datepicker">
+                    @*<input type="text" onclick="ShowDatePicker();" />*@
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendRecordPayments();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalEmail" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <h4 class="modal-title">
+                                    <label>Tracking Number</label>
+                                    <input type="text" name="Show" id="Show" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <h4>
+
+                                    <label>Customer Name</label>
+                                    <input type="text" style="margin-top:-5px" name="Show2" id="Show2" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label>Email :</label>
+                    <br />
+                    <font size="1" color="red">Add Multiple Email ID's Separated by ";"</font>
+                    <input type="text" name="text1" id="text1" value="" class="form-control" />
+                    <input type="hidden" name="text2" id="text2" value="" class="form-control" />
+                    <input type="hidden" name="text3" id="text3" value="" class="form-control" />
+                    <input type="hidden" name="text4" id="text4" value="" class="form-control" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn btn-success pull-right" onclick="SendEmail();">Send</button>*@
+                    <button type="button" class="btn btn-success pull-right" onclick="sendEmails();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @* <div id="loading-screen" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); clear: both; text-align: center; display: none; vertical-align: middle;">
+            <div style="padding:10px;width:130px;display: inline-block;margin: 0 auto;position:relative;top:300px;">
+                <img src="~/Content/Images/loading.gif" /><br />
+                <p style="color: #fff;">Please wait sending email...</p>
+            </div>
+        </div>*@
+    <!--<div class="modal fade" id="CreditNoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="t2" style=" font-weight: bold;  font-size: 20px; color: white; }">Are you sure to generate E-Credit Note?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name  :</b></h4>
+                        <p id="customerName" style="font-size: 16px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Reference Number  :</b></h4>
+
+                        <p id="trackingNumber" style="font-size: 16px; padding-left: 0px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 hidden class="text-left d-inline-block blockkk"><b>Invoice Number :</b></h4>
+                        <p hidden id="invNo" style="font-size: 16px; padding-left: 0px; display: inline-block; font-weight: bold;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Component Cost  :</b></h4>
+
+                        <div style="display:inline-block;margin-left:30px">
+                            <h4 class="text-left d-inline-block blockkk"><b>Amount</b></h4><br />-->
+    @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+    <!--<p id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px; color: #bcb5b5" class="text-left inline-block" oninput="CalculateGstAuto()"></p>
+
+    </div>
+    <div style="display:inline-block">
+        <h4 class="text-left d-inline-block blockkk"><b>CreditNote</b></h4>
+        <br />
+        <input type="text" id="CreditNote" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 100px" class="text-left inline-block">
+    </div>
+    <div style="display:inline-block">
+        <h4 class="text-left d-inline-block blockkk"><b>GST </b></h4>
+        <br />
+        <input type="text" id="GST" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+    </div>
+    <div style="display:inline-block">
+        <h4 class="text-left d-inline-block blockkk"><b>TotalAmount </b></h4>
+        <br />
+        <input type="text" id="totalAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+    </div>
+
+
+    <br>
+
+    <h4 class="text-left d-inline-block blockkk"><b>Labur Cost  :</b></h4>
+
+    <div style="display:inline-block">-->
+    @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+    <!--<p id="LAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px" class="text-left inline-block" oninput="CalculateGstAuto()"></p>
+
+    </div>
+    <div style="display:inline-block">
+
+
+        <input type="text" id="LCreditNote" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 100px;margin-left:80px" class="text-left inline-block">
+    </div>
+    <div style="display:inline-block">
+
+        <input type="text" id="Lgst" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+    </div>
+    <div style="display:inline-block">
+
+        <input type="text" id="Ltotal" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+    </div>-->
+    @*<h4 class="text-left d-inline-block blockkk"><b>Amount :</b></h4>
+        <p                  id="Amount" style="font-size: 16px; padding-left: 0px; display: inline-block; font-weight: bold;" class="text-left inline-block"></p>*@
+    <!--</div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="details()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+
+    <div class="modal fade" id="CreditNoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="t2" style=" font-weight: bold;  font-size: 20px; color: white; }">Are you sure to generate E-Credit Note?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name  :</b></h4>
+                        <p id="customerName" style="font-size: 16px; margin-left: 33px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Reference Number  :</b></h4>
+
+                        <p id="trackingNumber" style="font-size: 16px; padding-left: 0px; margin-left: 13px;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 hidden class="text-left d-inline-block blockkk"><b>Invoice Number :</b></h4>
+                        <p hidden id="invNo" style="font-size: 16px; padding-left: 0px; display: inline-block; font-weight: bold; margin-left: 38px; " class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Component Cost  :</b></h4>
+
+                        <div style="display:inline-block;margin-left:30px; font-size:14px;">
+                            <h4 class="text-left d-inline-block blockkk" style="font-size:14px;"><b>Amount</b></h4><br />
+                            <input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:73px" class="text-left inline-block" oninput="AutoCalculateCmptCost()">
+                        </div>
+                        <div style="display:inline-block">
+                            <h4 class="text-left d-inline-block blockkk" style="font-size:14px;"><b>Pckg.&Frwd.</b></h4>
+                            <br />
+                            <input type="text" id="CCost" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 87px" class="text-left inline-block" oninput="AutoCalculateCmptCost()">
+                        </div>
+                        <div style="display:inline-block">
+                            <h4 class="text-left d-inline-block blockkk" style="font-size:14px"><b>Sub Total</b></h4>
+                            <br />
+                            <input type="text" id="SubTotalAmt" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 73px" class="text-left inline-block" disabled>
+                        </div>
+                        <div style="display:inline-block">
+                            <h4 class="text-left d-inline-block blockkk" style="font-size:14px"><b>GST</b></h4>
+                            <br />
+                            <input type="text" id="GST" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 73px" class="text-left inline-block">
+                        </div>
+                        <div style="display:inline-block">
+                            <h4 class="text-left d-inline-block blockkk" style="font-size:14px"><b>Total Amt</b></h4>
+                            <br />
+                            <input type="text" id="totalAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                        </div>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Labour Cost  :</b></h4>
+                        <div style="display: inline-block;">
+
+                            <input type="text" id="LAmount" style="font-size: 16px; padding-left: 0px;margin-left:81px; font-weight: bold; display: inline-block; width:73px" class="text-left inline-block" oninput="AutoCalculateLaburCost()">
+                            @*<p id="LAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px; margin-left: 82px; color: darkgrey;" class="text-left inline-block"></p>*@
+
+                        </div>
+                        <div style="display:inline-block">
+
+                            <input type="text" id="LaburCostAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 85px;" class="text-left inline-block" disabled placeholder="0">
+                        </div>
+                        <div style="display:inline-block">
+                            <input type="text" id="SubTotalLAmount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;width: 77px;" class="text-left inline-block" disabled placeholder="0">
+                        </div>
+                        <div style="display:inline-block">
+                            <input type="text" id="LaburCostGst" style="font-size: 16px; font-weight: bold; display: inline-block; width: 73px" class="text-left inline-block">
+                        </div>
+                        <div style="display:inline-block">
+                            <input type="text" id="LaburCostTotal" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block;  width: 100px" class="text-left inline-block">
+                        </div>
+                        <div class="row">
+                            <h4 class="text-left d-inline-block blockkk"><b>Repair Charges  :</b></h4>
+
+                            <div style="display: inline-block;">
+                                <span style="display:inline-block;color:darkgray">₹</span>
+                                @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+                                <p id="RepairCharges" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px;  color: darkgrey;" class="text-left inline-block">₹</p>
+
+                            </div>
+                            <br />
+                            <h4 class="text-left d-inline-block blockkk"><b>Packaging Charges  :</b></h4>
+
+                            <div style="display: inline-block;">
+                                <span style="display:inline-block;color:darkgray">₹</span>
+                                @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+                                <p id="PackingCharges" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px;  color: darkgrey;" class="text-left inline-block"></p>
+
+                            </div>
+
+                            <h4 class="text-left d-inline-block blockkk"><b style="margin-left:24px;">Forwarding Charges :</b></h4>
+
+                            <div style="display: inline-block;">
+                                <span style="display:inline-block;color:darkgray">₹</span>
+                                @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+                                <p id="ForwardingCharges" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px;  color: darkgrey;" class="text-left inline-block"></p>
+
+                            </div>
+
+                        </div>
+
+                        <h4 class="text-left d-inline-block blockkk"><b>Total Amount Before Tax  :</b></h4>
+
+                        <div style="display: inline-block;">
+                            <span style="display:inline-block;color:darkgray">₹</span>
+                            @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+                            <p id="totalamountbeforetax" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px;  color: darkgrey;" class="text-left inline-block">₹</p>
+
+                        </div>
+
+                        <h4 class="text-left d-inline-block blockkk"><b>Total(INR)  :</b></h4>
+
+                        <div style="display: inline-block;">
+
+                            @*<input type="text" id="Amount" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width:100px" class="text-left inline-block" oninput="CalculateGstAuto()">*@
+                            <p id="TotalAmountAfterTax" style="font-size: 16px; padding-left: 0px; font-weight: bold; display: inline-block; width: 100px; margin-left: 50px; color: darkgrey;" class="text-left inline-block"></p>
+                        </div>
+                        <br />
+                        <p style="font-size: 12px; padding-left: 0px; font-weight: bold;color: red;"><sup>*</sup>Note - In Component Cost Repair and Forward Charges Includded.</p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-warning btnn" style="padding:6px 28px" data-dismiss="modal" onclick="details()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," style="font-weight: bold; color:white">Alert</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-center d-inline-block blockkk" id="cancelMessage" style="color:black; font-size:16px; font-weight:bold"></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px" onclick="clearCache()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="DebitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="dropdownlist-content">
+                <div class="modal-header listdatadropdown ">
+                    <h4 class="modal-title listItem-Content," id="text1" style=" font-weight: bold;  font-size: 20px; color: white;">Are You Sure To Generate DebitNote</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body dropdownlist-body">
+                    <div class="d-flex text-left">
+                        <h4 class="text-left d-inline-block blockkk"><b>Invoice No  :</b></h4>
+                        <p id="PBillNo" style="font-size: 16px; font-weight:700;display:contents;" class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>Customer Name  :</b></h4>
+
+                        <p id="Usrnm" style="font-size: 16px; font-weight: 700; display: contents; " class="text-left inline-block"></p>
+                        <br>
+                        <h4 class="text-left d-inline-block blockkk"><b>TotalAmount  :</b></h4>
+
+                        <p id="finalAmount" style="font-size: 16px; font-weight: 700; display: contents;" class="text-left inline-block">$</p>
+                    </div>
+                    <input type="hidden" value="" id="txtgeturl" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnn" data-dismiss="modal" style="padding:6px 28px">No</button>
+                    <button type="button" class="btn btn-secondary btnn" style="padding:6px 28px" data-dismiss="modal" onclick="GenerateDebitNote()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+    $(function () {
+        $('[data-toggle="datepicker"]').datepicker({
+            autoHide: true,
+            zIndex: 2048,
+            format: 'dd/mm/yyyy',
+        });
+    });
+    @*function changepage(pageno) {
+        location.href = "@Url.Action("GetInvoiceList", "Invoice")/?PageSize=10&PageNo= " + pageno ;
+             }*@
+    </script>
+    <script>
+    $(function () {
+        $('#myTable').on('change', '#ActionType', function () {
+            var TrackingNumber = $(this).closest('tr').find('td:eq(0)').text();
+            var InvoiceNo = $(this).closest('tr').find('td:eq(2)').text();
+            var InvNo = $(this).closest('tr').find('td:eq(2)').text();
+            var CreditNote = $(this).closest('tr').find('td:eq(3)').text();
+            var DebitNoteNo = $(this).closest('tr').find('td:eq(4)').text();
+            var CustomerName = $(this).closest('tr').find('td:eq(5)').text();
+            var Amount = $(this).closest('tr').find('td:eq(6)').text();
+            var CreditNoteAmount = $(this).closest('tr').find('td:eq(7)').text();
+            var OrderId = $(this).closest('tr').find('td:eq(9)').text();
+            var CustomerEmail = $(this).closest('tr').find('td:eq(11)').text();
+            var cid = $(this).closest('tr').find('td:eq(12)').text();
+            var SelecetCustomerId = $(this).closest('tr').find('td:eq(12)').text();
+            var SelectedValue = $(this).val();
+            var LCost = $(this).closest('tr').find('td:eq(13)').text();
+            var CMCost = $(this).closest('tr').find('td:eq(14)').text();
+            var RepairCharges = $(this).closest('tr').find('td:eq(15)').text();
+            var PackingCharges = $(this).closest('tr').find('td:eq(16)').text();
+            var ForwardingCharges = $(this).closest('tr').find('td:eq(17)').text();
+
+            localStorage.setItem("RepairCharges", RepairCharges);
+            localStorage.setItem("FinalAmount", Amount);
+            console.log(TrackingNumber);
+            console.log(Amount);
+            console.log(CustomerName);
+            console.log(OrderId);
+            console.log(Amount);
+            console.log(SelectedValue);
+
+            var data =
+            {
+                orderId: OrderId
+            }
+            if (SelectedValue == "RecordPayment") {
+                document.getElementById("InvoiceNoRP").value = InvoiceNo;
+                document.getElementById("OrderIdRP").value = OrderId;
+                $('#myModal').modal('show');
+
+            }
+            if (SelectedValue == "EmailInvoice") {
+                document.getElementById("Show").value = TrackingNumber;
+                document.getElementById("Show2").value = CustomerName;
+                document.getElementById("text1").value = CustomerEmail;
+                document.getElementById("text2").value = SelecetCustomerId;
+                document.getElementById("text3").value = OrderId;
+                document.getElementById("text4").value = SelectedValue;
+                $('#myModalEmail').modal('show');
+
+            }
+
+            else if (SelectedValue == "PaymentDetails") {
+                var data = {
+                    orderId: OrderId
+                }
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetPaymentDetails", "Invoice")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response.OrderPayment == null) {
+                            alert("Payment not Done yet!")
+                        }
+                        else {
+                            alert("Date Paid is " + "-" + response.OrderPayment.PDate + '\n'
+                                + "Payment Details  " + "-" + response.OrderPayment.PaymentDetails + '\n'
+                                + "Payment Type is" + "-" + response.OrderPayment.PaymentType)
+                        }
+                    },
+
+                });
+
+            }
+            else if (SelectedValue == "CreateCreditNote") {
+                var ComponentCost = 0;
+                var LaburCost = 0;
+                var data =
+                {
+                    ComponentCost: ComponentCost,
+                    LaburCost: LaburCost,
+                    OrderGuid: OrderId,
+                    CustomerId: cid,
+                    InvoiceNumber: InvNo,
+                    InvoiceDate: InvoiceNo
+                }
+
+                // let Comst = document.getElementById("Amount").innerHTML;
+
+                let Comst = parseFloat(CMCost) + parseFloat(PackingCharges) + parseFloat(ForwardingCharges);
+                let Calculategst = parseInt((Comst) * 18 / 100);
+                let TotalAmount = Comst + Calculategst;
+                let laburcostamountgst = (LCost) * 18 / 100;
+                let Lcst = parseFloat(LCost);
+                let laburcosttotalamount = parseFloat(laburcostamountgst) + Lcst;
+
+                let totalcharge = parseFloat(PackingCharges) + parseFloat(ForwardingCharges)
+                $('#invNo').text(InvNo);
+                $('#SubTotalAmt').val(Comst);
+                $('#Amount').val(CMCost);
+                $('#CCost').val(totalcharge);
+                $('#GST').val(Calculategst);
+                $('#totalAmount').val(TotalAmount);
+
+                $('#totalamountbeforetax').text(Amount - (laburcostamountgst + Calculategst));
+                $('#TotalAmountAfterTax').text(Amount);
+                $('#LaburCostAmount').val(0);
+                $('#LaburCostGst').val(laburcostamountgst);
+                $('#LaburCostTotal').val(laburcosttotalamount);
+                //document.getElementById("CCost").innerHTML = CMCost + RepairCharges + ForwardingCharges;
+
+                /*  $('#RepairCharges').text(` ₹ ${RepairCharges}`);*/
+                $('#RepairCharges').text(RepairCharges);
+                $('#PackingCharges').text(PackingCharges);
+                $('#ForwardingCharges').text(ForwardingCharges);
+                $('#SubTotalLAmount').val(LCost);
+                $('#LAmount').val(LCost);
+                $('#customerName').text(CustomerName);
+                $('#trackingNumber').text(TrackingNumber);
+
+                if (CreditNote != null && CreditNote != 0 && CreditNote != "") {
+                    $.ajax({
+                        beforeSend: function () {
+                            $('.spinner-wrapper').show()
+                        },
+
+                        type: "POST",  // method of sending data
+                        url: '@Url.Action("CreateCreditNote", "Invoice")', // name of PHP script
+                        data: data, // parameter name and value
+                        success: function (response) {
+                            $('.spinner-wrapper').hide();
+                            if (response == "success") {
+                                window.location = '@Url.Action("ReturnView", "Invoice")';
+                                localStorage.removeItem("oId");
+                                localStorage.removeItem("Cid");
+                                localStorage.removeItem("InvNo");
+                                localStorage.removeItem("InvDate");
+                                localStorage.removeItem("CCost");
+                                localStorage.removeItem("LaburCostAmount");
+                            }
+                            else {
+                                alert(response);
+                                window.location.reload(true)
+                                //$('#cancelMessage').text(response);
+                                //$('#cancelModal').modal('show');
+                                //window.location.reload(true);
+                            }
+                        },
+
+                    });
+                }
+
+                else {
+                    $('#CreditNoteModal').modal('show');
+                }
+                localStorage.setItem("oId", OrderId);
+                localStorage.setItem("Cid", cid);
+                localStorage.setItem("InvNo", InvNo);
+                localStorage.setItem("InvDate", InvoiceNo);
+            }
+            else if (SelectedValue == "CreateDebitNote") {
+                var ComponentCost = 0;
+                var LaburCost = 0;
+
+                var data =
+                {
+                    ComponentCost: ComponentCost,
+                    LaburCost: LaburCost,
+                    OrderGuid: OrderId,
+                    CustomerId: cid,
+                    InvoiceNumber: InvNo,
+                    InvoiceDate: InvoiceNo
+                }
+
+                $('#Amount').text(CMCost);
+                $('#RepairCharges').text(RepairCharges);
+                $('#PackingCharges').text(PackingCharges);
+                $('#ForwardingCharges').text(ForwardingCharges);
+                $('#LAmount').text(LCost);
+                $('#customerName').text(CustomerName);
+                $('#trackingNumber').text(TrackingNumber);
+                $('#invNo').text(InvNo);
+                $('#PBillNo').text(InvNo);
+                $('#Usrnm').text(CustomerName);
+                $('#finalAmount').text(CreditNoteAmount);
+
+                if (DebitNoteNo != null && DebitNoteNo != 0 && DebitNoteNo != "") {
+                    $.ajax({
+                        beforeSend: function () {
+                            $('.spinner-wrapper').show()
+                        },
+                        type: "POST",  // method of sending data
+                        url: '@Url.Action("CreateDebitNote", "Invoice")', // name of PHP script
+                        data: data, // parameter name and value
+                        success: function (response) {
+                            $('.spinner-wrapper').hide();
+                            if (response == "success") {
+                                window.location = '@Url.Action("ReturnView", "Invoice")';
+                                localStorage.removeItem("oId");
+                                localStorage.removeItem("Cid");
+                                localStorage.removeItem("InvNo");
+                                localStorage.removeItem("InvDate");
+                                localStorage.removeItem("CCost");
+                                localStorage.removeItem("LaburCostAmount");
+                            }
+                            else {
+                                $('#cancelMessage').text(response);
+                                $('#cancelModal').modal('show');
+                                //window.location.reload(true);
+                            }
+                        },
+
+                    });
+
+                }
+                else {
+                    if (CreditNote == null || CreditNote == "0" || CreditNote == 0) {
+                        alert("Please First Create CreditNote");
+                    }
+                    else {
+                        $('#DebitModal').modal('show');
+                    }
+                }
+
+                localStorage.setItem("oId", OrderId);
+                localStorage.setItem("Cid", cid);
+                localStorage.setItem("InvNo", InvNo);
+                localStorage.setItem("InvDate", InvoiceNo);
+            } else if (SelectedValue == "PrintInvoice") {
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("PrintInvoiceV1", "Invoice")?orderId=' + OrderId,
+                    data: data, //
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                        }
+                        else {
+                            alert(response)
+                            window.location.reload(true);
+                        }
+                    },
+
+                });
+
+            } else if (SelectedValue == "CancelCreditNote") {
+                if (CreditNote == "") {
+                    //Added by bharat date on 16-06-2023 changes on confimation messagge cancel and ok.
+                    window.confirm("Credit note is not generated yet.");
+                    return false;
+                }
+
+                if (CreditNote != null && CreditNote != 0 && CreditNote != "") {
+                    let text = "Are you sure to cancel selected E-Credit Note?";
+                if (confirm(text) == true) {
+                     var data =
+                {
+                    ComponentCost: ComponentCost,
+                    LaburCost: LaburCost,
+                    OrderGuid: OrderId,
+                    CustomerId: cid,
+                    InvoiceNumber: InvNo,
+                    InvoiceDate: InvoiceNo
+                }
+                $.ajax({
+                        beforeSend: function () {
+                            $('.spinner-wrapper').show()
+                        },
+
+                        type: "POST",  // method of sending data
+                        url: '@Url.Action("CancelCreditNote", "Invoice")', // name of PHP script
+                        data: data, // parameter name and value
+                        success: function (response) {
+                            $('.spinner-wrapper').hide();
+                            alert(response);
+                            window.location.reload(true);
+                        },
+
+                    });
+                } else {
+
+                }
+                }
+
+            }
+
+
+        });
+
+    });
+
+
+
+    </script>
+    <script>
+    function getInvoiceDetails(OrderId, callback) {
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+                    type: "POST",
+                    url: '@Url.Action("PrintInvoiceV1", "Invoice")?orderId=' + OrderId,
+                   // data: data,
+            success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                            $("#loading-screen").hide()
+                        }
+                        else {
+                            $('.spinner-wrapper').hide();
+                            $('#cancelMessage').text(response);
+                            $('#cancelModal').modal('show');
+                            //alert(response)
+                            window.location.reload(true);
+                        }
+
+                            },
+
+      });
+        setTimeout(function () {
+            callback();
+        },1000)
+    }
+    </script>
+    <script>
+    function SendEmail()
+    {
+
+        var TrackingNumber = $("#Show").val();
+        var Email = $("#text1").val();
+        var SelecetCustomerId = $("#text2").val();
+        var SelectedOrderId = $("#text3").val();
+        var SelectedValue = $("#text4").val();
+
+        var OrdersViewModel = {
+            TrackingNo: TrackingNumber,
+            SelectedAction: SelectedValue,
+            SelecetCustomerId: SelecetCustomerId,
+            SelectedOrderId: SelectedOrderId,
+            Email: Email,
+
+        }
+
+       //await getInvoiceDetails(SelectedOrderId)
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SendOrderEmail", "Order")', // name of PHP script
+            data: OrdersViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success")
+                {
+                    $('#myModalEmail').modal('hide');
+                    //alert("Email has been Sent!");
+                    $('#cancelMessage').text("Email has been Sent!");
+                    $('#cancelModal').modal('show');
+                }
+                else
+                {
+                    $('#myModalEmail').modal('hide');
+                    $('#cancelMessage').text(response);
+                    $('#cancelModal').modal('show');
+                    $('.spinner-wrapper').hide();
+                }
+
+            },
+
+        });
+
+
+    }
+
+    function sendEmails() {
+        $("#loading-screen").show();
+        $('#myModalEmail').modal('hide');
+        var SelectedOrderId = $("#text3").val();
+
+        getInvoiceDetails(SelectedOrderId, SendEmail);
+        $("#loading-screen").hide();
+    }
+
+    </script>
+    <script>
+
+        function AutoCalculateCmptCost() {
+
+            let RepairCharges = document.getElementById("RepairCharges").innerHTML;
+            //let testonly = document.getElementById("CCost").innerHTML;
+
+            if (document.getElementById('CCost').value == '') {
+                var Pckage_Forwarding = document.getElementById('CCost').value = 0 ;
+            }
+            else {
+                var Pckage_Forwarding = document.getElementById('CCost').value;
+            }
+            let PackingCharges = document.getElementById("PackingCharges").innerHTML;
+            let ForwardingCharges = document.getElementById("ForwardingCharges").innerHTML;
+            let LaburCostTotal = document.getElementById('LaburCostTotal');
+            //Added by bharat asthana date on 16-06-2023 handle by null value
+            if (document.getElementById('Amount').value =='') {
+                document.getElementById('Amount').value = 0;
+            }
+            let ComponentCost = document.getElementById('Amount');
+            let Componentcst = ComponentCost.value;
+            //Cooment on bharat date 16-07-2023 beacuse "" this vlaue not handle
+            //if (ComponentCost.value != 0 && ComponentCost.value != "") {
+                let totalAmount = document.getElementById('totalAmount');
+                let GST = document.getElementById('GST');
+                totalAmount.value = "";
+                let SubTotalAmount = document.getElementById("SubTotalAmt")
+            SubTotalAmount.value = parseFloat(Componentcst) + parseFloat(Pckage_Forwarding);
+
+            var tm = (parseFloat(Componentcst) + parseFloat(Pckage_Forwarding)) * 18 / 100;
+
+         //EnableRepaircharges
+            //var tm = (parseFloat(Componentcst) + parseFloat(PackingCharges) + parseFloat(ForwardingCharges)) * 18 / 100;
+             //Added by bharat date on 16-06-2023 changes filed contain on decimal value so math.round functoin are used value are round off
+            GST.value = Math.round(tm);
+            //totalAmount.value = (Math.round(tm)) + parseFloat(ComponentCost.value) + parseFloat(PackingCharges) + parseFloat(ForwardingCharges);
+
+            totalAmount.value = (Math.round(tm)) + parseFloat(ComponentCost.value) + parseFloat(Pckage_Forwarding);
+
+                let LaburCostAmount = document.getElementById('LAmount');
+                document.getElementById("totalamountbeforetax").innerHTML = parseFloat(SubTotalAmount.value) + parseFloat(LaburCostAmount.value);
+
+
+                //if ((PackingCharges != 0 && PackingCharges != "" )||( ForwardingCharges != ""&& ForwardingCharges!=0)) {
+                //    var TotalAmtAfterTax = parseFloat(totalAmount.value) + parseFloat(LaburCostTotal.value);
+                //    document.getElementById("TotalAmountAfterTax").innerHTML = TotalAmtAfterTax;
+
+                //}
+            if (Pckage_Forwarding != '') {
+                var TotalAmtAfterTax = parseFloat(totalAmount.value) + parseFloat(LaburCostTotal.value);
+                document.getElementById("TotalAmountAfterTax").innerHTML = TotalAmtAfterTax;
+            }
+            else {
+                var TotalAmtAfterTax = parseFloat(totalAmount.value) + parseFloat(LaburCostTotal.value);
+                document.getElementById("TotalAmountAfterTax").innerHTML=TotalAmtAfterTax;
+
+            }
+               // }
+        }
+
+        function AutoCalculateLaburCost() {
+            let RepairCharges = document.getElementById("RepairCharges").innerHTML;
+
+            console.log(RepairCharges)
+            let totalAmount = document.getElementById('totalAmount');
+            let PackingCharges = document.getElementById("PackingCharges").innerHTML;
+            let ForwardingCharges = document.getElementById("ForwardingCharges").innerHTML;
+            let LaburCostAmount = document.getElementById('LAmount');
+            let SubTotalAmount = document.getElementById("SubTotalAmt")
+            let SubTotalLAmount = document.getElementById("SubTotalLAmount")
+            SubTotalLAmount.value = LaburCostAmount.value;
+            console.log(LaburCostAmount);
+            if (SubTotalLAmount.value == '') {
+                document.getElementById('SubTotalLAmount').value = 0;
+            }
+            if (LaburCostAmount.value == '') {
+                document.getElementById('LAmount').value = 0;
+            }
+            document.getElementById("totalamountbeforetax").innerHTML = parseFloat(SubTotalAmount.value) + parseFloat(LaburCostAmount.value);
+
+            //if (LaburCostAmount.value != 0 && LaburCostAmount.value != "") {
+                let LaburCostTotal = document.getElementById('LaburCostTotal');
+                let LaburCostGst = document.getElementById('LaburCostGst');
+                LaburCostTotal.value = "";
+                var tm = ((LaburCostAmount.value) * 18 / 100);
+                //Added by bharat date on 16-06-2023 changes filed contain on decimal value so math.round functoin are used value are round off
+                LaburCostGst.value = Math.round(tm);
+                 //Added by bharat date on 16-06-2023 changes filed contain on decimal value so math.round functoin are used value are round off
+                LaburCostTotal.value = Math.round(tm) + Math.round(LaburCostAmount.value);
+
+                if ((PackingCharges != 0 && PackingCharges != "") || (ForwardingCharges != "" && ForwardingCharges != 0)) {
+                    var TotalAmtAfterTax = parseFloat(LaburCostTotal.value)+ parseFloat(totalAmount.value);
+                    document.getElementById("TotalAmountAfterTax").innerHTML = TotalAmtAfterTax;
+                }
+                else {
+                    var TotalAmtAfterTax = parseFloat(LaburCostTotal.value) + parseFloat(totalAmount.value);
+                    document.getElementById("TotalAmountAfterTax").innerHTML = TotalAmtAfterTax;
+                }
+            //}
+        }
+
+
+        function details() {
+
+            var partialAmt = false;
+            let PackingCharges = document.getElementById("PackingCharges").innerHTML;
+            let ForwardingCharges = document.getElementById("ForwardingCharges").innerHTML;
+            var Pckage_Forwarding = $('#CCost').val();
+            Pckage_Forwarding = parseFloat(Pckage_Forwarding);
+            var ComponentCost = $('#Amount').val();
+            var recentAmount = $('#TotalAmountAfterTax').text();
+            var finalAmount = localStorage.getItem("FinalAmount")
+            console.log(ComponentCost);
+            var LaburCostAmount = $('#LAmount').val();
+            let LabourCost = parseFloat(LaburCostAmount);
+            localStorage.setItem("LAmount", LaburCostAmount);
+
+            ComponentCost = parseFloat(ComponentCost); /*- (parseFloat(PackingCharges) + parseFloat(ForwardingCharges))*/
+            localStorage.setItem("CCost", ComponentCost);
+            //var newamt = recentAmount.toFixed(2);
+            if (parseFloat(recentAmount) != finalAmount) {
+                console.log(recentAmount);
+                console.log(finalAmount);
+                partialAmt = true;
+            } else {
+                partialAmt = false;
+            }
+            var data =
+            {
+                PckageForwarding: Pckage_Forwarding,
+                    ComponentCost: ComponentCost,
+                    LabourCost: LabourCost,
+                    OrderGuid: localStorage.getItem("oId"),
+                    CustomerId: localStorage.getItem("Cid"),
+                    InvoiceNumber: localStorage.getItem("InvNo"),
+                    InvoiceDate: localStorage.getItem("InvDate"),
+                    partialAmount: partialAmt,
+                }
+
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("CreateCreditNote", "Invoice")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                            localStorage.clear();
+                        }
+                        else {
+                            $('#cancelMessage').text(response);
+                            $('#cancelModal').modal('show');
+                            //window.location.reload(true);
+                        }
+                    },
+
+                });
+        }
+
+        function GenerateDebitNote() {
+         var ComponentCost = 0;
+                var LaburCost = 0;
+
+                var data =
+                {
+                    ComponentCost: ComponentCost,
+                    LaburCost: LaburCost,
+                    OrderGuid: localStorage.getItem("oId"),
+                    CustomerId: localStorage.getItem("Cid"),
+                    InvoiceNumber: localStorage.getItem("InvNo"),
+                    InvoiceDate: localStorage.getItem("InvDate")
+                }
+
+
+                    $.ajax({
+                        beforeSend: function () {
+                            $('.spinner-wrapper').show()
+                        },
+
+                        type: "POST",  // method of sending data
+                        url: '@Url.Action("CreateDebitNote", "Invoice")', // name of PHP script
+                        data: data, // parameter name and value
+                        success: function (response) {
+                            $('.spinner-wrapper').hide();
+                            if (response == "success") {
+                                window.location = '@Url.Action("ReturnView", "Invoice")';
+
+                                localStorage.removeItem("oId");
+                                localStorage.removeItem("Cid");
+                                localStorage.removeItem("InvNo");
+                                localStorage.removeItem("InvDate");
+                                localStorage.removeItem("CCost");
+                                localStorage.removeItem("LaburCostAmount");
+                            }
+                            else {
+                                $('#cancelMessage').text(response);
+                                $('#cancelModal').modal('show');
+                                window.location.reload(true);
+                            }
+                        },
+
+                    });
+
+        }
+    </script>
+
+    <script>
+        function clearCache() {
+            localStorage.clear();
+        }
+    </script>
+
+</body>
+</html>

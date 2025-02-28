@@ -1,0 +1,28 @@
+﻿
+
+.tile-container {
+    margin-top: 20px;
+}
+
+.tile {
+    
+    background-color: #003F87;
+    margin: 0 10px 10px 0;
+    height: 180px;
+    
+    color: white;
+    width: 28% !important;
+}
+
+    .tile:hover {
+        border: solid 1px white;
+    }
+
+
+
+    .tile-icon {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+}

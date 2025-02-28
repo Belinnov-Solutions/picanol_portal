@@ -1,0 +1,54 @@
+﻿@*<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>HTML Table</h2>
+
+    <table>
+        <tr>
+            <th>Tracking ID</th>
+            <th>Customer Name</th>
+            <th>Date</th>
+            <th>Challan No</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+        </tr>
+        @foreach (var item in collection)
+        {
+            <tr>
+                <td><a href="@Url.Action("JobCard","Material",new{id=@item.TrackingID})">@item.TrackingID</a></td>
+                <td>@item.CustomerName</td>
+                <td>@item.Date</td>
+                <td>@item.ChallanNo</td>
+                <td>@item.AssignedTo</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+
+
+
+
+    </table>
+
+</body>
+</html>*@
+

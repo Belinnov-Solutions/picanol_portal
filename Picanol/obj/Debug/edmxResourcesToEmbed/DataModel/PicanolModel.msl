@@ -1,0 +1,711 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PicanolModelStoreContainer" CdmEntityContainer="PicannolEntities">
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="PicanolModel.Log">
+        <MappingFragment StoreEntitySet="Logs">
+          <ScalarProperty Name="LogId" ColumnName="LogId" />
+          <ScalarProperty Name="Level" ColumnName="Level" />
+          <ScalarProperty Name="CallSite" ColumnName="CallSite" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+          <ScalarProperty Name="InnerException" ColumnName="InnerException" />
+          <ScalarProperty Name="AdditionalInfo" ColumnName="AdditionalInfo" />
+          <ScalarProperty Name="LoggedOnDate" ColumnName="LoggedOnDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblAudits">
+      <EntityTypeMapping TypeName="PicanolModel.tblAudit">
+        <MappingFragment StoreEntitySet="tblAudit">
+          <ScalarProperty Name="ActionId" ColumnName="ActionId" />
+          <ScalarProperty Name="ActionName" ColumnName="ActionName" />
+          <ScalarProperty Name="TableName" ColumnName="TableName" />
+          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Browser" ColumnName="Browser" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblBusinesses">
+      <EntityTypeMapping TypeName="PicanolModel.tblBusiness">
+        <MappingFragment StoreEntitySet="tblBusiness">
+          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+          <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+          <ScalarProperty Name="District" ColumnName="District" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="PIN" ColumnName="PIN" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="GSTIN" ColumnName="GSTIN" />
+          <ScalarProperty Name="PAN" ColumnName="PAN" />
+          <ScalarProperty Name="ParentBusinessID" ColumnName="ParentBusinessID" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="IFSCCode" ColumnName="IFSCCode" />
+          <ScalarProperty Name="BankName" ColumnName="BankName" />
+          <ScalarProperty Name="BankBranch" ColumnName="BankBranch" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblChallans">
+      <EntityTypeMapping TypeName="PicanolModel.tblChallan">
+        <MappingFragment StoreEntitySet="tblChallan">
+          <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
+          <ScalarProperty Name="ChallanNumber" ColumnName="ChallanNumber" />
+          <ScalarProperty Name="ChallanDate" ColumnName="ChallanDate" />
+          <ScalarProperty Name="ReferenceNo" ColumnName="ReferenceNo" />
+          <ScalarProperty Name="DateReceived" ColumnName="DateReceived" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="ChallanType" ColumnName="ChallanType" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblCreditNotes">
+      <EntityTypeMapping TypeName="PicanolModel.tblCreditNote">
+        <MappingFragment StoreEntitySet="tblCreditNote">
+          <ScalarProperty Name="CreditNoteId" ColumnName="CreditNoteId" />
+          <ScalarProperty Name="OrderGuid" ColumnName="OrderGuid" />
+          <ScalarProperty Name="CreditNoteNo" ColumnName="CreditNoteNo" />
+          <ScalarProperty Name="CreditNoteDate" ColumnName="CreditNoteDate" />
+          <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+          <ScalarProperty Name="TaxableAmount" ColumnName="TaxableAmount" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="CreditNoteFileName" ColumnName="CreditNoteFileName" />
+          <ScalarProperty Name="Createdby" ColumnName="Createdby" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="ComponentCost" ColumnName="ComponentCost" />
+          <ScalarProperty Name="LabourCost" ColumnName="LabourCost" />
+          <ScalarProperty Name="ServiceCharge" ColumnName="ServiceCharge" />
+          <ScalarProperty Name="Fare" ColumnName="Fare" />
+          <ScalarProperty Name="PocketExpeses" ColumnName="PocketExpeses" />
+          <ScalarProperty Name="BoardingCharges" ColumnName="BoardingCharges" />
+          <ScalarProperty Name="BoardingDays" ColumnName="BoardingDays" />
+          <ScalarProperty Name="ServiceDays" ColumnName="ServiceDays" />
+          <ScalarProperty Name="ConveyanceExpenses" ColumnName="ConveyanceExpenses" />
+          <ScalarProperty Name="ConveyanceExpenseDays" ColumnName="ConveyanceExpenseDays" />
+          <ScalarProperty Name="PocketExpenseDays" ColumnName="PocketExpenseDays" />
+          <ScalarProperty Name="OvertimeHours" ColumnName="OvertimeHours" />
+          <ScalarProperty Name="OvertimeCharges" ColumnName="OvertimeCharges" />
+          <ScalarProperty Name="OvertimeAmount" ColumnName="OvertimeAmount" />
+          <ScalarProperty Name="CRNCreated" ColumnName="CRNCreated" />
+          <ScalarProperty Name="Cancelled" ColumnName="Cancelled" />
+          <ScalarProperty Name="CancelledBy" ColumnName="CancelledBy" />
+          <ScalarProperty Name="CancelledDate" ColumnName="CancelledDate" />
+          <ScalarProperty Name="SubCustomerId" ColumnName="SubCustomerId" />
+          <ScalarProperty Name="PackagingForwarding" ColumnName="PackagingForwarding" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblCustomers">
+      <EntityTypeMapping TypeName="PicanolModel.tblCustomer">
+        <MappingFragment StoreEntitySet="tblCustomer">
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+          <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+          <ScalarProperty Name="District" ColumnName="District" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="PIN" ColumnName="PIN" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="GSTIN" ColumnName="GSTIN" />
+          <ScalarProperty Name="PAN" ColumnName="PAN" />
+          <ScalarProperty Name="BusinessId" ColumnName="BusinessId" />
+          <ScalarProperty Name="BigPacking" ColumnName="BigPacking" />
+          <ScalarProperty Name="BigForwarding" ColumnName="BigForwarding" />
+          <ScalarProperty Name="SmallPacking" ColumnName="SmallPacking" />
+          <ScalarProperty Name="SmallForwarding" ColumnName="SmallForwarding" />
+          <ScalarProperty Name="ShippingAddressLine1" ColumnName="ShippingAddressLine1" />
+          <ScalarProperty Name="ShippingAddressLine2" ColumnName="ShippingAddressLine2" />
+          <ScalarProperty Name="ShippingDistrict" ColumnName="ShippingDistrict" />
+          <ScalarProperty Name="ShippingCity" ColumnName="ShippingCity" />
+          <ScalarProperty Name="ShippingState" ColumnName="ShippingState" />
+          <ScalarProperty Name="ShippingPIN" ColumnName="ShippingPIN" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="RepairCharges" ColumnName="RepairCharges" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Delind" ColumnName="Delind" />
+          <ScalarProperty Name="Zone" ColumnName="Zone" />
+          <ScalarProperty Name="ShippingStateCode" ColumnName="ShippingStateCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblDebitNotes">
+      <EntityTypeMapping TypeName="PicanolModel.tblDebitNote">
+        <MappingFragment StoreEntitySet="tblDebitNote">
+          <ScalarProperty Name="DebitNoteId" ColumnName="DebitNoteId" />
+          <ScalarProperty Name="OrderGuid" ColumnName="OrderGuid" />
+          <ScalarProperty Name="DebitNoteNo" ColumnName="DebitNoteNo" />
+          <ScalarProperty Name="CreditNoteNo" ColumnName="CreditNoteNo" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="DebitNoteDate" ColumnName="DebitNoteDate" />
+          <ScalarProperty Name="DebitNoteFileName" ColumnName="DebitNoteFileName" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="SubCustomerId" ColumnName="SubCustomerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblDetailedExpenses">
+      <EntityTypeMapping TypeName="PicanolModel.tblDetailedExpens">
+        <MappingFragment StoreEntitySet="tblDetailedExpenses">
+          <ScalarProperty Name="DetailedExpensesId" ColumnName="DetailedExpensesId" />
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="ExpenseFrom" ColumnName="ExpenseFrom" />
+          <ScalarProperty Name="ExpenseTo" ColumnName="ExpenseTo" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblDispatchDetails">
+      <EntityTypeMapping TypeName="PicanolModel.tblDispatchDetail">
+        <MappingFragment StoreEntitySet="tblDispatchDetails">
+          <ScalarProperty Name="DispatchId" ColumnName="DispatchId" />
+          <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="DocketNo" ColumnName="DocketNo" />
+          <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="DispatchDetails" ColumnName="DispatchDetails" />
+          <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblEInvoices">
+      <EntityTypeMapping TypeName="PicanolModel.tblEInvoice">
+        <MappingFragment StoreEntitySet="tblEInvoice">
+          <ScalarProperty Name="EInvoiceId" ColumnName="EInvoiceId" />
+          <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="IRN" ColumnName="IRN" />
+          <ScalarProperty Name="QRCodeBase64" ColumnName="QRCodeBase64" />
+          <ScalarProperty Name="QRCode" ColumnName="QRCode" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="IRNGeneratedBy" ColumnName="IRNGeneratedBy" />
+          <ScalarProperty Name="CancelledBy" ColumnName="CancelledBy" />
+          <ScalarProperty Name="CancelledDate" ColumnName="CancelledDate" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="Cancelled" ColumnName="Cancelled" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblInvoices">
+      <EntityTypeMapping TypeName="PicanolModel.tblInvoice">
+        <MappingFragment StoreEntitySet="tblInvoices">
+          <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="OrderGuid" ColumnName="OrderGuid" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="InvoiceType" ColumnName="InvoiceType" />
+          <ScalarProperty Name="Cancelled" ColumnName="Cancelled" />
+          <ScalarProperty Name="CancelledBy" ColumnName="CancelledBy" />
+          <ScalarProperty Name="CancelledDate" ColumnName="CancelledDate" />
+          <ScalarProperty Name="InvoiceFileName" ColumnName="InvoiceFileName" />
+          <ScalarProperty Name="SendOnDate" ColumnName="SendOnDate" />
+          <ScalarProperty Name="SendTo" ColumnName="SendTo" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="SubCustomerId" ColumnName="SubCustomerId" />
+          <ScalarProperty Name="Packing" ColumnName="Packing" />
+          <ScalarProperty Name="Forwading" ColumnName="Forwading" />
+          <ScalarProperty Name="RepairCharge" ColumnName="RepairCharge" />
+          <ScalarProperty Name="ComponentCost" ColumnName="ComponentCost" />
+          <ScalarProperty Name="GeneratedByUserId" ColumnName="GeneratedByUserId" />
+          <ScalarProperty Name="BillingAddress" ColumnName="BillingAddress" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="ShippingStateCode" ColumnName="ShippingStateCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblOrders">
+      <EntityTypeMapping TypeName="PicanolModel.tblOrder">
+        <MappingFragment StoreEntitySet="tblOrder">
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
+          <ScalarProperty Name="AssignedUserId" ColumnName="AssignedUserId" />
+          <ScalarProperty Name="RepairType" ColumnName="RepairType" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="RepairTime" ColumnName="RepairTime" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="PackingType" ColumnName="PackingType" />
+          <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+          <ScalarProperty Name="EditedBy" ColumnName="EditedBy" />
+          <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
+          <ScalarProperty Name="Dispatched" ColumnName="Dispatched" />
+          <ScalarProperty Name="Paid" ColumnName="Paid" />
+          <ScalarProperty Name="ExemptLabourCost" ColumnName="ExemptLabourCost" />
+          <ScalarProperty Name="ExemptComponentCost" ColumnName="ExemptComponentCost" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblOrderParts">
+      <EntityTypeMapping TypeName="PicanolModel.tblOrderPart">
+        <MappingFragment StoreEntitySet="tblOrderPart">
+          <ScalarProperty Name="OrderPartId" ColumnName="OrderPartId" />
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Deletedby" ColumnName="Deletedby" />
+          <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblOrderPayments">
+      <EntityTypeMapping TypeName="PicanolModel.tblOrderPayment">
+        <MappingFragment StoreEntitySet="tblOrderPayments">
+          <ScalarProperty Name="OrderPaymentId" ColumnName="OrderPaymentId" />
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="PaymentGUID" ColumnName="PaymentGUID" />
+          <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="DatePaid" ColumnName="DatePaid" />
+          <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+          <ScalarProperty Name="PaymentDetails" ColumnName="PaymentDetails" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+          <ScalarProperty Name="TDS" ColumnName="TDS" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="Paid" ColumnName="Paid" />
+          <ScalarProperty Name="InvoiceAmount" ColumnName="InvoiceAmount" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="ReceivedAmount" ColumnName="ReceivedAmount" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblParts">
+      <EntityTypeMapping TypeName="PicanolModel.tblPart">
+        <MappingFragment StoreEntitySet="tblPart">
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+          <ScalarProperty Name="PartName" ColumnName="PartName" />
+          <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="GST" ColumnName="GST" />
+          <ScalarProperty Name="Stock" ColumnName="Stock" />
+          <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+          <ScalarProperty Name="OpeningStockDate" ColumnName="OpeningStockDate" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPartHistories">
+      <EntityTypeMapping TypeName="PicanolModel.tblPartHistory">
+        <MappingFragment StoreEntitySet="tblPartHistory">
+          <ScalarProperty Name="PartHistoryId" ColumnName="PartHistoryId" />
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+          <ScalarProperty Name="PartName" ColumnName="PartName" />
+          <ScalarProperty Name="SerialNo" ColumnName="SerialNo" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="GST" ColumnName="GST" />
+          <ScalarProperty Name="Stock" ColumnName="Stock" />
+          <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="OpeningStock" ColumnName="OpeningStock" />
+          <ScalarProperty Name="OpeningStockDate" ColumnName="OpeningStockDate" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPartLoans">
+      <EntityTypeMapping TypeName="PicanolModel.tblPartLoan">
+        <MappingFragment StoreEntitySet="tblPartLoan">
+          <ScalarProperty Name="OrderGUID" ColumnName="OrderGUID" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Returned" ColumnName="Returned" />
+          <ScalarProperty Name="ReturnedBy" ColumnName="ReturnedBy" />
+          <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="LoanId" ColumnName="LoanId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPartTypes">
+      <EntityTypeMapping TypeName="PicanolModel.tblPartType">
+        <MappingFragment StoreEntitySet="tblPartType">
+          <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+          <ScalarProperty Name="PartTypeName" ColumnName="PartTypeName" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblProformaInvoices">
+      <EntityTypeMapping TypeName="PicanolModel.tblProformaInvoice">
+        <MappingFragment StoreEntitySet="tblProformaInvoices">
+          <ScalarProperty Name="ProformaInvoiceId" ColumnName="ProformaInvoiceId" />
+          <ScalarProperty Name="ProformaInvoiceNo" ColumnName="ProformaInvoiceNo" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="OrderGuid" ColumnName="OrderGuid" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="ProformaInvoiceDate" ColumnName="ProformaInvoiceDate" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="EditedBy" ColumnName="EditedBy" />
+          <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="Packing" ColumnName="Packing" />
+          <ScalarProperty Name="Forwading" ColumnName="Forwading" />
+          <ScalarProperty Name="RepairCharge" ColumnName="RepairCharge" />
+          <ScalarProperty Name="ComponentCost" ColumnName="ComponentCost" />
+          <ScalarProperty Name="PackingType" ColumnName="PackingType" />
+          <ScalarProperty Name="BillingAddress" ColumnName="BillingAddress" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="ShippingStateCode" ColumnName="ShippingStateCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblProvisionalBills">
+      <EntityTypeMapping TypeName="PicanolModel.tblProvisionalBill">
+        <MappingFragment StoreEntitySet="tblProvisionalBill">
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CallType" ColumnName="CallType" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="ServiceCharge" ColumnName="ServiceCharge" />
+          <ScalarProperty Name="Fare" ColumnName="Fare" />
+          <ScalarProperty Name="PocketExpenses" ColumnName="PocketExpenses" />
+          <ScalarProperty Name="BoardingCharges" ColumnName="BoardingCharges" />
+          <ScalarProperty Name="BoardingDays" ColumnName="BoardingDays" />
+          <ScalarProperty Name="ConveyanceExpenses" ColumnName="ConveyanceExpenses" />
+          <ScalarProperty Name="OtherCharges" ColumnName="OtherCharges" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="GST" ColumnName="GST" />
+          <ScalarProperty Name="FinalAmount" ColumnName="FinalAmount" />
+          <ScalarProperty Name="ServiceDays" ColumnName="ServiceDays" />
+          <ScalarProperty Name="AuthorizedBy" ColumnName="AuthorizedBy" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+          <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+          <ScalarProperty Name="ConveyanceExpenseDays" ColumnName="ConveyanceExpenseDays" />
+          <ScalarProperty Name="PocketExpenseDays" ColumnName="PocketExpenseDays" />
+          <ScalarProperty Name="Authorized" ColumnName="Authorized" />
+          <ScalarProperty Name="AuthorizedOn" ColumnName="AuthorizedOn" />
+          <ScalarProperty Name="ServiceBillNo" ColumnName="ServiceBillNo" />
+          <ScalarProperty Name="OvertimeHours" ColumnName="OvertimeHours" />
+          <ScalarProperty Name="OvertimeCharges" ColumnName="OvertimeCharges" />
+          <ScalarProperty Name="OvertimeAmount" ColumnName="OvertimeAmount" />
+          <ScalarProperty Name="UserSignatureId" ColumnName="UserSignatureId" />
+          <ScalarProperty Name="TotalDays" ColumnName="TotalDays" />
+          <ScalarProperty Name="FinalSubmit" ColumnName="FinalSubmit" />
+          <ScalarProperty Name="SubCustomerId" ColumnName="SubCustomerId" />
+          <ScalarProperty Name="Cancelled" ColumnName="Cancelled" />
+          <ScalarProperty Name="IsProvisionalEmailSent" ColumnName="IsProvisionalEmailSent" />
+          <ScalarProperty Name="ReminderEmailSend" ColumnName="ReminderEmailSend" />
+          <ScalarProperty Name="ReminderEmailDate" ColumnName="ReminderEmailDate" />
+          <ScalarProperty Name="FinalReminderSent" ColumnName="FinalReminderSent" />
+          <ScalarProperty Name="Paid" ColumnName="Paid" />
+          <ScalarProperty Name="BillingAddress" ColumnName="BillingAddress" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="ShippingStateCode" ColumnName="ShippingStateCode" />
+          <ScalarProperty Name="SubCustomerBillingAddress" ColumnName="SubCustomerBillingAddress" />
+          <ScalarProperty Name="SubCustomerStateCode" ColumnName="SubCustomerStateCode" />
+          <ScalarProperty Name="SubCustomerShippingAddress" ColumnName="SubCustomerShippingAddress" />
+          <ScalarProperty Name="SubCustomerShippingStateCode" ColumnName="SubCustomerShippingStateCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblPurchases">
+      <EntityTypeMapping TypeName="PicanolModel.tblPurchase">
+        <MappingFragment StoreEntitySet="tblPurchase">
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="PurchaseId" ColumnName="PurchaseId" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblRoles">
+      <EntityTypeMapping TypeName="PicanolModel.tblRole">
+        <MappingFragment StoreEntitySet="tblRoles">
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblServiceDays">
+      <EntityTypeMapping TypeName="PicanolModel.tblServiceDay">
+        <MappingFragment StoreEntitySet="tblServiceDays">
+          <ScalarProperty Name="ServiceBillDayId" ColumnName="ServiceBillDayId" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblServiceRequests">
+      <EntityTypeMapping TypeName="PicanolModel.tblServiceRequest">
+        <MappingFragment StoreEntitySet="tblServiceRequest">
+          <ScalarProperty Name="ServiceRequestId" ColumnName="ServiceRequestId" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CallType" ColumnName="CallType" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="ServiceCharge" ColumnName="ServiceCharge" />
+          <ScalarProperty Name="Fare" ColumnName="Fare" />
+          <ScalarProperty Name="PocketExpenses" ColumnName="PocketExpenses" />
+          <ScalarProperty Name="BoardingCharges" ColumnName="BoardingCharges" />
+          <ScalarProperty Name="BoardingDays" ColumnName="BoardingDays" />
+          <ScalarProperty Name="ConveyanceExpenses" ColumnName="ConveyanceExpenses" />
+          <ScalarProperty Name="OtherCharges" ColumnName="OtherCharges" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="GST" ColumnName="GST" />
+          <ScalarProperty Name="FinalAmount" ColumnName="FinalAmount" />
+          <ScalarProperty Name="ServiceDays" ColumnName="ServiceDays" />
+          <ScalarProperty Name="AuthorizedBy" ColumnName="AuthorizedBy" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+          <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+          <ScalarProperty Name="ConveyanceExpenseDays" ColumnName="ConveyanceExpenseDays" />
+          <ScalarProperty Name="PocketExpenseDays" ColumnName="PocketExpenseDays" />
+          <ScalarProperty Name="Authorized" ColumnName="Authorized" />
+          <ScalarProperty Name="AuthorizedOn" ColumnName="AuthorizedOn" />
+          <ScalarProperty Name="ServiceBillNo" ColumnName="ServiceBillNo" />
+          <ScalarProperty Name="OvertimeHours" ColumnName="OvertimeHours" />
+          <ScalarProperty Name="OvertimeCharges" ColumnName="OvertimeCharges" />
+          <ScalarProperty Name="OvertimeAmount" ColumnName="OvertimeAmount" />
+          <ScalarProperty Name="UserSignatureId" ColumnName="UserSignatureId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblSubCustomers">
+      <EntityTypeMapping TypeName="PicanolModel.tblSubCustomer">
+        <MappingFragment StoreEntitySet="tblSubCustomer">
+          <ScalarProperty Name="SubCustomerId" ColumnName="SubCustomerId" />
+          <ScalarProperty Name="SubCustomerName" ColumnName="SubCustomerName" />
+          <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+          <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+          <ScalarProperty Name="District" ColumnName="District" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="PIN" ColumnName="PIN" />
+          <ScalarProperty Name="ConatctPerson" ColumnName="ConatctPerson" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="GSTIN" ColumnName="GSTIN" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblTimeSheets">
+      <EntityTypeMapping TypeName="PicanolModel.tblTimeSheet">
+        <MappingFragment StoreEntitySet="tblTimeSheet">
+          <ScalarProperty Name="TimeSheetId" ColumnName="TimeSheetId" />
+          <ScalarProperty Name="TimeSheetNo" ColumnName="TimeSheetNo" />
+          <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="AuthorizedBy" ColumnName="AuthorizedBy" />
+          <ScalarProperty Name="AuthorizedOn" ColumnName="AuthorizedOn" />
+          <ScalarProperty Name="Authorized" ColumnName="Authorized" />
+          <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+          <ScalarProperty Name="TimeSheetFileName" ColumnName="TimeSheetFileName" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+          <ScalarProperty Name="UserSignatureId" ColumnName="UserSignatureId" />
+          <ScalarProperty Name="FinalSubmit" ColumnName="FinalSubmit" />
+          <ScalarProperty Name="ProvisionalBillId" ColumnName="ProvisionalBillId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblTimeSheetDetails">
+      <EntityTypeMapping TypeName="PicanolModel.tblTimeSheetDetail">
+        <MappingFragment StoreEntitySet="tblTimeSheetDetails">
+          <ScalarProperty Name="TimeSheetDetailId" ColumnName="TimeSheetDetailId" />
+          <ScalarProperty Name="TimeSheetId" ColumnName="TimeSheetId" />
+          <ScalarProperty Name="WorkDate" ColumnName="WorkDate" />
+          <ScalarProperty Name="TotalHours" ColumnName="TotalHours" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="WeekNo" ColumnName="WeekNo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblUsers">
+      <EntityTypeMapping TypeName="PicanolModel.tblUser">
+        <MappingFragment StoreEntitySet="tblUser">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="OTP" ColumnName="OTP" />
+          <ScalarProperty Name="OtpVarify" ColumnName="OtpVarify" />
+          <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblWorkOrderImages">
+      <EntityTypeMapping TypeName="PicanolModel.tblWorkOrderImage">
+        <MappingFragment StoreEntitySet="tblWorkOrderImage">
+          <ScalarProperty Name="WorkOrderImageId" ColumnName="WorkOrderImageId" />
+          <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+          <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblWorkOrders">
+      <EntityTypeMapping TypeName="PicanolModel.tblWorkOrder">
+        <MappingFragment StoreEntitySet="tblWorkOrders">
+          <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+          <ScalarProperty Name="WorkOrderGUID" ColumnName="WorkOrderGUID" />
+          <ScalarProperty Name="WorkOrderNo" ColumnName="WorkOrderNo" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="WorkOrderType" ColumnName="WorkOrderType" />
+          <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Conditions" ColumnName="Conditions" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+          <ScalarProperty Name="CallType" ColumnName="CallType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblZones">
+      <EntityTypeMapping TypeName="PicanolModel.tblZone">
+        <MappingFragment StoreEntitySet="tblZone">
+          <ScalarProperty Name="Zone" ColumnName="Zone" />
+          <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblCustomerContacts">
+      <EntityTypeMapping TypeName="PicanolModel.tblCustomerContact">
+        <MappingFragment StoreEntitySet="tblCustomerContact">
+          <ScalarProperty Name="CustomerContactId" ColumnName="CustomerContactId" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="ContactPersonName" ColumnName="ContactPersonName" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblGSTStates">
+      <EntityTypeMapping TypeName="PicanolModel.tblGSTState">
+        <MappingFragment StoreEntitySet="tblGSTStates">
+          <ScalarProperty Name="GSTStateId" ColumnName="GSTStateId" />
+          <ScalarProperty Name="StateName" ColumnName="StateName" />
+          <ScalarProperty Name="StateInitials" ColumnName="StateInitials" />
+          <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+          <ScalarProperty Name="StateType" ColumnName="StateType" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tblServiceCallTypes">
+      <EntityTypeMapping TypeName="PicanolModel.tblServiceCallType">
+        <MappingFragment StoreEntitySet="tblServiceCallTypes">
+          <ScalarProperty Name="CallTypeId" ColumnName="CallTypeId" />
+          <ScalarProperty Name="CallTypeNumber" ColumnName="CallTypeNumber" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ServiceCharges" ColumnName="ServiceCharges" />
+          <ScalarProperty Name="DelInd" ColumnName="DelInd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="usp_UpdatetblPart" FunctionName="PicanolModel.Store.usp_UpdatetblPart" />
+  </EntityContainerMapping>
+</Mapping>

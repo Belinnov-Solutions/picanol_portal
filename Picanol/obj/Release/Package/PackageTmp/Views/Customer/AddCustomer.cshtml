@@ -1,0 +1,832 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+@{
+    ViewBag.Title = "AddCustomer";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Content/jquery.multifile.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+        .required-field::before {
+            content: "*";
+            color: red;
+        }
+        @*input[type=text] {
+            width: 100%;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            outline: none;
+        }*@
+
+        input[type=text]:focus {
+                border: 2px solid #555;
+        }
+    </style>
+</head>
+<body>
+    <button type="submit" class="btn btn-primary btn-large pull-left" onclick="history.back()">Back </button>
+    <button type="submit" class="btn btn-success btn-large pull-right" id="Refresh" value="Refresh">Refresh </button>
+    <div class="container">
+        @if (Model.Customer == null)
+        {
+            <h3 class="text-center"><b>Add Customer</b></h3>}
+
+        else
+        { <h3 class="text-center"><b>Edit Customer</b></h3>}
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="CustomerName" class="required-field">Customer Name:</label>
+                    @Html.TextBoxFor(model => model.Customer.CustomerName, new { @class = "form-control", id = "CustomerName", @placeholder = "Enter Customer Name" })
+                    @Html.HiddenFor(model => model.Customer.CustomerId, new { id = "CustomerId" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+
+                    <button type="submit" class="btn btn-primary" style="margin-top:25px" id="CheckGSTIN" value="Check">Check</button>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="AddressLine1" class="required-field">Address Line1:</label>
+                    @Html.TextBoxFor(model => model.Customer.AddressLine1, new { @class = "form-control", id = "AddressLine1", @placeholder = "Enter Address Line1" })
+
+                </div>
+            </div>
+
+
+            <div class="col-md-12">
+                <div id="updateData" class="table-responsive">
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="AddressLine2">Address Line2</label>
+                    @Html.TextBoxFor(model => model.Customer.AddressLine2, new { @class = "form-control", id = "AddressLine2", @placeholder = "Enter Address Line2" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="District" class="required-field">District</label>
+                    @Html.TextBoxFor(model => model.Customer.District, new { @class = "form-control", id = "District", @placeholder = "Enter District" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="City" class="required-field">City</label>
+                    @Html.TextBoxFor(model => model.Customer.City, new { @class = "form-control", id = "City", @placeholder = "Enter City" })
+
+                </div>
+            </div>
+            @if (Model.Customer == null)
+            {
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="State" class="required-field">State</label>
+                        @*@Html.TextBoxFor(model => model.Customer.State, new { @class = "form-control", id = "State", @placeholder = "Enter State" })*@
+                        @*@Html.DropDownListFor(p => p.Customer.State, new SelectList(Model.StateList, "StateName", "StateName"), "Select State", new { id = "State", @class = "form-control" , onchange = "getState()" })*@
+                        <input name="id" class="form-control" placeholder="Enter State" type="search" list="StateList" autocomplete="off" id="State" onchange="getState()" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @*<label for="Zone" class="required-field">Zone</label>*@
+                        <label for="Zone">Zone</label>
+                        @Html.TextBoxFor(model => model.Customer.Zone, new { @class = "form-control", id = "Zone", @placeholder = "Enter Zone", list = "ZoneList" })
+                        @*<input name="idd" class="form-control" placeholder="Enter Zone" type="search" list="ZoneList" autocomplete="off" id="Zone" />*@
+
+                    </div>
+                </div>
+
+
+            }
+            else
+            {
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="State" class="required-field">State</label>
+                        @Html.TextBoxFor(model => model.Customer.State, new { @class = "form-control", id = "State", @placeholder = "Enter State" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="State" class="required-field">Zone</label>
+                        @Html.TextBoxFor(model => model.Customer.Zone, new { @class = "form-control", id = "Zone", @placeholder = "Enter Zone", list = "ZoneList" })
+                        @*@Html.DropDownListFor(p => p.Customer.Zone, new SelectList(ViewBag.List), "Select one", new { id = "Zone", @class = "form-control" })*@
+                    </div>
+                </div>
+
+            }
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="PIN" class="required-field">PIN</label>
+                    @Html.TextBoxFor(model => model.Customer.PIN, new { @class = "form-control", id = "PIN", @placeholder = "Enter PIN" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ContactPerson">Contact Person</label>
+                    @Html.TextBoxFor(model => model.Customer.ContactPerson, new { @class = "form-control", id = "ContactPerson", @placeholder = "Enter Contact Person" })
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Mobile" class="required-field">Mobile</label>
+                    @Html.TextBoxFor(model => model.Customer.Mobile, new { @class = "form-control", id = "Mobile", @placeholder = "Enter Multiple Mobile separated by ' ; '" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    @Html.TextBoxFor(model => model.Customer.Email, new { @class = "form-control", id = "Email", @placeholder = "Enter Multiple Email separated by ' ; '" })
+
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="GSTIN" class="required-field">GSTIN</label>
+                    @Html.TextBoxFor(model => model.Customer.GSTIN, new { @class = "form-control", id = "GSTIN", @placeholder = "Enter GSTIN" })
+
+                </div>
+            </div>
+
+
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="StateCode" class="required-field">StateCode</label>
+                    @Html.TextBoxFor(model => model.Customer.StateCode, new { @class = "form-control", id = "StateCode", @placeholder = "Enter StateCode" })
+
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="SmallPacking" class="required-field">Small Packing</label>
+                    @Html.TextBoxFor(model => model.Customer.SmallPacking, new { @class = "form-control", id = "SmallPacking", @placeholder = "Enter Small Packing" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="BigPacking" class="required-field">Big Packing:</label>
+                    @Html.TextBoxFor(model => model.Customer.BigPacking, new { @class = "form-control", id = "BigPacking", @placeholder = "Enter Big Packing" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="SmallForwarding" class="required-field">Small Forwarding:</label>
+                    @Html.TextBoxFor(model => model.Customer.SmallForwarding, new { @class = "form-control", id = "SmallForwarding", @placeholder = "Enter Small Forwarding" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="BigForwarding" class="required-field">Big Forwarding:</label>
+                    @Html.TextBoxFor(model => model.Customer.BigForwarding, new { @class = "form-control", id = "BigForwarding", @placeholder = "Enter Big Forwarding" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="RepairCharges" class="required-field">RepairCharges</label>
+                    @Html.TextBoxFor(model => model.Customer.RepairCharges, new { @class = "form-control", id = "RepairCharges", @placeholder = "Enter Repair Charges" })
+
+                </div>
+            </div>
+            @if (Model.Customer != null)
+            {
+
+
+                if (Model.Customer.InActive != null && Model.Customer.InActive == true)
+                {
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="RepairCharges">InActive:</label>
+                            <input type="checkbox" style="zoom:1.5; margin-left:30px ;" id="checkactive" checked>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="RepairCharges">InActive</label>
+                            <input type="checkbox" style="zoom:1.5; margin-left:30px ;" id="checkactive">
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="RepairCharges">InActive</label>
+                        <input type="checkbox" style="zoom:1.5; margin-left:30px ;" id="checkactive">
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="SmallForwarding">Please Select is Billing & Shipping Address is Same:</label>
+                    <input type="checkbox" style="zoom:1.5; margin-left:30px ;" id="myCheck">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingAddressLine1" class="required-field">Shipping Address Line1:</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingAddressLine1, new { @class = "form-control", id = "ShippingAddressLine1", @placeholder = "Enter Shipping Address Line1" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingAddressLine2">Shipping Address Line2:</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingAddressLine2, new { @class = "form-control", id = "ShippingAddressLine2", @placeholder = "Enter Shipping Address Line2" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingDistrict">Shipping District</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingDistrict, new { @class = "form-control", id = "ShippingDistrict", @placeholder = "Enter Shipping District" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingState" class="required-field">Shipping State</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingState, new { @class = "form-control", id = "ShippingState", @placeholder = "Enter Shipping State" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingPIN" class="required-field">Shipping PIN</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingPIN, new { @class = "form-control", id = "ShippingPIN", @placeholder = "Enter Shipping PIN" })
+
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="ShippingStateCode" class="required-field">Shipping State Code:</label>
+                    @Html.TextBoxFor(model => model.Customer.ShippingStateCode, new { @class = "form-control", id = "ShippingStateCode", @placeholder = "Enter Shipping State Code" })
+
+                </div>
+            </div>
+            <br />
+
+            <div class="col-lg-12">
+                <table class="table table-bordered" id="Table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Departments</th>
+                            <th scope="col">Contact Person</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Customer == null)
+                        {
+                            <tr>
+                                @*<th scope="row">Sales</th>*@
+                                <td>
+                                    <input type="text" class="form-control" value="Sales" readonly>
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Contact Name">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Mobile separated by ' ; '">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Email separated by ' ; '">
+                                </td>
+                            </tr>
+                            <tr>
+                                @*<th scope="row">Purchase</th>*@
+                                <td>
+                                    <input type="text" class="form-control" value="Purchase" readonly>
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Contact Name">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Mobile separated by ' ; '">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Email separated by ' ; '">
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <input type="text" class="form-control" value="Engineers" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Contact Name">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Mobile separated by ' ; '">
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Email separated by ' ; '">
+                                </td>
+                            </tr>
+                            <tr>
+                                @*<th scope="row">Production</th>*@
+                                <td>
+                                    <input type="text" class="form-control" value="Production" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Contact Name">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Mobile separated by ' ; '">
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Email separated by ' ; '">
+                                </td>
+                            </tr>
+                            <tr>
+                                @*<th scope="row">Accounts</th>*@
+                                <td>
+                                    <input type="text" class="form-control" value="Accounts" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Contact Name">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Mobile separated by ' ; '">
+                                </td>
+
+                                <td>
+                                    <input type="text" class="form-control" placeholder="Enter Multiple Email separated by ' ; '">
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Customer.CustomerContacts)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" value=@item.Department readonly>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" value=@item.ContactPersonName>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" value=@item.Mobile>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" value=@item.EmailId>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" class="form-control" value=@item.CustomerContactId>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-large center-block" id="btnSave" value="Save">Submit</button>
+
+        <datalist id="StateList">
+            @foreach (var item in Model.StateList)
+            {
+                <option id="@item.StateName" data-value="@item.StateName" value="@item.StateName"></option>
+
+            }
+
+        </datalist>
+        <datalist id="ZoneList">
+            @foreach (var item in Model.ZoneList)
+            {
+                <option id="@item.Zone" data-value="@item.Zone" value="@item.Zone"></option>
+            }
+        </datalist>
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+
+        $('#myCheck').click(function () {
+            if (this.checked) {
+                $('#ShippingAddressLine1').val($('#AddressLine1').val());
+                $('#ShippingAddressLine2').val($('#AddressLine2').val());
+                $('#ShippingDistrict').val($('#District').val());
+                $('#ShippingState').val($('#State').val());
+                $('#ShippingPIN').val($('#PIN').val());
+                $('#ShippingStateCode').val($('#StateCode').val());
+            }
+            else {
+                $('#ShippingAddressLine1').val(null);
+                $('#ShippingAddressLine2').val(null);
+                $('#ShippingDistrict').val(null);
+                $('#ShippingState').val(null);
+                $('#ShippingPIN').val(null);
+                $('#ShippingStateCode').val(null);
+            }
+        });
+
+
+        function getState() {
+            var e = document.getElementById("State").value;
+            var res = e.split(';');
+            var state = res[0];
+            var statecode = res[1];
+
+            document.getElementById("State").value = state
+            document.getElementById("StateCode").value = statecode
+        }
+
+        //function getZone() {
+        //    var e = document.getElementById("Zone").value;
+        //    var zone = res[0];
+        //    document.getElementById("State").value =zone
+
+        //}
+
+    </script>
+
+    <script type="text/javascript">
+            $("#btnSave").click(function () {
+               var CustomerName = $('#CustomerName').val().trim();
+                if (CustomerName == '') {
+                   alert('Please fill your CustomerName!');
+                   //document.getElementById('<%=CustomerName%>').focus();
+                    document.getElementById('CustomerName').focus();
+                 return false;
+                }
+                var CustomerId = $('#CustomerId').val();
+
+                
+                var AddressLine1 = $('#AddressLine1').val().trim();
+                if (AddressLine1 == '') {
+                    alert('Please fill your AddressLine1!');
+                    //document.getElementById('<%=AddressLine1%>').focus();
+                    document.getElementById('AddressLine1').focus();
+                    return false;
+                }
+
+                var AddressLine2 = $('#AddressLine2').val();
+                var District = $('#District').val();
+
+            var District = $('#District').val().trim();
+                if (District == '') {
+                    alert('Please fill your District!');
+                    //document.getElementById('<%=District%>').focus();
+                    document.getElementById('District').focus();
+                    return false;
+                }
+
+
+
+            var City = $('#City').val().trim();
+                if (City == '') {
+                    alert('Please fill your City!');
+                    //document.getElementById('<%=City%>').focus();
+                    document.getElementById('City').focus();
+                    return false;
+                }
+
+
+                var State = $('#State').val().trim();
+                if (City == '') {
+                    alert('Please enter State!');
+                    //document.getElementById('<%=State%>').focus();
+                    document.getElementById('State').focus();
+                    return false;
+                }
+
+                var Zone = $('#Zone').val().trim();
+
+                @*if (Zone == '') {
+                    alert('Please enter State!');
+                    document.getElementById('<%=Zone%>').focus();
+                    return false;
+                }*@
+
+                var PIN = $('#PIN').val().trim();
+                if (PIN == '') {
+                    alert('Please enter PIN!');
+                    //document.getElementById('<%=PIN%>').focus();
+                    document.getElementById('PIN').focus();
+                    return false;
+                }
+
+                var CEmail = $('#Email').val();
+
+                var CMobile = $('#Mobile').val().trim();
+                if (CMobile == '') {
+                    alert('Please enter Mobile number!');
+                    //document.getElementById('<%=Mobile%>').focus();
+                    document.getElementById('Mobile').focus();
+                    return false;
+                }
+
+
+                var CContactPerson = $('#ContactPerson').val();
+                var GSTIN = $('#GSTIN').val().trim();
+                if (GSTIN == '') {
+                    alert('Please enter GSTIN!');
+                    //document.getElementById('<%=GSTIN%>').focus();
+                    document.getElementById('GSTIN').focus();
+                    return false;
+                }
+                var StateCode = $('#StateCode').val().trim();
+                if (StateCode == '') {
+                    alert('Please enter State Code!');
+                    //document.getElementById('<%=StateCode%>').focus();
+                    document.getElementById('StateCode').focus();
+                    return false;
+                }
+
+                var BigPacking = $('#BigPacking').val().trim();
+                if (BigPacking == '') {
+                    alert('Please enter BigPacking!');
+                    //document.getElementById('<%=BigPacking%>').focus();
+                    document.getElementById('BigPacking').focus();
+                    return false;
+                }
+                var SmallPacking = $('#SmallPacking').val().trim();
+                if (SmallPacking == '') {
+                    alert('Please enter SmallPacking!');
+                    //document.getElementById('<%=SmallPacking%>').focus();
+                    document.getElementById('SmallPacking').focus();
+                    return false;
+                }
+
+                var SmallForwarding = $('#SmallForwarding').val().trim();
+                if (SmallForwarding == '') {
+                    alert('Please enter SmallForwarding!');
+                    document.getElementById('SmallForwarding').focus();
+                    return false;
+                }
+
+                var BigForwarding = $('#BigForwarding').val().trim();
+                if (BigForwarding == '') {
+                    alert('Please enter BigForwarding!');
+                    //document.getElementById('<%=BigForwarding%>').focus();
+                    document.getElementById('BigForwarding').focus();
+                    return false;
+                }
+                var RepairCharges = $('#RepairCharges').val().trim();
+                if (RepairCharges == '') {
+                    alert('Please enter RepairCharges!');
+                    //document.getElementById('<%=RepairCharges%>').focus();
+                    document.getElementById('RepairCharges').focus();
+                    return false;
+                }
+
+                var ShippingAddressLine1 = $('#ShippingAddressLine1').val().trim();
+                if (ShippingAddressLine1 == '') {
+                    alert('Please enter Shipping Address Line1!');
+                    //document.getElementById('<%=ShippingAddressLine1%>').focus();
+                    document.getElementById('ShippingAddressLine1').focus();
+                    return false;
+                }
+
+                var ShippingDistrict = $('#ShippingDistrict').val();
+                //if (ShippingDistrict == '') {
+                //    alert('Please fill your ShippingDistrict!');
+                //    document.getElementById('<%=ShippingDistrict%>').focus();
+                //    return false;
+                //}
+
+                var ShippingState = $('#ShippingState').val().trim();
+                if (ShippingState == '') {
+                    alert('Please enter Shipping State!');
+                    //document.getElementById('<%=ShippingState%>').focus();
+                    document.getElementById('ShippingState').focus();
+                    return false;
+                }
+
+                var ShippingPIN = $('#ShippingPIN').val().trim();
+                if (ShippingPIN == '') {
+                    alert('Please fill your Shipping PIN!');
+                    //document.getElementById('<%=ShippingPIN%>').focus();
+                    document.getElementById('ShippingPIN').focus();
+                    return false;
+                }
+
+                var ShippingStateCode = $('#ShippingStateCode').val().trim();
+                if (ShippingStateCode == '') {
+                    alert('Please fill your ShippingStateCode!');
+                    //document.getElementById('<%=ShippingStateCode%>').focus();
+                    document.getElementById('ShippingStateCode').focus();
+                    return false;
+                }
+
+
+                var AddressLine2 = $('#AddressLine2').val();
+                var ShippingAddressLine2 = $('#ShippingAddressLine2').val();
+
+                var oTable = document.getElementById('Table');
+                var rowLength = oTable.rows.length;
+                var ActiveCus = myfunction();
+                var CustomerDetails = [];
+                //loops through rows
+                for (i = 1; i < rowLength; i++) {
+
+                    //gets cells of current row
+                    var oCells = oTable.rows.item(i).cells;
+
+                    var Departments = oCells.item(0).children[0].value;
+                    var ContactPerson = oCells.item(1).children[0].value;
+                    var Mobile = oCells.item(2).children[0].value;
+                    var Email = oCells.item(3).children[0].value;
+                    var CustomerContactId = CustomerContactId != null ? oCells.item(4).children[0].value : null;
+
+
+                    //loops through each cell in current row
+                    var CustomerContactDto = {
+                        Department: Departments,
+                        ContactPersonName: ContactPerson,
+                        Mobile: Mobile,
+                        EmailId: Email,
+                        CustomerContactId:CustomerContactId
+                    }
+                    CustomerDetails.push(CustomerContactDto);
+
+                }
+
+                var CustomerDto = {
+                    CustomerId: CustomerId,
+                    CustomerName: CustomerName,
+                    AddressLine1: AddressLine1,
+                    AddressLine2: AddressLine2,
+                    District: District,
+                    City: City,
+                    State: State,
+                    Zone: Zone,
+                    PIN: PIN,
+                    Email: CEmail,
+                    Mobile: CMobile,
+                    ContactPerson: CContactPerson,
+                    InActive: ActiveCus,
+                    GSTIN: GSTIN,
+                    StateCode: StateCode,
+                    SmallPacking: SmallPacking,
+                    BigPacking: BigPacking,
+                    SmallForwarding: SmallForwarding,
+                    BigForwarding: BigForwarding,
+                    RepairCharges: RepairCharges,
+                    ShippingAddressLine1: ShippingAddressLine1,
+                    ShippingAddressLine2: ShippingAddressLine2,
+                    ShippingDistrict: ShippingDistrict,
+                    ShippingState: ShippingState,
+                    ShippingPIN: ShippingPIN,
+                    ShippingStateCode: ShippingStateCode,
+                    CustomerContacts: CustomerDetails,
+                };
+
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("AddCustomer", "Customer")', // name of PHP script
+                    data: CustomerDto, // parameter name and value
+                    success: function (data) {
+                        $('.spinner-wrapper').hide();
+                        if (data == "Updated") {
+                            alert("Customer Updated successfully");
+                            window.location = '@Url.Action("CustomerList", "Customer")';
+                        }
+                        else {
+                            alert("Customer added successfully");
+                             //window.location = '@Url.Action("AddNew", "Material")';
+                            window.location = '@Url.Action("CustomerList", "Customer")';
+                        }
+                    },
+
+                });
+
+ });
+
+
+    </script>
+
+    <script type="text/javascript">
+
+    function myfunction() {
+        if (document.getElementById("checkactive").checked == true) {
+            return true;
+        }
+        else {
+            return false;
+
+        }
+    }
+
+
+    $("#CheckGSTIN").click(function () {
+        var CustomerName = $('#CustomerName').val();
+        var data = {
+            searchString: CustomerName
+        };
+        $.ajax({
+            beforeSend: function () {
+                $('.signal').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SearchCustomersListByName", "Customer")', // name of PHP script
+            data: data, // parameter name and value
+            success: function (data) {
+                if (data == "failure") {
+                    $('.signal').hide();
+                    alert("Customer Not Found");
+
+                }
+                else {
+                    $('.signal').hide();
+                    $('#updateData').html(data);
+                }
+            },
+
+        });
+
+    });
+
+    </script>
+
+    <script>
+        $("#Refresh").click(function () {
+
+            location.reload(true);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Picanol</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+    .class1 {
+    border-left: 6px solid #00CED1;
+    height: 60px;
+    
+}
+      .class2 {
+    margin-top: -20px;
+}
+          .class3 {
+    margin-top: -40px;
+}
+          .th .td{
+              text-align:center
+          }
+        
+</style>
+
+</head>
+<body>
+    <img src="~/Content/Images/header.png" alt="Image Not Load" style="width:100%">
+
+    <div class="container">
+
+
+        <div class="container body-content">
+            @RenderBody()
+            <center>This is a Computer Generated Invoice</center>
+            <hr />
+            <footer>
+                Regd. Office:<br />
+                <b>Picanol India Private Limited,</b>DSM-621 & 622, 6th Floor, DLF Towers, Block-IV, 15 Shivaji Marg, Near Moti Nagar,
+                New Delhi-110 015 Tel.: +91 11 42464024, Telefax: +91 11 42461202 indiadelhi@picanol.be - www.picanol.be,
+                CIN No. : U17291DL2007PTC169500
+            </footer>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+</body>
+</html>

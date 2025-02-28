@@ -1,0 +1,62 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@using Picanol.Helpers
+@{
+
+    Layout = null;
+}
+<style>
+    .pagebreak {
+        page-break-before: always;
+    }
+</style>
+@if (Model.OrderDetails.RepairType == ConstantsHelper.RepairType.Chargeable.ToString() || Model.OrderDetails.RepairType == ConstantsHelper.RepairType.NoRepairWarranty.ToString())
+{
+    <div class="Original">
+        @*@HttpContext.Current.Session["PrintType"] = Original*@
+        @RenderPage("~/Views/Invoice/EmailInvoicePDF.cshtml", Model)
+    </div>
+    <div class="pagebreak"></div>
+    <div class="Duplicate">
+        @*@HttpContext.Current.Sessio["PrintType"] = Duplicate*@
+        @RenderPage("~/Views/Invoice/EmailInvoiceDuplicatePDF.cshtml", Model)
+    </div>
+    <div class="pagebreak"></div>
+    <div class="Triplicate">
+        @*@HttpContext.Current.Sessio["PrintType"] = Triplicate*@
+        @RenderPage("~/Views/Invoice/EmailInvoiceTriplicatePDF.cshtml", Model)
+    </div>
+}
+@if (Model.OrderDetails.RepairType == ConstantsHelper.RepairType.FOC.ToString())
+{
+    <div class="FOC">
+
+        @RenderPage("~/Views/Invoice/FocPDF.cshtml", Model)
+    </div>
+}
+@if (Model.OrderDetails.RepairType == ConstantsHelper.RepairType.Loan.ToString())
+{
+    <div class="Loan">
+
+        @RenderPage("~/Views/Invoice/LoanPDF.cshtml", Model)
+    </div>
+}
+@if (Model.OrderDetails.RepairType == ConstantsHelper.RepairType.UnRepairedBoards.ToString())
+{
+    <div class="Loan">
+
+        @RenderPage("~/Views/Invoice/UnrepairedBoardsPDF.cshtml", Model)
+    </div>
+}
+
+@* Newly Added For Repaired Warranty 05/02/2021 *@
+@if (Model.OrderDetails.RepairType == ConstantsHelper.RepairType.RepairWarranty.ToString())
+{
+<div class="Original">
+    @*@HttpContext.Current.Session["PrintType"] = Original*@
+    @RenderPage("~/Views/Invoice/RepairWarrantyPDF.cshtml", Model)
+</div>
+}
+<div class="pagebreak"></div>
+<div class="Jobsheet">
+    @RenderPage("~/Views/Invoice/JobSheetPDF.cshtml", Model)
+</div>

@@ -1,0 +1,155 @@
+﻿@model Picanol.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewBag.Title = "_AllOrderParts";
+}
+
+<table id="data_table">
+    <thead>
+        <tr>
+            <th>Part Name</th>
+            <th>Part No</th>
+            <th>Quantity</th>
+            @*<th>Notes</th>*@
+            @if (Model.OrderDetails.Status != "Completed")
+            {
+                <th>Action</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (var item in Model.ConsumedParts)*@
+        @foreach (var item in Model.ConsumedParts)
+        {
+            <tr>
+
+                <td>@item.PartName</td>
+                <td>@item.PartNumber</td>
+                <td>@item.Qty</td>
+                @*<td>@item.Notes</td>*@
+                @if (Model.OrderDetails.Status != "Completed")
+                {
+                    <td>
+                        <input type='button' value='Delete' class='delete' onclick="Delete(@item.OrderPartId,'@item.PartName','@item.PartNumber')" />
+                    </td>
+                }
+            </tr>
+
+        }
+        @*@foreach (var item in Model.NewConsumedParts)*@
+        @foreach (var item in Model.NewConsumedParts)
+        {
+            <tr>
+
+                <td>@item.PartName</td>
+                <td>@item.PartNumber</td>
+                <td>@item.Qty</td>
+                @*<td>@item.Notes</td>*@
+                @if (Model.OrderDetails.Status != "Completed")
+                {
+                    <td>
+                        <input type='button' value='Delete' class='delete' onclick="Delete(@item.OrderPartId,'@item.PartName','@item.PartNumber')" />
+                    </td>
+                }
+            </tr>
+
+        }
+    </tbody>
+    @if (Model.OrderDetails.Status != "Completed")
+    {
+
+        <tfoot>
+            <tr>
+                <td><input name="id" class="form-control" type="search" list="lan" autocomplete="off" id="Part_Name" /></td>
+                @*<td>@Html.DropDownListFor(p => p.Parts, new SelectList(Model.Parts, "PartName", "PartName"), "Seclect Name", new { id = "Part_Name", @class = "form-control" })</td>*@
+                <td><input type="text" class="form-control" id="Part_No" /></td>
+                <td><input type="text" class="form-control" id="Quantity" /></td>
+                @Html.HiddenFor(model => model.OrderDetails.OrderGUID, new { id = "GUID" })
+                <td>
+                    <input type="button" class="add" onclick="add_row();" value="Add Row">
+
+                </td>
+                <td hidden><input type="text" id="ProPrize" /></td>
+                <td hidden><input type="text" id="ProStock" /></td>
+            </tr>
+        </tfoot>
+    }
+</table>
+
+<datalist id="lan">
+    @foreach (var item in Model.Parts)
+    {
+        <option id="@item.PartId" value="@item.PartName"></option>
+
+    }
+
+</datalist>
+
+
+
+<script>
+
+    $('#Part_Name').on('change', function () {
+        var e = document.getElementById("Part_Name").value;
+        var res = e.split(';');
+        var name = res[0];
+        var partno = res[1];
+        var Price = res[2];
+        var Stock = res[3];
+       
+     
+        document.getElementById("Part_Name").value = name
+        document.getElementById("Part_No").value = partno
+        document.getElementById("ProStock").value = Stock
+        document.getElementById("ProPrize").value = Price
+
+
+
+
+        @*var mainselection = this.value; // get the selection value
+        var data = {
+            mainselection: mainselection
+        };
+        $.ajax({
+            //beforeSend: function () {
+            //    $('.signal').show()
+            //},
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GetPartNo", "Material")', // name of PHP script
+            data: data, // parameter name and value
+            success: function (data) {
+                //$('.signal').hide();
+                $("#Part_No").val(data); // insert in div above
+            },
+
+        });*@
+    });
+
+
+</script>
+<script>
+    //var TimeTaken = $("#TimeTaken").val();
+
+    //$('#Status_Type').change(function () {
+    //	var TimeTaken = $("#TimeTaken").val();
+    //	if (this.value == 'Completed' && TimeTaken == 0) {
+    //		alert('Fill Time Taken');
+    //		$("#Status_Type")[0].selectedIndex = 0;
+    //	} else if (this.value == 'Completed' && TimeTaken != 0) {
+    //		$('#display_bt1').show();
+    //	}
+    //});
+
+
+</script>
+@*<script>
+    function getQuantity() {
+        var stock = document.getElementById("ProStock").value
+        var qty = document.getElementById("Quantity").value
+       
+        if (parseInt(qty) > parseInt(stock)) {
+            alert("Stock of this product is" + stock);
+        }
+
+    }
+</script>*@

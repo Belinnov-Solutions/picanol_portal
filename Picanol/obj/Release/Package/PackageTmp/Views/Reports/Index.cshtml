@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container margin-top-lg pull-left">
+
+
+    <h2>View Reports</h2>
+    <div class="margin-top-md">
+        <h4>Please select an application area that you want to access:</h4>
+
+        <div class="row">
+            <div class="col-md-3"><a type="button" href="@Url.Action("StockReport", "Reports")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> Stock Report</a></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"><a type="button" href="@Url.Action("RepairSummary", "Reports")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> Repair Summary Report </a></div>
+            <div class="col-md-9">Section to view and print Repair Summary Report.</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"><a type="button" href="@Url.Action("PCBNameWiseReport", "Reports")" class="btn red-buton btn-large"> <i class="fam-cog-edit"></i> PCB Name Wise Report </a></div>
+            <div class="col-md-9">Section to view and print Pcb Name Wise Report.</div>
+        </div>
+    </div>
+    </div>
+<div class="row margin-bottom-lg"></div>
+<br />
+
+

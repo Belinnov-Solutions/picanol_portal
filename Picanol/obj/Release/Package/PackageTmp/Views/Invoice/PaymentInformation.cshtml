@@ -1,0 +1,217 @@
+﻿
+@model Picanol.ViewModels.InvoiceListViewModel
+@{
+    ViewBag.Title = "PaymentInformation";
+}
+
+<h2>Payment Information</h2>
+@using (Html.BeginForm("AddPaymentInformation", "Order", FormMethod.Post, new { enctype = "multipart/form-data", Id = "form0" }))
+{
+    <div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="PaymentDate">Payment Date</label>
+                    @Html.TextBoxFor(d => d.PaymentDate, "{0:dd/MM/yyyy}", new { id = "PaymentDate", @class = "form-control", maxlength = "500" })
+                </div>
+            </div>
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="PaymentAmount">Payment Amount</label>
+                    @Html.TextBoxFor(d => d.PaymentAmount, new { id = "PaymentAmount", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="PaymentMethod">PaymentMethod</label>
+                    @*@Html.TextBoxFor(d => d.PaymentMethod, new { id = "PaymentMethod", @class = "form-control" })*@
+                    @Html.DropDownListFor(p => p.SelectPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select Payment Method", new { id = "PaymentMethod", @class = "form-control" })
+
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="PaymentAccount">Payment Account</label>
+                    @Html.TextBoxFor(d => d.PaymentAccount, new { id = "PaymentAccount", @class = "form-control" })
+
+
+                </div>
+            </div><br>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Details">Details</label>
+                    @Html.TextAreaFor(d => d.DetailText, new { id = "DetailText", @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(p => p.PaymentImage.PaymentImages, new { @class = "" })
+                    <div class="field" align="left">
+
+                        <input type="file" id="files" name="images" multiple="multiple" />
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success btn-large pull-left" id="btnSave" value="Save">Submit </button>
+    <br /><br /><br />
+
+
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="signal"></div>
+
+<script type="text/javascript">
+
+
+	$("#PaymentDate").datepicker({
+
+		dateFormat: 'dd/mm/yy',
+
+
+		onSelect: function (selected) {
+
+			var dateSplit = selected.split('/');
+			var newDate = dateSplit[1] + '/' + dateSplit[0] + '/' + dateSplit[2];
+			var dt = new Date(newDate);
+			dt.setDate(dt.getDate());
+		},
+
+	});
+</script>
+<script type="text/javascript">
+	 $("#btnSave").click(function () {
+
+		 var PaymentDate = $('#PaymentDate').val();
+		 if (PaymentDate == '') {
+			 alert('Please fill your Payment Date!');
+			 return false;
+		 }
+		 var PaymentAmount = $('#PaymentAmount').val();
+		 if (PaymentAmount == '') {
+			 alert('Please Fill your Payment Amount!');
+			 return false;
+		 }
+		 var PaymentMethod = $('#PaymentMethod').val();
+		 if (PaymentMethod == '') {
+			 alert('Please Select your Payment Method!');
+			 return false;
+		 }
+		 var PaymentAccount = $('#PaymentAccount').val();
+		 if (PaymentAccount == '') {
+			 alert('Please Fill your Payment Account!');
+			 return false;
+		 }
+		 var files = $('#files').val();
+		 if (files == '') {
+			 alert('Please Select your Image!');
+			 return false;
+		 }
+		 var DetailText = $('#DetailText').val();
+		 if (DetailText == '') {
+			 alert('Please fill your DetailText!');
+			 return false;
+		 }
+
+		 var InvoiceViewModel = {
+			 PaymentDate: PaymentDate,
+			 PaymentAmount: PaymentAmount,
+			 PaymentMethod: PaymentMethod,
+			 PaymentAccount: PaymentAccount,
+			    files: files,
+			 DetailText: DetailText,
+
+
+        };
+		 $.ajax({
+		     beforeSend: function () {
+		         $('.signal').show()
+		     },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("PaymentInformation", "Order")', // name of PHP script
+			data: InvoiceViewModel, // parameter name and value
+			success: function (data) {
+			    $('.signal').hide();
+			},
+
+			});
+			});
+</script>
+<style>
+    input[type="file"] {
+        display: block;
+    }
+
+    .imageThumb {
+        max-height: 75px;
+        border: 2px solid;
+        padding: 1px;
+        cursor: pointer;
+    }
+
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .remove:hover {
+            background: white;
+            color: black;
+        }
+</style>
+<script>
+	$(document).ready(function () {
+		if (window.File && window.FileList && window.FileReader) {
+			$("#files").on("change", function (e) {
+				var files = e.target.files,
+					filesLength = files.length;
+				for (var i = 0; i < filesLength; i++) {
+					var f = files[i]
+					var fileReader = new FileReader();
+					fileReader.onload = (function (e) {
+						var file = e.target;
+						$("<span class=\"pip\">" +
+							"<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+							"<br/><span class=\"remove\">Remove image</span>" +
+							"</span>").insertAfter("#files");
+						$(".remove").click(function () {
+							$(this).parent(".pip").remove();
+						});
+
+						// Old code here
+						/*$("<img></img>", {
+						  class: "imageThumb",
+						  src: e.target.result,
+						  title: file.name + " | Click to remove"
+						}).insertAfter("#files").click(function(){$(this).remove();});*/
+
+					});
+					fileReader.readAsDataURL(f);
+				}
+			});
+		} else {
+			alert("Your browser doesn't support to File API")
+		}
+	});
+</script>
+

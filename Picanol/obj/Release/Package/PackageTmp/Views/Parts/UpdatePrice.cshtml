@@ -1,0 +1,72 @@
+﻿@model Picanol.ViewModels.PartsViewModel
+@{
+    ViewBag.Title = "UpdatePrice";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <a href="@Url.Action("Index", "Inventory")" class="btn btn-primary btn-large pull-left">Back</a> <br />
+
+    <div class="container" style="margin-left: 100px;">
+
+        <h4 style="ma">Update Price & View Stock Difference <a href="~/Content/Stock.xlsx" class="btn btn-danger btn-sm" role="button" aria-pressed="true">Download Stock Template</a></h4>
+
+        <br />
+
+        <div class="col-lg-3">
+            <input type="file" id="files" />
+        </div>
+        <div class="col-lg-2">
+            <input type="button" value="Update" id="btnSubmit" />
+        </div>
+        <div id="divResultdata" class="table-responsive">
+        </div>
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                url: "@Url.Action("UpdatePrice", "Parts")",
+                type: "POST",
+                data: function () {
+                    var files = new FormData();
+
+                    files.append("files", jQuery("#files").get(0).files[0]);
+                    return files;
+                }(),
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $('.spinner-wrapper').hide();
+                    $("#divResultdata").html(data);
+                },
+                error: function (jqXHR, textStatus, errorMessage) {
+                    $('.spinner-wrapper').hide();
+                    console.log(errorMessage);
+                }
+            });
+        });
+    });
+
+    </script>
+</body>
+</html>

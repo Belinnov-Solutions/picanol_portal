@@ -1,0 +1,88 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+<link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="CustomerName">Customer Name :</label>
+               @Html.DropDownListFor(p => p.SelectedCustomerId, new SelectList(Model.Customers, "CustomerId", "CustomerName"), "Select Name", new { id = "CustomerId", @class = "form-control" })
+               
+            </div>
+         </div>
+            
+        <button type="submit" value="Submit" style="margin-top:25px" id="btnSearch" onclick="Calc()" class="btn btn-info">Search </button>
+
+
+</div>
+</div>
+
+<br/>
+<br/>
+<div class="container">
+    <div class="col-lg-12">
+        <div id="divResultdata" class="table-responsive">
+
+        </div>
+        </div>
+    </div>
+<div class="signal"></div>
+<script type="text/javascript">
+   
+    function Calc() {
+
+		var SearchUrl = '@Url.Action("GetOrdersList", "Material")';
+		if (SearchUrl == '') {
+			alert('Please Write URL to search!');
+			return false;
+		}
+		var FromDate = $("#FromDate").val();
+		if (FromDate == '') {
+			alert('Please Select Date!');
+			return false;
+		}
+		var ToDate = $("#ToDate").val();
+		if (ToDate == '') {
+			alert('Please Select Date!');
+			return false;
+		}
+		var CustomerId = $("#CustomerId").val();
+		if (CustomerId == '') {
+			alert('Please Select Customer ID!');
+			return false;
+		}
+         {
+             var data = {
+
+                 FromDate: FromDate,
+                 ToDate: ToDate,
+                 CustomerId: CustomerId,
+            }
+
+
+            $.ajax(
+            {
+                beforeSend: function () {
+                    $('.signal').show()
+                },
+                url: SearchUrl,
+                type: "POST",
+                datatype: "json",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (res) {
+                    $('.signal').hide();
+                    $("#divResultdata").html(res);
+
+
+
+                },
+                error: function (data) {
+                    $('.signal').hide();
+                    $("#divResultdata").html(res);
+                },
+            });
+        }
+    }
+    
+</script>

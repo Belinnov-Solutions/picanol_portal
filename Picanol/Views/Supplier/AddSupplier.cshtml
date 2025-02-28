@@ -1,0 +1,358 @@
+﻿@model Picanol.ViewModels.SupplierViewModel
+@{
+	ViewBag.Title = "AddSupplier";
+}
+
+<h2>AddSupplier</h2>
+<head>
+	<style>
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		td, th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+		}
+
+		tr:nth-child(even) {
+			background-color: #dddddd;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="SupplierName">Supplier Name</label>
+					@Html.TextBoxFor(d => d.SupplierName, new { id = "SupplierName", @class = "form-control" })
+
+
+				</div>
+			</div>
+
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="AddressLine1">Address Line1</label>
+					@Html.TextBoxFor(d => d.AddressLine1, new { id = "AddressLine1", @class = "form-control" })
+
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="AddressLine2">Address Line2</label>
+					@Html.TextBoxFor(d => d.AddressLine2, new { id = "AddressLine2", @class = "form-control" })
+
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="City">City</label>
+					@Html.TextBoxFor(d => d.City, new { id = "City", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="District">District</label>
+					@Html.TextBoxFor(d => d.District, new { id = "District", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="State">State</label>
+					@Html.TextBoxFor(d => d.State, new { id = "State", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="PIN">PIN</label>
+					@Html.TextBoxFor(d => d.PIN, new { id = "PIN", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="ContactPerson">Contact Person</label>
+					@Html.TextBoxFor(d => d.ContactPerson, new { id = "ContactPerson", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="Mobile">Mobile</label>
+					@Html.TextBoxFor(d => d.Mobile, new { id = "Mobile", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="Email">Email</label>
+					@Html.TextBoxFor(d => d.Email, new { id = "Email", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="GSTIN">GSTIN</label>
+					@Html.TextBoxFor(d => d.GSTIN, new { id = "GSTIN", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="StateCode">State Code</label>
+					@Html.TextBoxFor(d => d.StateCode, new { id = "StateCode", @class = "form-control" })
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="PAN">PAN</label>
+					@Html.TextBoxFor(d => d.PAN, new { id = "PAN", @class = "form-control" })
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<button type="submit" class="btn btn-success btn-large pull-left" id="btnSave" value="Save">Save</button>
+	<br />
+	<br />
+	<button type="submit" class="btn btn-success btn-large pull-left" id="AddParts" value="Save">ADDPARTS</button>
+	<br /><br /><br />
+				<table width="200%" id="foo" style="display: none;">
+
+					<tr>
+
+						<th>Part Number</th>
+						<th>Part Name</th>
+						<th>Price</th>
+						<th>Add</th>
+						<th>Delete</th>
+
+					</tr>
+					<tr>
+						<td><input type="text" id="PartNo0" class="form-control"></td>
+						<td><input type="text" id="PartName0" class="form-control"></td>
+						<td><input type="text" id="Price0" class="form-control"></td>
+
+						<td><button type="submit" class="btn btn-success btn-large pull-left" id="ADDNEW" value="Save">ADDNEW</button></td>
+						<td><button type="submit" class="btn btn-success btn-large pull-left" id="DELNEW" value="Save">DELETE</button></td>
+
+					</tr>
+
+
+					</table>
+	<br /><br />
+	<button type="submit" class="btn btn-success btn-large pull-left" id="Submit" style="display: none;" value="Save" style="display: none;">Submit</button>
+	<br /><br />
+</body>
+<script type="text/javascript">
+
+	$("#AddParts").click(function () {
+
+		document.getElementById("foo").style.display = "block";
+		document.getElementById('ADDNEW').style.display = "block";
+		document.getElementById('DELNEW').style.display = "block";
+		document.getElementById('Submit').style.display = "block";
+
+	});
+
+</script>
+<script>
+	var idCounter = 0;
+	$(function () {
+		$("#ADDNEW").click(function () {
+			var table = document.getElementById("foo");
+			idCounter = table.rows.length-1;
+			var row = table.insertRow(table.rows.length);
+			var partNo = row.insertCell(0);
+			var t1 = document.createElement("input");
+			t1.className = "form-control";
+			t1.id = "PartNo" + idCounter;
+			partNo.appendChild(t1);
+
+			var partName = row.insertCell(1);
+			var t2 = document.createElement("input");
+			t2.className = "form-control";
+			t2.id = "PartName" + idCounter;
+			partName.appendChild(t2);
+
+			var price = row.insertCell(2);
+			var t3 = document.createElement("input");
+			t3.className = "form-control";
+			t3.id = "Price" + idCounter;
+			price.appendChild(t3);
+
+			var cell4 = row.insertCell(3);
+			var t4 = document.createElement("BUTTON");
+			//t4.type = "submit";
+			 t4.className = "btn btn-success btn-large pull-left";
+			t4.id = "ADDNEW"+ idCounter;
+			t4.innerText="ADD NEW";
+			cell4.appendChild(t4);
+
+			var cell5 = row.insertCell(4);
+			var t5 = document.createElement("BUTTON");
+			t5.type = "submit";
+			t5.className = "btn btn-success btn-large pull-left";
+			t5.id = "DELNEW" + idCounter;
+			t5.innerText = "DELETE";
+			cell5.appendChild(t5);
+
+			idCounter = table.rows.length;
+		});
+		$("#DELNEW").click(function () {
+			$(this).closest("tr").remove();
+		});
+	});
+</script>
+<script type="text/javascript">
+	$("#ADDNEW").click(function () {
+
+		var PartNo = $('#PartNo').val();
+		if (PartNo == '') {
+			alert('Please fill your PartNo!');
+			return false;
+		}
+		var PartName = $('#PartName').val();
+		if (PartName == '') {
+			alert('Please Fill your PartName!');
+			return false;
+		}
+		var Mobile = $('#Mobile').val();
+		if (Mobile == '') {
+			alert('Please fill your Mobile Number!');
+			return false;
+		}
+
+	});
+</script>
+@*<script type="text/javascript">
+	 $("#btnSave").click(function () {
+
+		 var SupplierName = $('#SupplierName').val();
+		 if (SupplierName == '') {
+			 alert('Please fill your Supplier Name!');
+			 return false;
+		 }
+		 var PaymentMode = $('#PaymentMethod').val();
+		 if (PaymentMode == '') {
+			 alert('Please Select your Payment Method');
+			 return false;
+		 }
+		 var AddressLine1 = $('#AddressLine1').val();
+		 if (AddressLine1 == '') {
+			 alert('Please fill your Address Line1!');
+			 return false;
+		 }
+		 var AddressLine2 = $('#AddressLine2').val();
+		 if (AddressLine2 == '') {
+			 alert('Please fill your Address Line2!');
+			 return false;
+		 }
+		 var City = $('#City').val();
+		 if (City == '') {
+			 alert('Please fill your City!');
+			 return false;
+		 }
+		 var District = $('#District').val();
+		 if (District == '') {
+			 alert('Please fill your District!');
+			 return false;
+		 }
+		 var State = $('#State').val();
+		 if (State == '') {
+			 alert('Please fill your State!');
+			 return false;
+		 }
+		 var PIN = $('#PIN').val();
+		 if (PIN == '') {
+			 alert('Please fill your !');
+			 return false;
+		 }
+		 var ContactPerson = $('#ContactPerson').val();
+		 if (ContactPerson == '') {
+			 alert('Please fill ContactPerson!');
+			 return false;
+		 }
+		 var Mobile = $('#Mobile').val();
+		 if (Mobile == '') {
+			 alert('Please fill your Mobile Number!');
+			 return false;
+		 }
+		 var Email = $('#Email').val();
+		 if (Email == '') {
+			 alert('Please fill your Email!');
+			 return false;
+		 }
+		 var GSTIN = $('#GSTIN').val();
+		 if (GSTIN == '') {
+			 alert('Please fill your GSTIN');
+			 return false;
+		 }
+		 var StateCode = $('#StateCode').val();
+		 if (StateCode == '') {
+			 alert('Please fill your StateCode!');
+			 return false;
+		 }
+		 var PAN = $('#PAN').val();
+		 if (PAN == '') {
+			 alert('Please fill your PAN');
+			 return false;
+		 }
+
+		 var SupplierViewModel = {
+			 SupplierName: SupplierName,
+			 AddressLine1: AddressLine1,
+			 AddressLine2: AddressLine2,
+			 City: City,
+			 District: District,
+			 State: State,
+			 PIN: PIN,
+			 ContactPerson: ContactPerson,
+			 Mobile: Mobile,
+			 Email: Email,
+			 GSTIN: GSTIN,
+			 StateCode: StateCode,
+			 PAN: PAN,
+        };
+        $.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("AddSupplier", "Supplier")', // name of PHP script
+			data: SupplierViewModel, // parameter name and value
+			success: function (data) {
+
+			},
+
+			});
+			});
+</script>*@
+<script type="text/javascript">
+	
+	$("#Submit").click(function () {
+		var supplierArray = [];
+		var SupplierViewModel = {
+			SupplierParts:[]
+        };
+		for (i = 0; i < idCounter; i++) {
+			var supplierObj = {}; 
+			supplierObj['PartNo'] = $('#PartNo' + i).val();
+			supplierObj['PartName'] = $('#PartName' + i).val();
+			supplierObj['Price'] = $('#Price' + i).val();
+			supplierArray.push(supplierObj);
+		}
+		SupplierViewModel.SupplierParts = supplierArray;
+		 
+        $.ajax({
+            type: "POST",  // method of sending data
+            url: '@Url.Action("AddSupplier", "Supplier")', // name of PHP script
+			data: SupplierViewModel, // parameter name and value
+			success: function (data) {
+
+			},
+
+			});
+			});
+</script>
+
+
+

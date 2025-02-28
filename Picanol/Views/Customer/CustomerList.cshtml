@@ -1,0 +1,230 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+@{
+    ViewBag.Title = "CustomerList";
+}
+@{
+    var userInfo = (Picanol.Helpers.UserSession)Session["UserInfo"];
+    <!--Creted BY Himanshu for customer Pagination-->
+    int customerCount = Model.CustomersList.Count;
+    int noOfPages = customerCount / 10;
+    int CountList = Model.CountList;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+      
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <link href="~/Content/Loader.css" rel="stylesheet" type="text/css" />
+        <div class="row">
+            <div class="col-sm-1">
+                <div class="form-group">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large"> Back</a>
+
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <input name="id" class="form-control" type="search" Placeholder="Enter Customer Name" list="CNList" autocomplete="on" id="CustomerId" />
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <button type="submit" value="Submit" id="btnSearch" class="btn btn-info">
+                        Search
+
+                    </button>
+                </div>
+            </div>
+        </div>
+        @if (userInfo.RoleName != "Service Engineer")
+        {
+            <div class="row" style="font-family:Calibri">
+                <div class="col-sm-1">
+                    <div class="form-group" style="margin-bottom:0px">
+                        <a href="@Url.Action("AddCustomer","Customer")" class="btn btn-sm  btn-success" style="margin-top: -7.5em;margin-left:69.5em"><i class="fam-add"></i> Add Customer</a>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-1">
+                    <div class="form-group" style="margin-bottom:0px">
+                        <a href="@Url.Action("SubCustomerList")" class="btn btn-sm btn-success" style="margin-left:69.5em;margin-top: -7.5em"><i class="fam-add"></i> Add Sub Customer</a>
+                    </div>
+                </div>
+
+                <div class="col-sm-1">
+                    <div class="form-group" style="margin-bottom:0px">
+                        <a href="@Url.Action("CustomerList","Customer", new { Inactive = "CheckActive" })" class="btn btn-danger btn-group-sm" style="margin-left:61.53em;margin-top:-6.5em"><i class="fam-add"></i> InActive Customer List</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <br />
+        <datalist id="CNList">
+            @*@foreach (var item in Model.CustomersList)*@
+            @foreach (var item in Model.SearchCustomersList)
+            {
+                <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+            }
+
+        </datalist>
+
+
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#btnSearch").click(function () {
+            var shownVal = document.getElementById("CustomerId").value;
+            var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            var PageSize = 10;
+            var PageNo = 1;
+
+            var data = {
+                CustomerId: CustomerId,
+                PageSize: PageSize,
+                PageNo: PageNo,
+
+            };
+            $.ajax({
+                beforeSend: function () {
+                    $('.spinner-wrapper').show()
+                },
+                type: "POST",  // method of sending data
+                url: '@Url.Action("CustomerList", "Customer")', // name of PHP script
+                data: data, // parameter name and value
+                success: function (data) {
+                    $('.spinner-wrapper').hide()
+                    $('#updateData').html(data).show();
+                },
+                error: function (response) {
+                    $('.spinner-wrapper').hide()
+                    $('#updateData').html(data).show();
+
+                }
+               // $('.signal').hide();
+            });
+        });
+    //Function of customer Management pagination//
+    function changepage(pageno) {
+        location.href = "@Url.Action("CustomerList", "Customer")/?PageSize=10&PageNo= " + pageno ;
+             }
+
+    </script>
+    <script>
+    function GetSubCustomer(id,CustomerName) {
+        var val = {
+            CustomerId:id
+        }
+        var trHTML = "<tr><th>SubCustomerName</th><th>MobileNo</th><th>GSTIN</th><th>City</th><th>State</th></tr>";
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("GetSubCustomerDetail", "Customer")',
+            data: val, // parameter name and value
+            success: function (data) {
+                $('.spinner-wrapper').hide()
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        trHTML += '<tr><td>' + item.SubCustomerName + '</td><td>' + item.Mobile + '</td><td>' + item.GSTIN + '</td><td>' + item.City + '</td><td>' + item.State + '</td></tr>';
+                    });
+                    $('#records_table').empty().append(trHTML);
+                    var p = '<p>' + CustomerName + '</p>';
+                    $('#subcustomername').empty().append(p);
+                    $('#myModal').modal('show');
+                }
+                else {
+                    alert("No SubCustomer Available!")
+                }
+            },
+            error: function (response) {
+                $('.spinner-wrapper').hide()
+                $('#updateData').html(data).show();
+
+            }
+            // $('.signal').hide();
+        });
+    }
+    </script>
+
+    <div id="updateData" class="table-responsive">
+        @Html.Partial("~/Views/Customer/_FilterCustomerList.cshtml")
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="subcustomername"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="records_table">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

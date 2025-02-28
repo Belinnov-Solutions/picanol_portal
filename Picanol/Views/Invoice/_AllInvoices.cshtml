@@ -1,0 +1,529 @@
+﻿
+@model Picanol.ViewModels.InvoiceListViewModel
+@{
+    int customerCount = Model.InvoicesList.Count;
+    //int noOfPages = customerCount / 10;
+    int CountList = Model.CountList;
+    int PageSize = Convert.ToInt32(@System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfRecordAvailable"]);
+    int noOfPages = customerCount / PageSize;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link rel="stylesheet" href="~/Content/dist/datepicker.css">
+    <script src="~/Content/dist/datepicker.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <style>
+
+        .datepicker {
+            z-index: 1151 !important;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+        }
+
+        .pagination .row {
+            margin-right: -15px;
+            margin-left: 3px !important;
+            display: flex;
+            justify-content: center;
+            width: auto;
+        }
+
+        .pagination {
+            padding-left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0px;
+            border-radius: 4px;
+        }
+
+        .cell {
+            border: 1px solid #5bc0de;
+            cursor: pointer;
+        }
+
+        .active {
+            color: white;
+            background-color: #0e15ea;
+        }
+    </style>
+</head>
+<body>
+
+
+    <table id="myTable">
+        <tr>
+            <th>Reference number</th>
+            <th>Date</th>
+            <th>Invoice Number</th>
+            <th>Customer Name</th>
+            <th>Amount</th>
+            <th>Action</th>
+        </tr>
+        @foreach (var item in Model.InvoicesList)
+        {
+    <tr>
+        <td>@item.TrackingNo</td>
+        <td>@item.DateCreated</td>
+        <td>@item.InvoiceNo</td>
+        <td>@item.CustomerName</td>
+
+        <td>@item.Amount</td>
+        <td>
+            <select id="ActionType" class="form-control">
+                <option selected value="">Select Action Type</option>
+                <option value="PrintInvoice">PrintInvoice</option>
+                <option value="PrintJobSheet">PrintJobSheet</option>
+
+            </select>
+
+            @*@Html.DropDownListFor(p => p.SelectedAction, new SelectList(Model.SelectActionTypeList, "Text", "Text"), "Select Action Type", new { id = "ActionType", @class = "form-control" })*@
+        </td>
+        <td hidden>@item.OrderGuid</td>
+        <td hidden>@item.Paid</td>
+        <td hidden>@item.CustomerEmail</td>
+        <td hidden>@item.CustomerId</td>
+        <td hidden>@item.ProvisionalBillId</td>
+        <td hidden>@item.WorkOrderId</td>
+
+        <td hidden>
+            <input type="hidden" class="form-control" value=@item.CustomerId id="CustomerId">
+        </td>
+    </tr>
+        }
+    </table>
+
+    <!--new Pagination for Invoices All Invoices by Himanshu-->
+    @if (CountList == PageSize)
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPage == 1)
+                {
+                    <div class="col-md-4 cell" onclick="SubmitClick(@Model.CurrentPage);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="SubmitClick(@Model.CurrentPage-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPage - (Model.CurrentPage % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPage % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPage;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <div class="col-md-3 cell active" onclick="SubmitClick(@i);">@Model.CurrentPage</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="SubmitClick(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="SubmitClick(@Model.CurrentPage+1);">Next</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrentPage != 1)
+                {
+                    @*{
+                            <div class="col-md-4 cell" onclick="SubmitClick(@Model.CurrentPage);">Prev</div>
+                        }
+                        else*@
+
+                    <div class="col-md-4 cell" onclick="SubmitClick(@Model.CurrentPage-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrentPage - (Model.CurrentPage % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrentPage % 5 == 0)
+                    {
+                        startIndex = Model.CurrentPage;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrentPage; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <div class="col-md-3 cell active" onclick="SubmitClick(@i);">@Model.CurrentPage</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="SubmitClick(@i);">@i</div>
+                    }
+                }
+                @*<div class="col-md-3 cell" onclick="SubmitClick(@Model.CurrentPage+1);">Next</div>*@
+            </div>
+        </div>
+
+    }
+    <div>@CountList Record Found</div>
+    <!--End Here-->
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-lg-12">
+                        <h4 class="modal-title">
+                            <label>Record Payment </label>
+                            @*<input type="text" name="Display" id="Display" value="" class="form-control" readonly />*@
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label for="PaymentMethod">Payment Method</label>
+                    @Html.DropDownListFor(p => p.OrderPayment.SelectedPaymentMethod, new SelectList(Model.SelectPaymentMethodList, "Text", "Value"), "Select Payment Method", new { id = "PaymentMethod", @class = "form-control" })
+                    @Html.HiddenFor(model => model.OrderPayment.OrderGUID, new { id = "OrderIdRP" })
+                    @Html.HiddenFor(model => model.OrderPayment.InvoiceNo, new { id = "InvoiceNoRP" })
+                    <label for="BankName">Details</label>
+                    @Html.TextBoxFor(d => d.OrderPayment.PaymentDetails, new { id = "PaymentDetails", @class = "form-control" })
+                    <label for="DatePaid">Date Paid</label>
+                    @*@Html.TextBoxFor(d => d.OrderPayment.DatePaid, "{0:dd/MM/yyyy}", new { id = "DatePaid", @class = "form-control", maxlength = "500" })*@
+                    <input type="text" class="form-control" id="DatePaid" data-toggle="datepicker">
+                    @*<input type="text" onclick="ShowDatePicker();" />*@
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendRecordPayments();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalEmail" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <h4 class="modal-title">
+
+                                    <label>Tracking Number</label>
+                                    <input type="text" name="Show" id="Show" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <h4>
+
+                                    <label>Customer Name</label>
+                                    <input type="text" style="margin-top:-5px" name="Show2" id="Show2" value="" class="form-control" readonly />
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label>Email :</label>
+                    <br />
+                    <font size="1" color="red">Add Multiple Email ID's Separated by ";"</font>
+                    <input type="text" name="text1" id="text1" value="" class="form-control" />
+                    <input type="hidden" name="text2" id="text2" value="" class="form-control" />
+                    <input type="hidden" name="text3" id="text3" value="" class="form-control" />
+                    <input type="hidden" name="text4" id="text4" value="" class="form-control" />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success pull-right" onclick="SendEmail();">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('[data-toggle="datepicker"]').datepicker({
+                autoHide: true,
+                zIndex: 2048,
+                format: 'dd/mm/yyyy',
+            });
+        });
+    </script>
+    <script>
+    $(function () {
+        $('#myTable').on('change', '#ActionType', function () {
+            var InvoiceNo = $(this).closest('tr').find('td:eq(1)').text();
+            var InvNo = $(this).closest('tr').find('td:eq(2)').text();
+            var cid = $(this).closest('tr').find('td:eq(9)').text();
+            var Amount = $(this).closest('tr').find('td:eq(3)').text();
+            var OrderId = $(this).closest('tr').find('td:eq(6)').text();
+            var TrackingNumber = $(this).closest('tr').find('td:eq(0)').text();
+            var CustomerName = $(this).closest('tr').find('td:eq(3)').text();
+            var CustomerEmail = $(this).closest('tr').find('td:eq(8)').text();
+            var SelecetCustomerId = $(this).closest('tr').find('td:eq(9)').text();
+            var SelectedValue = $(this).val();
+            var psbid = $(this).closest('tr').find('td:eq(10)').text();
+            var woId = $(this).closest('tr').find('td:eq(11)').text();
+            console.log(psbid);
+            console.log(woId);
+
+            var SelectedValue = $(this).val();
+            var data =
+            {
+                orderId: OrderId
+            }
+            if (SelectedValue == "RecordPayment") {
+                document.getElementById("InvoiceNoRP").value = InvoiceNo;
+                document.getElementById("OrderIdRP").value = OrderId;
+                $('#myModal').modal('show');
+
+            }
+            if (SelectedValue == "EmailInvoice") {
+
+                document.getElementById("Show").value = TrackingNumber;
+                document.getElementById("Show2").value = CustomerName;
+                document.getElementById("text1").value = CustomerEmail;
+                document.getElementById("text2").value = SelecetCustomerId;
+                document.getElementById("text3").value = OrderId;
+                document.getElementById("text4").value = SelectedValue;
+                $('#myModalEmail').modal('show');
+
+            }
+
+            else if (SelectedValue == "PaymentDetails") {
+
+                var data = {
+                    orderId: OrderId
+                }
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetPaymentDetails", "Invoice")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response.OrderPayment == null) {
+                            alert("Payment not Done yet!")
+                        }
+                        else {
+                            alert("Date Paid is " + "-" + response.OrderPayment.PDate + '\n'
+                                + "Payment Details  " + "-" + response.OrderPayment.PaymentDetails + '\n'
+                                + "Payment Type is" + "-" + response.OrderPayment.PaymentType)
+                        }
+                    },
+
+                });
+
+            }
+            else if (SelectedValue == "CreateCreditNote") {
+                var data =
+                {
+                    OrderGuid: OrderId,
+                    CustomerId: cid,
+                    InvoiceNumber: InvNo,
+                    InvoiceDate: InvoiceNo
+
+                }
+                console.log(data);
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("CreateCreditNote", "Invoice")', // name of PHP script
+                    data: data, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            $('#myModalEmail').modal('show');
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                        }
+                        else {
+
+                            $('#myModalEmail').modal('show');
+                            alert(response)
+                            window.location.reload(true);
+                        }
+                    },
+
+                });
+                //  window.location = '@Url.Action("CreateCreditNote", "Invoice")?orderId=  ' + OrderId;
+            }
+            else if (SelectedValue == "PrintInvoice" && InvNo.includes("RP")) {
+                //InvoiceDto = {
+                //    OrderGuid: OrderGuid
+                //}
+                //window.location = '@Url.Action("PrintInvoiceV1", "Invoice")?orderId=  ' + OrderId;
+                //Created by Himanshu 24082021
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",
+                    url: '@Url.Action("PrintInvoiceV1", "Invoice")?orderId=' + OrderId,
+                    data: data,
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                        }
+                        else {
+                            //alert(response)
+                            // window.location='@Url.Action("GenerateInvoice", "Invoice")';
+                            alert(response)
+                            window.location.reload(true);
+                        }
+
+                    },
+
+                });
+
+            }
+            else if (SelectedValue == "PrintJobSheet" && InvNo.includes("RP")) {
+                var OrdersViewModel = {
+                    TrackingNo: TrackingNumber,
+                    SelectedAction: SelectedValue,
+                    SelecetCustomerId: SelecetCustomerId,
+                    SelectedOrderId: OrderId
+                }
+
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("ProcessAction", "Invoice")', // name of PHP script
+                    data: OrdersViewModel, // parameter name and value
+                    success: function (response) {
+                        $('.spinner-wrapper').hide();
+                        if (response == "success") {
+                            window.location = '@Url.Action("ReturnView", "Invoice")';
+                        }
+                        else {
+                            alert(response)
+                            window.location.reload(true);
+                        }
+                    },
+
+                });
+
+            } else if (SelectedValue == "PrintInvoice" && InvNo.includes("AC")) {
+                var url = `@Url.Action("ServiceRequestInvoice", "ServiceRequest")?ProvisionalBillId=${psbid}&WorkOrderId=${woId}&PreviewType=${null}&Initiator=${"ViewInvoice"}`;
+                window.location.href = url;
+                
+            }
+
+        });
+
+        });
+
+    </script>
+
+    <script>
+    function SendEmail()
+    {
+        var TrackingNumber = $("#Show").val();
+        var Email = $("#text1").val();
+        var SelecetCustomerId = $("#text2").val();
+        var SelectedOrderId = $("#text3").val();
+        var SelectedValue = $("#text4").val();
+
+        var OrdersViewModel = {
+            TrackingNo: TrackingNumber,
+            SelectedAction: SelectedValue,
+            SelecetCustomerId: SelecetCustomerId,
+            SelectedOrderId: SelectedOrderId,
+            Email: Email,
+
+        }
+
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",  // method of sending data
+            url: '@Url.Action("SendOrderEmail", "Order")', // name of PHP script
+            data: OrdersViewModel, // parameter name and value
+            success: function (response) {
+                $('.spinner-wrapper').hide();
+                if (response == "success")
+                {
+                    $('#myModalEmail').modal('hide');
+                    alert("Email has been Sent!");
+                }
+                else
+                {
+                    $('#myModalEmail').modal('hide');
+                    alert(response)
+                }
+
+            },
+
+        });
+    }
+
+    </script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,133 @@
+﻿@model Picanol.ViewModels.InwardMaterialViewModel
+@{
+    ViewBag.Title = "ChallanList";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/bootstrapModal.min.css">
+    <script src="~/Content/3.3.1.js"></script>
+    <script src="~/Content/bootstrapModal.min.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <a href="@Url.Action("OrdersList", "Order")" style="margin-left: -90px;margin-top:-10px;" class="btn btn-primary btn-large pull-left"> <i class="fam-control-rewind-blue"></i> Back</a>
+        </div>
+        <h3 style="text-align:center;"><b>Challan List</b></h3>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.FromDate, new { @class = "" })
+                        @Html.TextBoxFor(d => d.FromDate, "{0:dd/MM/yyyy}", new { id = "FromDate", @class = "form-control", maxlength = "500" ,autocomplete = "off" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.ToDate, new { @class = "" })
+                        @Html.TextBoxFor(d => d.ToDate, "{0:dd/MM/yyyy}", new { id = "ToDate", @class = "form-control", maxlength = "500" ,autocomplete = "off"})
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <button type="submit" style="margin-top:25px" value="Submit" onclick="submitClick(1)" id="btnSearch" class="btn btn-info">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+        </div>
+
+        <div id="divResultdata" class="table-responsive">
+        </div>
+        <br />
+        @*<div class="signal"></div>*@
+        <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+            <div class="spinner">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+            $(document).keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                    submitClick();
+                }
+            });
+            //$("#btnSearch").click(function () {
+    function submitClick(val) {
+                var FromDate = $("#FromDate").val();
+                var ToDate = $("#ToDate").val();
+                var PageSize = 10;
+                var PageNo = val;
+
+                if (FromDate == '') {
+                    alert('Please Fill From Date!');
+                    return false;
+                }
+
+                if (ToDate == '') {
+                    alert('Please Fill To Date!');
+                    return false;
+                }
+
+
+
+                var InwardMaterialViewModel = {
+                    tdate: ToDate,
+                    fdate: FromDate,
+                    PageSize: PageSize,
+                    PageNo:PageNo,
+
+                };
+                $.ajax({
+                    beforeSend: function () {
+                        $('.spinner-wrapper').show()
+                    },
+                    type: "POST",  // method of sending data
+                    url: '@Url.Action("GetFilteredInwardMaterialList", "Material")', // name of PHP script
+                    data: InwardMaterialViewModel, // parameter name and value
+                    success: function (data) {
+                        $('.spinner-wrapper').hide();
+                        $("#divResultdata").html(data);
+                    },
+                    error: function (data) {
+                        $('.spinner-wrapper').hide();
+                        $('#divResultdata').html(data).show();
+                    }
+                });
+            }
+
+    </script>
+
+    <script type="text/javascript">
+        $("#FromDate").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#ToDate").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    </script>
+</body>
+</html>

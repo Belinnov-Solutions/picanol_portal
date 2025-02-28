@@ -1,0 +1,165 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+
+@{ <!--Creted BY Himanshu for customer Pagination-->
+    int customerCount = Model.CustomersList.Count;
+    int noOfPages = customerCount / 10;
+    int CountList = Model.CountList;
+}
+<html>
+<head>
+    <style>
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            display: block;
+            overflow-x: auto;
+            white-space: pre-line;
+/*            word-wrap: break-word;
+*/            /* border: 0px solid black;*/
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 8px;
+            white-space: normal;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <table>
+        <tr>
+            <th>Customer Name</th>
+            <th>Address</th>
+            @*<th>District</th>
+        <th>City</th>*@
+            <th>Zone </th>
+            <th>State </th>
+            @*<th>Email</th>*@
+            @*<th>Mobile</th>*@
+            <th>GSTIN</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Sub Customer</th>
+        </tr>
+        @foreach (var item in Model.CustomersList)
+        {
+    <tr>
+
+
+        <td>@item.CustomerName</td>
+        <td>@item.AddressLine1</td>
+        @*<td>@item.AddressLine1 <br />@item.AddressLine2</td>*@
+        @*<td>@item.District</td>
+        <td>@item.City</td>*@
+        <td>@item.Zone</td>
+        <td>@item.State</td>
+        @*<td>@item.Email</td>*@
+        @*<td>@item.Mobile</td>*@
+        <td>@item.GSTIN</td>
+        <td><a href="@Url.Action("AddCustomer", "Customer", new {id = item.CustomerId})" class="btn btn-primary btn-large">Edit</a></td>
+        <td><a href="@Url.Action("DeleteCustomer", "Customer", new {id = item.CustomerId})" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-danger btn-large">Delete</a></td>
+        <td><button type="button" class="btn btn-info btn-sm" onclick="GetSubCustomer(@item.CustomerId,'@item.CustomerName')">Sub Customer</button></td>
+
+    </tr>
+        }
+
+
+
+
+    </table>
+
+    <!--Creted By Himanshu for customer Management Pagination-->
+    @if (CountList == 10)
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrnetPageNo == 1)
+                {
+                    <div class="col-md-4 cell" onclick="changepage(@Model.CurrnetPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-4 cell" onclick="changepage(@Model.CurrnetPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i < startIndex + 5; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-3 cell active" onclick="changepage(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 cell " onclick="changepage(@i);">@i</div>
+                    }
+                }
+                <div class="col-md-3 cell" onclick="changepage(@Model.CurrnetPageNo+1);">Next</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pagination">
+            <div class="row">
+                @if (Model.CurrnetPageNo == 1)
+                {
+                    <div class="col-md-6 cell" onclick="changepage(@Model.CurrnetPageNo);">Prev</div>
+                }
+                else
+                {
+                    <div class="col-md-6 cell" onclick="changepage(@Model.CurrnetPageNo-1);">Prev</div>
+                }
+                @{
+                    int startIndex = Model.CurrnetPageNo - (Model.CurrnetPageNo % 5);
+                    if (startIndex == 0)
+                    {
+                        startIndex += 1;
+                    }
+                    if (Model.CurrnetPageNo % 5 == 0)
+                    {
+                        startIndex = Model.CurrnetPageNo;
+                    }
+
+                }
+
+                @for (int i = startIndex; i <= Model.CurrnetPageNo ; i++)
+                {
+                    if (i == Model.CurrnetPageNo)
+                    {
+                        <div class="col-md-6 cell active" onclick="changepage(@i);">@Model.CurrnetPageNo</div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5 cell " onclick="changepage(@i);">@i</div>
+                    }
+                }
+                @*<div class="col-md-3 cell" onclick="changepage(@Model.CurrnetPageNo+1);">Next</div>*@
+            </div>
+        </div>
+    }
+    <div class="pull-right">@CountList  Record Found</div>
+    <!--End Here-->
+</body>
+</html>

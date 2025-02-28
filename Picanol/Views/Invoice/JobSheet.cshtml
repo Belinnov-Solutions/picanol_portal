@@ -1,0 +1,197 @@
+﻿@model Picanol.ViewModels.InvoiceViewModel
+@{
+    ViewBag.Title = "JobSheet";
+}
+<a href="@Url.Action("OrdersList", "Order")" class="btn btn-primary btn-large"> <i class="fam-control-rewind-blue"></i> Back</a>
+
+
+<div class="col-xs-12">
+    <div class="row">
+        <div class="col-xs-3">
+        <b><u>JOB SHEET : </u></b>
+        </div>
+
+        <div class="col-xs-3">
+            <b>Date :</b>
+        </div>
+
+        </div>
+</div>
+
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-6">
+                    <table rules="all" border="1" style="width:100%">
+                        <tr>
+                            <td><b>SSI no. :</b></td>
+                            <td>@Model.OrderDetails.TrackingNumber</td>
+                        </tr>
+                        <tr>
+                            <td><b>Customer Name:</b></td>
+                            <td>@Model.CustomerDetails.CustomerName</td>
+                        </tr>
+                        <tr>
+                            <td><b>Address</b></td>
+                            <td>@Model.CustomerDetails.AddressLine1 @Model.CustomerDetails.AddressLine2</td>
+                        </tr>
+                        <tr>
+                            <td><b>Contact</b></td>
+                            <td>@Model.CustomerDetails.Mobile</td>
+                        </tr>
+                        <tr>
+                            <td><b>Customer Ref.</b></td>
+                            <td>@Model.OrderDetails.CustomerRef</td>
+                        </tr>
+                        <tr>
+                            <td><b> Ref. Date</b></td>
+                            <td>@Model.OrderDetails.ChallanDate.Value.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td><b>Customer GST</b></td>
+                            <td>@Model.CustomerDetails.GSTIN</td>
+                        </tr>
+                        <tr>
+                            <td><b>Engineer Comment</b></td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td><b>Type of Repair</b></td>
+                            <td>CHARGABLE</td>
+                        </tr>
+                        <tr>
+                            <td><b>PCB</b></td>
+                            <td>@Model.OrderDetails.PartName</td>
+                        </tr>
+                        <tr>
+                            <td><b>Part No.</b></td>
+                            <td>@Model.OrderDetails.PartNo</td>
+                        </tr>
+                        <tr>
+                            <td><b>PCB Sr. No.</b></td>
+                            <td>@Model.OrderDetails.SerialNo</td>
+                        </tr>
+                        <tr>
+                            <td><b>Hours</b></td>
+                            <td>@Model.OrderDetails.TimeTaken</td>
+                        </tr>
+                        <tr>
+                            <td><b>Repaired By</b></td>
+                            <td>STS</td>
+                        </tr>
+
+
+
+                    </table>
+                </div>
+
+
+                <div class="col-xs-6">
+                    <table style="margin-left:100px ; width:100%">
+                        <tr><th><center><b>Cost Invoice</b></center></th></tr>
+                        @*@foreach (var item in Model.InvoiceItems)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>Rs</td>
+                                    <td>@item.Amount</td>
+
+                                </tr>
+
+                            }*@
+
+                        <tr>
+                            <td>Component Cost</td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.ComponentsCost</td>
+                        </tr>
+
+                        <tr>
+                            <td>Labour/test Chgs</td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.LabourCost</td>
+                        </tr>
+
+                        <tr>
+                            <td>Packing Chgs </td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.PackingCharges</td>
+                        </tr>
+
+                        <tr>
+                            <td>Forwarding Chgs</td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.ForwardingCharges</td>
+                        </tr>
+
+                        <tr>
+                            <td>GST</td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.TotalTax</td>
+                        </tr>
+
+                        <tr>
+                            <td>Total</td>
+                            <td>Rs.</td>
+                            <td>@Model.InvoiceDetails.Amount</td>
+                        </tr>
+
+                        <tr>
+                            <td>State</td>
+                            <td></td>
+                            <td>@Model.CustomerDetails.State</td>
+                        </tr>
+                        <tr>
+                            <td>State Code</td>
+                            <td></td>
+                            <td>@Model.CustomerDetails.StateCode</td>
+                        </tr>
+
+
+
+                    </table>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-6">
+
+                    <table rules="all" style="border:5px ; width:100% ; margin-top:30px ;text-align:center">
+                        <caption><b>Parts Used</b></caption>
+                        <tr>
+                            <th><b>Item Code</b></th>
+                            <th><b>Parts Description</b></th>
+                            <th><b>Qty</b></th>
+                            <th><b>Unit Price</b></th>
+                            <th><b>Amount (In Rs.)</b></th>
+                        </tr>
+                        @foreach (var item in Model.ConsumedParts)
+                        {
+                            <tr>
+                                <td>@item.PartNumber</td>
+                                <td>@item.PartName</td>
+                                <td>@item.Qty</td>
+                                <td>@item.Price</td>
+                                <td>@item.Total</td>
+                            </tr>
+                        }
+                        
+                        <tr>
+                            <td colspan="2" style="text-align:right">Total</td>
+                            <td>@Model.InvoiceDetails.ComponentQty</td>
+                            <td></td>
+                            <td style="text-align:right">@Model.InvoiceDetails.Amount</td>
+                        </tr>
+                    </table>
+
+
+
+
+                </div>
+            </div>
+        </div>
+

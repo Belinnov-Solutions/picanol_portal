@@ -1,0 +1,321 @@
+﻿@model Picanol.ViewModels.CustomerViewModel
+@{
+    ViewBag.Title = "AddSubCustomer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Content/swinloader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <datalist id="StateList">
+        @foreach (var item in Model.StateList)
+        {
+            <option id="@item.StateName" data-value="@item.StateName" value="@item.StateName"></option>
+
+        }
+
+    </datalist>
+
+    <datalist id="CNList">
+        @foreach (var item in Model.CustomersList)
+        {
+            <option id="@item.CustomerId" data-value="@item.CustomerId" value="@item.CustomerName"></option>
+
+        }
+    </datalist>
+    <div class="spinner-wrapper" id=" jackkk" style="display:none;">
+        <div class="spinner">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    function getState() {
+        var e = document.getElementById("State").value;
+        var res = e.split(';');
+        var state = res[0];
+        var statecode = res[1];
+
+        document.getElementById("State").value = state
+        document.getElementById("StateCode").value = statecode
+    }
+
+
+    function getCustomerDetails() {
+
+            var shownVal = document.getElementById("CustomerId").value;
+        var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+        debugger;
+            var data = {
+                CustomerId: CustomerId
+            };
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+            },
+            type: "POST",
+            url: '@Url.Action("GetCustomerDetails", "Customer")',
+            data: data,
+            success: function (data) {
+                $('.spinner-wrapper').hide();
+                $("#AddressLine1").val(data.AddressLine1);
+                $("#AddressLine2").val(data.AddressLine2);
+                $("#District").val(data.District);
+                $("#City").val(data.City);
+                $("#State").val(data.State);
+                $("#StateCode").val(data.StateCode);
+                $("#PIN").val(data.PIN);
+                $("#ContactPerson").val(data.ContactPerson);
+                $("#Mobile").val(data.Mobile);
+                $("#Email").val(data.Email);
+              },
+
+        });
+    }
+    function SaveDeatils()
+    {
+
+        var shownVal = document.getElementById("CustomerId").value;
+        if (shownVal != "") {
+            var CustomerId = document.querySelector("#CNList option[value='" + shownVal + "']").dataset.value;
+            debugger;
+        }
+        var SubCustomerName = $("#SubCustomerName").val();
+        if (SubCustomerName == '') {
+            alert('Please fill  Sub Customer Name!');
+            document.getElementById('<%=SubCustomerName%>').focus();
+            return false;
+        }
+        var SubCustomerId = $("#SubCustomerId").val();
+        var AddressLine1 = $("#AddressLine1").val();
+        var AddressLine2 = $("#AddressLine2").val();
+        var District = $("#District").val();
+        var City = $("#City").val();
+        var State = $("#State").val();
+        var StateCode = $("#StateCode").val();
+        var PIN = $("#PIN").val();
+        var ContactPerson = $("#ContactPerson").val();
+        var Mobile = $("#Mobile").val();
+        var Email = $("#Email").val();
+        var GSTIN = $("#GSTIN").val();
+        var SubCustomerDto =
+        {
+            SubCustomerId: SubCustomerId,
+            AddressLine1: AddressLine1,
+            AddressLine2: AddressLine2,
+            District: District,
+            City: City,
+            State: State,
+            StateCode: StateCode,
+            PIN: PIN,
+            ConatctPerson: ContactPerson,
+            Mobile: Mobile,
+            Email: Email,
+            GSTIN: GSTIN,
+            CustomerId: CustomerId,
+            SubCustomerName: SubCustomerName,
+        };
+        $.ajax({
+            beforeSend: function () {
+                $('.spinner-wrapper').show()
+                    $("#btnSave").attr("disabled", true);
+
+            },
+
+            type: "POST",
+            url: '@Url.Action("AddNewSubCustomer", "Customer")',
+            data: SubCustomerDto,
+            success: function (response) {
+                debugger;
+                $('.spinner-wrapper').hide();
+                if (response == "Successs") {
+                    $("#btnSave").attr("disabled", false);
+                    alert("Sub Customer Added successfully");
+                    location.reload(true);
+
+                }
+
+                else if (response == "Updated") {
+                    $('.spinner-wrapper').hide();
+                    $("#btnSave").attr("disabled", false);
+                    alert("Sub Customer Edited successfully!");
+                     window.location = '@Url.Action("SubCustomerList", "Customer")';
+                    location.reload(true);
+                }
+                else {
+                    $('.spinner-wrapper').hide();
+                    $("#btnSave").attr("disabled", false);
+                    alert("Add Customer Name .....");
+                    location.reload(true);
+                }
+            },
+
+        });
+    }
+    //});
+
+    </script>
+
+    <a href="@Url.Action("SubCustomerList", "Customer")" class="btn btn-primary btn-large pull-left"> Back</a>
+
+    <div class="text-center">
+        @if (Model.CustomerIsEdit == false)
+        {
+            <h3><b>Add Sub Customer</b></h3>
+        }
+        else
+        {
+            <h3><b>Edit Sub Customer</b></h3>
+        }
+    </div>
+
+    <div>
+
+        <br />
+        <div style="margin-left:10px;margin-right:10px;font-size:small;font-family:Calibri;">
+            <div class="row">
+                @if (Model.CustomerIsEdit == false)
+                {
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="CustomerName">Customer Name :</label>
+                            <input class="form-control" type="search" value="" list="CNList" id="CustomerId" placeholder="Enter Customer Name" onchange="getCustomerDetails()" />
+                            @Html.HiddenFor(model => model.SubCustomer.SubCustomerId, new { id = "SubCustomerId" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="CustomerName">Customer Name :</label>
+                            <input class="form-control" type="search" value="@Model.SubCustomer.CustomerName" list="CNList" id="CustomerId" placeholder="Enter Customer Name" onchange="getCustomerDetails()" />
+                            @Html.HiddenFor(model => model.SubCustomer.SubCustomerId, new { id = "SubCustomerId" })
+                        </div>
+                    </div>
+                }
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="AddressLine1"><strong>Sub Customer Name:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.SubCustomerName, new { @class = "form-control", id = "SubCustomerName", @placeholder = "Enter Sub Customer Name " })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="AddressLine1"><strong>Address Line1:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.AddressLine1, new { @class = "form-control", id = "AddressLine1", @placeholder = "Enter Address Line1" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="AddressLine1"><strong>Address Line2:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.AddressLine2, new { @class = "form-control", id = "AddressLine2", @placeholder = "Enter Address Line2" })
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="District"><strong>District:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.District, new { @class = "form-control", id = "District", @placeholder = "Enter District" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="District"><strong>City:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.City, new { @class = "form-control", id = "City", @placeholder = "Enter City" })
+                    </div>
+                </div>
+                @if (Model.CustomerIsEdit == false)
+                {
+                    <div class="col-sm-3">
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="StateCode"><strong>State :</strong></label>
+
+                                <input name="id" class="form-control" type="search" list="StateList" value="" autocomplete="off" id="State" onchange="getState()" placeholder="Enter State Name" />
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-3">
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="StateCode"><strong>State :</strong></label>
+
+                                <input name="id" class="form-control" type="search" list="StateList" value="@Model.SubCustomer.State" autocomplete="off" id="State" onchange="getState()" placeholder="Enter State Name" />
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="District"><strong>StateCode:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.StateCode, new { @class = "form-control", id = "StateCode", @placeholder = "Enter StateCode", @readonly = true })
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="ContactPerson"><strong>PIN:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.PIN, new { @class = "form-control", id = "PIN", @placeholder = "Enter PIN" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="ContactPerson"><strong>Contact Person:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.ConatctPerson, new { @class = "form-control", id = "ContactPerson", @placeholder = "Enter Contact Person" })
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Mobile"><strong>Mobile:</strong><span id="errmsg"></span></label>
+                        @Html.TextAreaFor(model => model.SubCustomer.Mobile, new { @class = "form-control", id = "Mobile", @placeholder = "Enter Mobile No's Seperated By ';' ", @maxlength = "10" })
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="Email"><strong>Email:</strong></label>
+                        @Html.TextAreaFor(model => model.SubCustomer.Email, new { @class = "form-control", id = "Email", @placeholder = "Enter Email Id's Seperated by ';' " })
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="GSTIN"><strong>GSTIN:</strong></label>
+                        @Html.TextBoxFor(model => model.SubCustomer.GSTIN, new { @class = "form-control", id = "GSTIN", @placeholder = "Enter GSTIN" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <center> <button type="submit" class="btn btn-info " id="btnSave" onclick="SaveDeatils()" value="Save" style="margin-left:10px;"><strong>Submit</strong></button></center>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
