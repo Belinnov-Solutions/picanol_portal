@@ -28,6 +28,10 @@ namespace Picanol.Helpers
             //Localize = controller.Localize;
             validationDictionary = new ModelStateWrapper();
         }
+
+        public AccountHelper()
+        {
+        }
         #endregion
         public string SaveNewPassword(LoginDto user)
         {

@@ -20,13 +20,9 @@ namespace Picanol.App_Start
             try
             {
                 var url = ConfigurationManager.AppSettings["OtpVerifyPath"].ToString();
+                var url2 = ConfigurationManager.AppSettings["authenticateUserPath"].ToString();
                 app.UseCors(CorsOptions.AllowAll);
                 HttpConfiguration config = new HttpConfiguration();
-                //config.Routes.MapHttpRoute(
-                //    name: "DefaultApi",
-                //    routeTemplate: "api/{controller}/{id}",
-                //    defaults: new { id = RouteParameter.Optional }
-                //);
                 OAuthAuthorizationServerOptions option = new OAuthAuthorizationServerOptions
                 {
 
@@ -35,7 +31,18 @@ namespace Picanol.App_Start
                     AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(60),
                     AllowInsecureHttp = true
                 };
+
+                OAuthAuthorizationServerOptions option1 = new OAuthAuthorizationServerOptions
+                {
+
+                    TokenEndpointPath = new PathString(url2),
+                    Provider = new ApplicationAuthProvider(),
+                    AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(60),
+                    AllowInsecureHttp = true
+                };
+
                 app.UseOAuthAuthorizationServer(option);
+                app.UseOAuthAuthorizationServer(option1);
                 app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
                 app.UseWebApi(config);
             }

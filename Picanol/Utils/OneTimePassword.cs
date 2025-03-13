@@ -15,6 +15,7 @@ using RestSharp;
 using NLog;
 using System.Configuration;
 using System.Data;
+using Picanol.Models;
 
 namespace Picanol.Utils
 {
@@ -29,7 +30,7 @@ namespace Picanol.Utils
                 
                 Username = "+91" + Username;
                 tblUser checkUserExist = new tblUser();
-                checkUserExist = Context.tblUsers.Where(x => x.Email == Username || x.MobileNo == Username).FirstOrDefault();
+                checkUserExist = Context.tblUsers.Where(x => x.Email == Username || x.MobileNo == Username && x.DelInd==false).FirstOrDefault();
                 //var checkUserExist = Context.tblUsers.Where(x => x.Email == Username || x.MobileNo == Username).FirstOrDefault();
                 if (checkUserExist != null)
                 {
@@ -155,6 +156,67 @@ namespace Picanol.Utils
 
 
             return isSuccess;
+        }
+
+
+        //get access token while with username and password from mobile app
+        //Code changes on 11-03-2025
+        //changes by sunit
+        public bool GetAccessToken(string username, string password)
+        {
+            bool isSuccess = false;
+            try
+            {
+                if (!string.IsNullOrEmpty(username) && username.Length == 10 && !IsValidEmail(username))
+                {
+                    username = "+91" + username;
+                }
+                using (var _context = new PicannolEntities())
+                {
+                    AccountHelper accountHelper = new AccountHelper();
+                    string encryptedPwd = string.Empty;
+
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        encryptedPwd = accountHelper.GetEncryptedPassword(password);
+                    }
+
+                    var us = _context.tblUsers.Where(x => x.MobileNo.Substring(x.MobileNo.Length-10) == username.Substring(username.Length - 10)
+                    || x.Email==username && x.Password == encryptedPwd
+                    && x.DelInd==false).FirstOrDefault();
+
+                    // Check if a valid user is found
+                    if (us != null && us.UserId > 0)
+                    {
+                        isSuccess = true;
+                    }
+                    else
+                    {
+                        // No matching user found, set isSuccess to false
+                        isSuccess = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception gracefully
+                isSuccess = false;
+            }
+            return isSuccess;
+        }
+        //end
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 

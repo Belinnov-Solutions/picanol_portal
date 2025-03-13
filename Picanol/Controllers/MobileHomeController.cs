@@ -170,8 +170,6 @@ namespace Picanol.Controllers
 
                     var user = (from a in context.tblUsers
                                 join b in context.tblRoles on a.RoleId equals b.RoleId
-                                /* where (a.Email == loginDto.UserName || a.MobileNo == loginDto.UserName)
-                                       && a.Password == encryptedPwd*/
                                 where (a.Email == loginDto.UserName || a.MobileNo == loginDto.UserName)
                                       && a.DelInd == false
                                 select new LoginDto
@@ -182,6 +180,23 @@ namespace Picanol.Controllers
                                     Email = a.Email,
                                     RoleName = b.RoleName,
                                 }).FirstOrDefault();
+
+
+                    /*var user = (from a in context.tblUsers
+                                join b in context.tblRoles on a.RoleId equals b.RoleId
+                                where
+                                    (a.Email == loginDto.UserName ||
+                                    (a.MobileNo != null && a.MobileNo == loginDto.UserName.Substring(loginDto.UserName.Length - 10)))
+                                    && a.DelInd == false
+                                select new LoginDto
+                                {
+                                    UserID = a.UserId,
+                                    UserName = a.UserName,
+                                    RoleID = a.RoleId,
+                                    Email = a.Email,
+                                    RoleName = b.RoleName,
+                                }).FirstOrDefault();*/
+
 
                     return Json(user, JsonRequestBehavior.AllowGet);
                 }
